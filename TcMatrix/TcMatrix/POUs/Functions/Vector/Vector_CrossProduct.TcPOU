@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Vector_CrossProduct" Id="{25532393-25b9-0f66-3679-64664fc1dc7e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Vector_CrossProduct : BOOL
+VAR_INPUT
+	Res : REFERENCE TO Matrix;
+END_VAR
+VAR
+	Ri : UINT;
+	Ci : UINT;
+	I : DINT;
+	M_Vectors : Matrix;
+	M_Det : Matrix;
+	Det : LREAL;
+END_VAR
+VAR_IN_OUT
+	Vectors : ARRAY[*] OF POINTER TO Matrix;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//a cross product in N dimensions space requires N-1 vectors of length N, the result of which is an N-length vector orthogonal to all supplied vectors. Order of vectors matters.
+//if you arrange all supplied vectors horizontally into an almost-square matrix, then each component of the result vector is simply the determinate of the aggregate matrix with the corresponding column removed
+
+IF NOT(Res.IsVector) OR Res.IsEmpty OR (UPPER_BOUND(Vectors,1) - LOWER_BOUND(Vectors,1) + 1) <> Res.Length - 1 THEN
+	Vector_CrossProduct := FALSE;
+	RETURN;
+END_IF
+
+FOR I := LOWER_BOUND(Vectors,1) TO UPPER_BOUND(Vectors,1) DO
+	IF Vectors[I] = 0 THEN
+		Vector_CrossProduct := FALSE;
+		RETURN;
+	END_IF
+	IF NOT(Vectors[I]^.IsVector) OR Vectors[I]^.Length <> Res.Length THEN
+		Vector_CrossProduct := FALSE;
+		RETURN;
+	END_IF
+END_FOR
+
+//first row is garbage, just for shrinking
+IF NOT(M_Vectors.Init(Res.Length,Res.Length)) THEN
+	Vector_CrossProduct := FALSE;
+	RETURN;
+END_IF
+IF NOT(M_Det.Init(Res.Length-1,Res.Length-1)) THEN
+	Vector_CrossProduct := FALSE;
+	RETURN;
+END_IF
+
+Vector_CrossProduct := TRUE;
+
+//build aggregate matrix
+FOR Ri := 1 TO M_Vectors.Rows-1 DO
+	I := LOWER_BOUND(Vectors,1) + Ri-1;
+	FOR Ci := 0 TO M_Vectors.Cols-1 DO
+		M_Vectors.SetRC(Ri,Ci,Vectors[I]^.GetI(Ci));
+	END_FOR
+END_FOR
+
+//take determiantes
+FOR Ci := 0 TO M_Vectors.Cols-1 DO
+	Matrix_Shrink(M_Vectors,M_Det,0,Ci);
+	IF NOT(Matrix_Determinate(M_Det, Res=>Det)) THEN
+		Vector_CrossProduct := FALSE;
+		RETURN;
+	END_IF
+	Res.SetI(Ci,Det);
+END_FOR
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="Vector_CrossProduct">
+      <LineId Id="38" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="75" Count="2" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

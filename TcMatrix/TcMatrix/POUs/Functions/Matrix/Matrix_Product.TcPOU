@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_Product" Id="{78d7729b-89b3-48bc-b06c-a73009771b2d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_Product : Bool
+VAR_INPUT
+	A : REFERENCE TO Matrix;
+	B : REFERENCE TO Matrix;
+	Res : REFERENCE TO Matrix;//must not be the same source as M_L or M_R
+END_VAR
+VAR
+	Ri : UINT;
+	Ci : UINT;
+	I : UINT;
+	Sum : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT(Matrix_CanMult(A,B)) THEN
+	Matrix_Product := FALSE;
+	RETURN;
+END_IF
+
+IF A.Rows <> Res.Rows OR B.Cols <> Res.Cols THEN
+	Matrix_Product := FALSE;
+	RETURN;
+END_IF
+
+Matrix_Product := TRUE;
+
+FOR Ri := 0 TO Res.Rows-1 DO
+	FOR Ci := 0 TO Res.Cols-1 DO
+		Sum := 0;
+		FOR I := 0 TO A.Cols-1 DO
+			Sum := Sum + A.GetRC(Ri,I) * B.GetRC(I,Ci);
+		END_FOR
+		Res.SetRC(Ri,Ci,Sum);
+	END_FOR
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_Product">
+      <LineId Id="91" Count="19" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

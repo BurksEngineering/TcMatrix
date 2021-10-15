@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_Grow" Id="{f909547c-ed56-48e1-9f36-d8c62dce67dc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_Grow : Bool
+VAR_INPUT
+	M_From : REFERENCE TO Matrix;
+	M_To : REFERENCE TO Matrix;
+	Row : UINT;
+	Col : UINT;
+	DiagVal : LREAL;
+	RowVal : LREAL;
+	ColVal : LREAL;
+END_VAR
+VAR
+	Ri : UINT;
+	Ci : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF M_From.Rows <> M_To.Rows-1 THEN
+	Matrix_Grow := FALSE;
+	RETURN;
+END_IF
+IF M_From.Cols <> M_To.Cols-1 THEN
+	Matrix_Grow := FALSE;
+	RETURN;
+END_IF
+
+IF Row < 0 OR Row > M_From.Rows THEN
+	Matrix_Grow := FALSE;
+	RETURN;
+END_IF
+
+IF Col < 0 OR Col > M_From.Cols THEN
+	Matrix_Grow := FALSE;
+	RETURN;
+END_IF
+
+Matrix_Grow := TRUE;
+
+//loop backwards to avoid possible overwriting the input if the same matrix is both inputs.
+//in order to ensure the final decrement breaks the loop condition the final valid value must be 1, not zero. So just offset all indexes by 1...
+FOR Ri := 0 TO M_To.Rows-1 DO
+	FOR Ci := 0 TO M_To.Cols-1 DO
+		IF Ri = Row AND Ci = Col THEN
+			M_To.SetRC(Ri,Ci,DiagVal);
+		ELSIF Ri = Row THEN
+			M_To.SetRC(Ri,Ci,RowVal);
+		ELSIF Ci = Col THEN
+			M_To.SetRC(Ri,Ci,ColVal);
+		ELSE
+			//note that if Ri or Ci is their lowest value (1), then the BOOL condition must be false because 0 cannot be greater than any UINT.
+			//This guarantees that the lowest RC indexes are zero.
+			M_To.SetRC(Ri,Ci,M_From.GetRC(Ri - BOOL_TO_UINT((Ri)>Row),Ci - BOOL_TO_UINT((Ci)>Col)));
+		END_IF
+	END_FOR
+END_FOR
+]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_Grow">
+      <LineId Id="59" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="65" Count="2" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="13" Count="10" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="36" Count="8" />
+      <LineId Id="71" Count="1" />
+      <LineId Id="45" Count="3" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

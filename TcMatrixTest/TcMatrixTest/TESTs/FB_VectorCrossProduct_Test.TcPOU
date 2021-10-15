@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_VectorCrossProduct_Test" Id="{27cbb6d0-ee82-05a0-0885-25c9ace8e002}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_VectorCrossProduct_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenWrongSizeExpectError();
+WhenMatchingSizeExpectResult();
+]]></ST>
+    </Implementation>
+    <Method Name="WhenMatchingSizeExpectResult" Id="{210123e9-79aa-07ab-204d-1d5b02cf36e9}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenMatchingSizeExpectResult
+VAR_INPUT
+END_VAR
+VAR
+	V1 : Matrix;
+	V2 : Matrix;
+	M1 : Matrix;
+	Result : BOOL;
+	V3 : Matrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenMatchingSizeExpectResult');
+
+// @TEST-RUN
+V1.InitVector3(1,0,0);
+V2.InitVector3(0,1,0);
+Result := M1.AsVector3CrossProduct(V1,V2);
+V3.InitVector3(0,0,1);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertTrue(M1.IsEqual(V3),'Result is the correct vector');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenWrongSizeExpectError" Id="{94f8a6a5-daf1-0562-3890-919c18f161b5}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenWrongSizeExpectError
+VAR_INPUT
+END_VAR
+VAR
+	V1 : Matrix;
+	V2 : Matrix;
+	M1 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenWrongSizeExpectError');
+
+// @TEST-RUN
+V1.InitVector(3,1,1);
+V2.InitVector(4,1,1);
+Result := M1.AsVector3CrossProduct(V1,V2);
+
+// @TEST-ASSERT
+AssertFalse(Result,'Main function call was unexpectedly successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_VectorCrossProduct_Test">
+      <LineId Id="9" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VectorCrossProduct_Test.WhenMatchingSizeExpectResult">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_VectorCrossProduct_Test.WhenWrongSizeExpectError">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

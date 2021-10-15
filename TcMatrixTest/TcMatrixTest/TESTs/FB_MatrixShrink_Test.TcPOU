@@ -1,0 +1,93 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_MatrixShrink_Test" Id="{6badab89-4b35-0a67-0e21-0fcc6b60e2f9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MatrixShrink_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenEmptyExpectError();
+WhenShrunkExpectDataRetained();]]></ST>
+    </Implementation>
+    <Method Name="WhenEmptyExpectError" Id="{d6787aff-e80e-04a9-15be-66639abd753f}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenEmptyExpectError
+VAR_INPUT
+END_VAR
+VAR
+	M1 : Matrix;
+	M2 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenEmptyExpectError');
+
+// @TEST-RUN
+M1.InitZeros(1,1);
+Result := M2.AsShrunk(M1,0,0);
+
+// @TEST-ASSERT
+AssertFalse(Result,'Main function call was unexpectedly successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenShrunkExpectDataRetained" Id="{a2dd6e96-bc8c-06dc-0aa7-16350c013705}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenShrunkExpectDataRetained
+VAR_INPUT
+END_VAR
+VAR
+	M1 : Matrix;
+	M2 : Matrix;
+	M3 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenShrunkExpectDataRetained');
+
+// @TEST-RUN
+M1.InitMagicSquare(3);
+Result := M2.AsShrunk(M1,0,0);
+M3.AsSubMatrix(M1,1,2,1,2);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertTrue(M3.IsEqual(M2),'Old data was not retained');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_MatrixShrink_Test">
+      <LineId Id="28" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_MatrixShrink_Test.WhenEmptyExpectError">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixShrink_Test.WhenShrunkExpectDataRetained">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

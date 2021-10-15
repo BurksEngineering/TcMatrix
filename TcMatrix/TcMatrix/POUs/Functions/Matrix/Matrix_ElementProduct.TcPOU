@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_ElementProduct" Id="{61941b80-cefc-03b0-068a-f4ffeccad5f5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_ElementProduct : BOOL
+VAR_INPUT
+	A : REFERENCE TO Matrix;
+	B : REFERENCE TO Matrix;
+	Res : REFERENCE TO Matrix;
+END_VAR
+VAR
+	I : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT(A.IsEqualSize(Res)) OR A.IsEmpty THEN
+	Matrix_ElementProduct := FALSE;
+	RETURN;
+END_IF
+
+IF NOT(B.IsEqualSize(Res)) OR B.IsEmpty THEN
+	Matrix_ElementProduct := FALSE;
+	RETURN;
+END_IF
+
+Matrix_ElementProduct := TRUE;
+
+FOR I := 0 TO Res.Length - 1 DO
+	Res.SetI(I,A.GetI(I)*B.GetI(I));
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_ElementProduct">
+      <LineId Id="100" Count="13" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

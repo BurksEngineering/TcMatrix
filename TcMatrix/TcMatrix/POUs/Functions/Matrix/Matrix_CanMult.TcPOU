@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_CanMult" Id="{5be8d691-0a25-42cd-92c4-3f31297674a2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_CanMult : Bool
+VAR_INPUT
+	M_L : REFERENCE TO Matrix;
+	M_R : REFERENCE TO Matrix;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Matrix_CanMult := NOT(M_L.IsEmpty) AND NOT(M_R.IsEmpty) AND M_L.Cols = M_R.Rows;]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_CanMult">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

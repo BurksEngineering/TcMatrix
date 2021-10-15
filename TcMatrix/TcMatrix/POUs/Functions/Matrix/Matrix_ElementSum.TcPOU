@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_ElementSum" Id="{dd7ad31b-9e72-403d-8fad-fec05d5191bf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_ElementSum : BOOL
+VAR_INPUT
+	A : REFERENCE TO Matrix;
+	B : REFERENCE TO Matrix;
+	Res : REFERENCE TO Matrix;
+END_VAR
+VAR
+	I : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT(A.IsEqualSize(Res)) OR A.IsEmpty THEN
+	Matrix_ElementSum := FALSE;
+	RETURN;
+END_IF
+
+IF NOT(B.IsEqualSize(Res)) OR B.IsEmpty THEN
+	Matrix_ElementSum := FALSE;
+	RETURN;
+END_IF
+
+Matrix_ElementSum := TRUE;
+
+FOR I := 0 TO Res.Length - 1 DO
+	Res.SetI(I,A.GetI(I)+B.GetI(I));
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_ElementSum">
+      <LineId Id="45" Count="13" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

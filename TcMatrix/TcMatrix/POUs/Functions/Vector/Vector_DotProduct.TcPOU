@@ -1,0 +1,46 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Vector_DotProduct" Id="{ebd5ad2a-d448-0df4-1d3d-226835190fab}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Vector_DotProduct : BOOL
+VAR_INPUT
+	A : REFERENCE TO Matrix;
+	B : REFERENCE TO Matrix;
+END_VAR
+VAR_OUTPUT
+	Res : LREAL;
+END_VAR
+VAR
+	Sum : LREAL;
+	I : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT(A.IsVector) OR NOT(B.IsVector) OR A.Length <> B.Length OR A.IsEmpty THEN
+	Vector_DotProduct := FALSE;
+	Res := 0;
+	RETURN;
+END_IF
+
+Vector_DotProduct := TRUE;
+
+Sum := 0;
+FOR I := 0 TO A.Length-1 DO
+	Sum := Sum + A.GetI(I)*B.GetI(I);
+END_FOR
+Res := SUM;]]></ST>
+    </Implementation>
+    <LineIds Name="Vector_DotProduct">
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="2" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

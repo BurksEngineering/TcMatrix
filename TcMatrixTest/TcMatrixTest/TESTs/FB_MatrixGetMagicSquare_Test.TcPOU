@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_MatrixGetMagicSquare_Test" Id="{a15b73b2-380f-051b-10ff-af82c1df93a3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MatrixGetMagicSquare_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenCreatedExpectMagicProperties();]]></ST>
+    </Implementation>
+    <Method Name="WhenCreatedExpectMagicProperties" Id="{8f2dca3c-5f77-06ac-0bb8-305f754aab8f}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenCreatedExpectMagicProperties
+VAR_INPUT
+END_VAR
+VAR
+	M1 : Matrix;
+	V : Matrix;
+	Actual : LREAL;
+	Expected : LREAL := 15;
+	I : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenCreatedExpectMagicProperties');
+
+// @TEST-RUN
+M1.InitMagicSquare(3);//all rows and cols are 15
+M1.LogData('3x3 Magic Square');
+
+// @TEST-ASSERT
+FOR I := 0 TO M1.Rows-1 DO
+	//V.AsRowVector(M1,I); //cannot use, untested at this point
+	Actual :=  M1.GetRC(I,0) + M1.GetRC(I,1) + M1.GetRC(I,2);//V.Sum; //cannot use, untested at this point
+	AssertEquals(Expected,Actual,'Row is not the magic number');
+END_FOR
+FOR I := 0 TO M1.Cols-1 DO
+	//V.AsRowVector(M1,I); //cannot use, untested at this point
+	Actual :=  M1.GetRC(0,I) + M1.GetRC(1,I) + M1.GetRC(2,I);//V.Sum; //cannot use, untested at this point
+	AssertEquals(Expected,Actual,'Col is not the magic number');
+END_FOR
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_MatrixGetMagicSquare_Test">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixGetMagicSquare_Test.WhenCreatedExpectMagicProperties">
+      <LineId Id="9" Count="3" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

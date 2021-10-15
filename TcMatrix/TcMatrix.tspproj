@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<TcSmProject xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.20">
+	<Project ProjectGUID="{85BE87FF-93A2-4C73-967A-8A4C6B2B95E6}" Target64Bit="true" ShowHideConfigurations="#x106">
+		<Plc>
+			<Project GUID="{C0F4BEF7-55D3-4B7E-A92A-8580425ECFB1}" Name="TcMatrix" PrjFilePath="TcMatrix\TcMatrix.plcproj" TmcFilePath="TcMatrix\TcMatrix.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e"/>
+		</Plc>
+	</Project>
+</TcSmProject>

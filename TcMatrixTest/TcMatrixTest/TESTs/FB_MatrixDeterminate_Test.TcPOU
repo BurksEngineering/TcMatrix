@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_MatrixDeterminate_Test" Id="{05d09fac-54aa-03fb-32bc-a7271461908b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MatrixDeterminate_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenNotSquareExpectError();
+WhenMatchingExpectResult();]]></ST>
+    </Implementation>
+    <Method Name="WhenMatchingExpectResult" Id="{861ae7e2-3c14-05ef-31e2-8fb2373cafa7}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenMatchingExpectResult
+VAR_INPUT
+END_VAR
+VAR
+	M1 : Matrix;
+	Result : BOOL;
+	Actual : LREAL;
+	Expected : LREAL := 360;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenMatchingExpectResult');
+
+// @TEST-RUN
+M1.InitMagicSquare(3);
+Result := Matrix_Determinate(M := M1,Res => Actual);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertEquals(Expected,Actual,'Determinate value was incorrect');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenNotSquareExpectError" Id="{47a4dc4c-d738-0f7a-3585-802d49f8721f}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenNotSquareExpectError
+VAR_INPUT
+END_VAR
+VAR
+	M1 : Matrix;
+	Result : BOOL;
+	Actual : LREAL;
+	Expected : LREAL := 0;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenNotSquareExpectError');
+
+// @TEST-RUN
+M1.InitTrapezoidal(2,3,1,1,1);
+Result := Matrix_Determinate(M := M1,Res => Actual);
+
+// @TEST-ASSERT
+AssertFalse(Result,'Main function call was unexpectedly successful');
+AssertEquals(Expected,Actual,'Determinate value was incorrect');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_MatrixDeterminate_Test">
+      <LineId Id="47" Count="0" />
+      <LineId Id="29" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixDeterminate_Test.WhenMatchingExpectResult">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixDeterminate_Test.WhenNotSquareExpectError">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

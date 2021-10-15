@@ -1,0 +1,182 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_MatrixMatrixProduct_Test" Id="{33465ab5-ba95-0ec3-140f-15805398157f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MatrixMatrixProduct_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenColumnsExpectError();
+WhenOppositeExpectScalar();
+WhenOppositeExpectSquare();
+WhenWithIdentityExpectSame();]]></ST>
+    </Implementation>
+    <Method Name="WhenColumnsExpectError" Id="{f5bd05a7-fa23-0b4f-3869-39c03f8d41c2}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenColumnsExpectError
+VAR_INPUT
+END_VAR
+VAR
+	V1 : Matrix;
+	V2 : Matrix;
+	M1 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenColumnsExpectError');
+
+// @TEST-RUN
+V1.InitVector(3,1,1);
+V2.InitVector(3,1,1);
+Result := M1.AsMatrixProduct(V1,V2);
+
+// @TEST-ASSERT
+AssertFalse(Result,'Main function call was unexpectedly successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenOppositeExpectScalar" Id="{28b0bfad-3c73-0de1-2496-6b3a14f15ca4}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenOppositeExpectScalar
+VAR_INPUT
+END_VAR
+VAR
+	V1 : Matrix;
+	V2 : Matrix;
+	M1 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenOppositeExpectScalar');
+
+// @TEST-RUN
+V1.InitVector(3,1,1);
+V2.InitVector(3,1,1);
+V1.Transpose();
+Result := M1.AsMatrixProduct(V1,V2);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertTrue(M1.Length = 1,'Result was not a scalar');
+AssertTrue(M1.GetI(0) = V1.GetVectorDotProduct(V2),'Result was not the same as a dot product');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenOppositeExpectSquare" Id="{d4e06f2c-c239-01e0-3c90-c93f903940a4}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenOppositeExpectSquare
+VAR_INPUT
+END_VAR
+VAR
+	V1 : Matrix;
+	V2 : Matrix;
+	M1 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenOppositeExpectSquare');
+
+// @TEST-RUN
+V1.InitVector(3,1,1);
+V2.InitVector(3,1,1);
+V2.Transpose();
+Result := M1.AsMatrixProduct(V1,V2);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertTrue(M1.Length = 9 AND M1.IsSquare,'Result was not a 3x3 square');
+AssertTrue(M1.Sum = 36,'Result values are incorrect');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenWithIdentityExpectSame" Id="{45d2b782-0820-033b-26df-b0fba5f01771}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenWithIdentityExpectSame
+VAR_INPUT
+END_VAR
+VAR
+	V1 : Matrix;
+	MI : Matrix;
+	M1 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenWithIdentityExpectSame');
+
+// @TEST-RUN
+V1.InitVector(3,1,1);
+MI.InitIdentity(3);
+Result := M1.AsMatrixProduct(MI,V1);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertTrue(V1.IsEqual(M1),'Result was not the same');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_MatrixMatrixProduct_Test">
+      <LineId Id="9" Count="3" />
+    </LineIds>
+    <LineIds Name="FB_MatrixMatrixProduct_Test.WhenColumnsExpectError">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixMatrixProduct_Test.WhenOppositeExpectScalar">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixMatrixProduct_Test.WhenOppositeExpectSquare">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="55" Count="1" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixMatrixProduct_Test.WhenWithIdentityExpectSame">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Vector_Magnitude" Id="{196a9e75-9374-02ba-0429-dfa5e7be03f4}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Vector_Magnitude : LREAL
+VAR_INPUT
+	IN : REFERENCE TO Matrix;
+END_VAR
+VAR
+	Sum : LREAL;
+	I : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT(IN.IsVector) OR IN.IsEmpty THEN
+	Vector_Magnitude := 0;
+END_IF
+
+Sum := 0;
+
+FOR I := 0 TO IN.Length-1 DO
+	Sum := Sum + IN.GetI(I) * IN.GetI(I);
+END_FOR
+
+Vector_Magnitude := SQRT(Sum);]]></ST>
+    </Implementation>
+    <LineIds Name="Vector_Magnitude">
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

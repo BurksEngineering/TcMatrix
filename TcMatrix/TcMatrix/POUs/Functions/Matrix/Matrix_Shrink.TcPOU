@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_Shrink" Id="{d21782ed-5125-47a2-8d89-29ac4702d315}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_Shrink : Bool
+VAR_INPUT
+	M_From : Matrix;
+	M_To : Matrix;
+	Row : UINT;
+	Col : UINT;
+END_VAR
+VAR
+	Ri : UINT;
+	Ci : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF M_From.Length <= 1 THEN
+	Matrix_Shrink := FALSE;
+	RETURN;
+END_IF
+
+IF M_To.Rows <> MAX(1,M_From.Rows-1) OR M_To.Cols <> MAX(1,M_From.Cols-1) THEN
+	Matrix_Shrink := FALSE;
+	RETURN;
+END_IF
+
+IF Row >= M_From.Rows OR Col >= M_From.Cols THEN
+	Matrix_Shrink := FALSE;
+	RETURN;
+END_IF
+
+Matrix_Shrink := TRUE;
+
+FOR Ri := 0 TO M_To.Rows-1 DO
+	FOR Ci := 0 TO M_To.Cols-1 DO
+		M_To.SetRC(Ri,Ci,M_From.GetRC(Ri + BOOL_TO_UINT(Ri >= Row AND M_From.Rows <> M_To.Rows),Ci + BOOL_TO_UINT(Ci >= Col AND M_From.Cols <> M_To.Cols)));
+	END_FOR
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_Shrink">
+      <LineId Id="12" Count="3" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="41" Count="1" />
+      <LineId Id="40" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

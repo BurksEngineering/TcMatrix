@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Vector_Normalize" Id="{b014a21a-b81c-08f1-053c-7e75309e191c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Vector_Normalize : BOOL
+VAR_INPUT
+	In : REFERENCE TO Matrix;
+	Res : REFERENCE TO Matrix;
+END_VAR
+VAR
+	Mag : LREAL;
+	I : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT(IN.IsVector) OR NOT(Res.IsVector) OR IN.IsEmpty OR IN.Length <> Res.Length THEN
+	Vector_Normalize := FALSE;
+	RETURN;
+END_IF
+
+Mag := Vector_Magnitude(In);
+
+//dont use copy because vectors might be in different orientations
+FOR I:= 0 TO Res.Length-1 DO
+	Res.SetI(I,In.GetI(I)*Mag);
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Vector_Normalize">
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

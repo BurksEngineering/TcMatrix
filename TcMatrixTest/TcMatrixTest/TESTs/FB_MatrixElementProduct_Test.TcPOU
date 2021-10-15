@@ -1,0 +1,98 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_MatrixElementProduct_Test" Id="{f04ce50a-919b-0b22-19c3-ecba2f551f8d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MatrixElementProduct_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenDifferentExpectError();
+WhenmatchingExpectResult();]]></ST>
+    </Implementation>
+    <Method Name="WhenDifferentExpectError" Id="{ab9d56c7-ba5b-00df-0667-a79c52cd33a2}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenDifferentExpectError
+VAR_INPUT
+END_VAR
+VAR
+	M1 : Matrix;
+	M2 : Matrix;
+	M3 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenDifferentExpectError');
+
+// @TEST-RUN
+M1.InitMagicSquare(3);
+M2.InitMagicSquare(5);
+Result := M3.AsElementProduct(M1,M2);
+
+// @TEST-ASSERT
+AssertFalse(Result,'Main function call was unexpectedly successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenMatchingExpectResult" Id="{64427d6c-abd8-0054-1ab6-597e00ab5274}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenMatchingExpectResult
+VAR_INPUT
+END_VAR
+VAR
+	M1 : Matrix;
+	M2 : Matrix;
+	M3 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenShrunkExpectDataRetained');
+
+// @TEST-RUN
+M1.InitMagicSquare(3);
+M2.InitMagicSquare(3);
+Result := M3.AsElementProduct(M1,M2);
+M1.Power(2);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertTrue(M3.IsEqual(M1),'Data was successfully multiplied');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_MatrixElementProduct_Test">
+      <LineId Id="39" Count="0" />
+      <LineId Id="29" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixElementProduct_Test.WhenDifferentExpectError">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixElementProduct_Test.WhenMatchingExpectResult">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,1615 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix" Id="{37681762-a9e8-4dd1-b97b-ca342c51c659}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'reflection'}
+FUNCTION_BLOCK Matrix
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Rows_ : UINT;
+	Cols_ : UINT;
+	Data : POINTER TO LREAL;//1D array of reals, such that I = F(R,C) = R*Cols + C
+	
+	{attribute 'instance-path'}
+	{attribute 'noinit'}
+	sPath_ : T_MaxString;
+	
+	MemManager : FB_DynMem_Manager2;
+	
+	Ri : UINT;
+	Ci : UINT;
+	I : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Aggregators" Id="{c541bfa3-492b-0df6-1926-f02606816bce}" />
+    <Folder Name="Comparators" Id="{b7fe62c6-6f13-454d-9f2a-eae01884c717}" />
+    <Folder Name="Getters" Id="{764d70ab-da43-41bc-a172-c1370fa4e2a7}" />
+    <Folder Name="Helpers" Id="{c18f9319-b519-4a83-98b2-43ca8f72caca}" />
+    <Folder Name="Initializers" Id="{2e3f05ef-737a-046d-2a48-d72377f6b2d8}" />
+    <Folder Name="Modifiers" Id="{0b7b615a-d2d6-4e62-b148-1a83ef247c62}" />
+    <Folder Name="Private" Id="{52ab6c01-12bf-4ee4-b7d8-7459de792de0}" />
+    <Folder Name="Properties" Id="{63bcd68f-51b7-4cdd-bc76-abfb7c04d216}" />
+    <Folder Name="Resultants" Id="{e9cc64b5-17e3-05cb-0547-28b67d88aa8b}" />
+    <Method Name="AsColVector" Id="{8333982d-97ec-03df-25f4-b8160437c221}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsColVector : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	Col : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AsColVector := AsSubMatrix(M,0,Rows,Col,1);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsElementProduct" Id="{1d639892-7279-0584-2a80-52cd430c8d25}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsElementProduct : BOOL
+VAR_INPUT
+	A : REFERENCE TO Matrix;
+	B : REFERENCE TO Matrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(A.IsEqualSize(B)) THEN
+	AsElementProduct := FALSE;
+	LogWarning('%s: Matricies supplied to AsElementProduct were not the same size');
+	RETURN;
+END_IF
+
+IF NOT(Init(A.Rows,A.Cols)) THEN
+	AsElementProduct := FALSE;
+	RETURN;
+END_IF
+
+AsElementProduct := Matrix_ElementProduct(A,B,THIS^);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsElementSum" Id="{1ed69aa6-4c59-063d-134e-146775a583ed}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsElementSum : BOOL
+VAR_INPUT
+	A : REFERENCE TO Matrix;
+	B : REFERENCE TO Matrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(A.IsEqualSize(B)) THEN
+	AsElementSum := FALSE;
+	LogWarning('%s: Matricies supplied to AsElementSum were not the same size');
+	RETURN;
+END_IF
+
+IF NOT(Init(A.Rows,A.Cols)) THEN
+	AsElementSum := FALSE;
+	RETURN;
+END_IF
+
+AsElementSum := Matrix_ElementSum(A,B,THIS^);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsGrown" Id="{3cd3cf6d-f6c0-085c-3642-2ba18a0c7d35}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsGrown : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	Row : UINT;
+	Col : UINT;
+	DiagVal : LREAL;
+	RowVal : LREAL;
+	ColVal : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(init(M.Rows+1,M.Cols+1)) THEN
+	AsGrown := FALSE;
+	LogWarning('%s: Matrix supplied to AsGrown was not the right size');
+	RETURN;
+END_IF
+
+AsGrown := Matrix_Grow(M,THIS^,Row,Col,DiagVal,RowVal,ColVal);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsMatrixProduct" Id="{53280527-f75b-06ac-01d7-498318ada10c}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsMatrixProduct : BOOL
+VAR_INPUT
+	A : REFERENCE TO Matrix;
+	B : REFERENCE TO Matrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF A.Cols <> B.Rows THEN
+	AsMatrixProduct := FALSE;
+	LogWarning('%s: Matricies supplied to AsMatrixProduct are not compatible for multiplication');
+	RETURN;
+END_IF
+
+IF NOT(Init(A.Rows,B.Cols)) THEN
+	AsMatrixProduct := FALSE;
+	RETURN;
+END_IF
+
+AsMatrixProduct := Matrix_Product(A,B,THIS^);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsRowVector" Id="{46190744-41a6-0d8f-0bf6-d07b0ad4ecb0}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsRowVector : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	Row : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AsRowVector := AsSubMatrix(M,Row,1,0,Cols);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsScaled" Id="{b4ebfd3a-7f84-0c68-3eb7-f5f1a49c6aeb}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsScaled : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	Scalar : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(InitCopy(M)) THEN
+	AsScaled := FALSE;
+	RETURN;
+END_IF
+
+AsScaled := TRUE;
+Scale(Scalar);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsShrunk" Id="{37c92294-b9bc-00a9-17a2-cb7d0631759a}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsShrunk : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	Row : UINT;
+	Col : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Init(M.Rows-1,M.Cols-1)) THEN
+	AsShrunk := FALSE;
+	LogWarning('%s: Matrix supplied to AsGrown was not the right size');
+	RETURN;
+END_IF
+
+AsShrunk := Matrix_Shrink(M,THIS^,Row,Col);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsSubMatrix" Id="{f93c8810-7b34-0e2d-0d0e-56744d128372}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsSubMatrix : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	RowStart : UINT;
+	RowCount : UINT;
+	ColStart : UINT;
+	ColCount : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF RowStart + RowCount > M.Rows THEN
+	AsSubMatrix := FALSE;
+	LogWarning('%s: Attempt to access out of bounds Row during SubMatrix access');
+	RETURN;
+END_IF
+IF ColStart + ColCount > M.Cols THEN
+	AsSubMatrix := FALSE;
+	LogWarning('%s: Attempt to access out of bounds Row during SubMatrix access');
+	RETURN;
+END_IF
+
+IF NOT(Init(RowCount,ColCount)) THEN
+	AsSubMatrix := FALSE;
+	RETURN;
+END_IF
+
+AsSubMatrix := Matrix_SubMatrix(M,THIS^,RowStart,RowCount,ColStart,ColCount);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsTransposed" Id="{a2212529-f813-054e-209a-a7ba6ac5c31a}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsTransposed : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Init(M.Cols,M.Rows)) THEN
+	AsTransposed := FALSE;
+	RETURN;
+END_IF
+
+AsTransposed := Matrix_Transpose(M,THIS^);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsVector3CrossProduct" Id="{cc12c619-77e5-0d6d-11ee-284c5bb52333}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsVector3CrossProduct : BOOL
+VAR_INPUT
+	A : REFERENCE TO Matrix;
+	B : REFERENCE TO Matrix;
+END_VAR
+VAR
+	Vectors : ARRAY[0..1] OF POINTER TO Matrix;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Vectors[0] := ADR(A);
+Vectors[1] := ADR(B);
+AsVector3CrossProduct := AsVectorCrossProduct(Vectors);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="AsVectorCrossProduct" Id="{3ec0f3e8-0a31-090c-3d7c-88ea53422b02}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsVectorCrossProduct : BOOL
+VAR_INPUT
+END_VAR
+VAR_IN_OUT
+	Vectors : ARRAY[*] OF POINTER TO Matrix;
+END_VAR
+VAR
+	Dim : UINT;
+	Vi : DINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Dim := DINT_TO_UINT(UPPER_BOUND(Vectors,1) - LOWER_BOUND(Vectors,1))+2;
+
+FOR I := 0 TO Dim-2 DO
+	Vi := LOWER_BOUND(Vectors,1)+I;
+	//check pointer before other checks because PLCs don't do short-circuit logic
+	IF Vectors[Vi] = 0 THEN
+		AsVectorCrossProduct := FALSE;
+		LogWarning('%s: At least one of the elements of the Vector array is a null pointer');
+		RETURN;
+	END_IF
+	IF Vectors[Vi]^.IsEmpty OR NOT(Vectors[Vi]^.IsVector) OR Vectors[Vi]^.Length <> Dim THEN
+		AsVectorCrossProduct := FALSE;
+		LogWarning('%s: At least one of the elements of the Vector array is empty, or not a vector of the right size');
+		RETURN;
+	END_IF
+END_FOR
+
+//only allocate memory if we think it will work
+IF NOT(Init(Dim,1)) THEN
+	AsVectorCrossProduct := FALSE;
+	RETURN;
+END_IF
+
+AsVectorCrossProduct := Vector_CrossProduct(THIS^,Vectors);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Average" Id="{bbb5565e-c8b8-06a4-072f-2f69a4299899}" FolderPath="Aggregators\">
+      <Declaration><![CDATA[PROPERTY PUBLIC Average : LREAL]]></Declaration>
+      <Get Name="Get" Id="{3df0d655-ce9c-0473-3f0c-ac0787664407}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF Length > 0 THEN
+	Average := Sum / Length;
+ELSE
+	Average := 0;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="BufferSize" Id="{f271d29f-8d22-4870-9606-910840251c4c}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY PUBLIC BufferSize : UDINT]]></Declaration>
+      <Get Name="Get" Id="{cde88b07-59bd-48ab-b6be-612e25f0f9b5}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[BufferSize := SIZEOF(LREAL)*Length;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Clear" Id="{788b000b-9652-4513-87ea-afa0efbc93b4}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC Clear : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Clear := FillTrapezoidal(0,0,0);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Cols" Id="{35464740-fecf-4181-a610-82199573deeb}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY PUBLIC Cols : UINT]]></Declaration>
+      <Get Name="Get" Id="{ad13d2b4-ccf3-48d6-804b-1aaadbf5c134}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Cols := Cols_;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="CopyDataTo" Id="{1a312d97-f8c9-408c-b32b-7f5ec3a08d93}" FolderPath="Helpers\">
+      <Declaration><![CDATA[METHOD PUBLIC CopyDataTo : ULINT
+VAR_INPUT
+	DestBuffer : POINTER TO LREAL;
+	DestBufferSize : UDINT;//Buffer size, in bytes
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CopyDataTo := MEMCPY(DestBuffer,Data,MIN(DestBufferSize,BufferSize));]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_exit" Id="{5b5dff2f-9433-4a66-972b-13ea86797369}">
+      <Declaration><![CDATA[METHOD FB_exit : BOOL
+VAR_INPUT
+	bInCopyCode : BOOL; // if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Data <> 0 AND NOT(bInCopyCode) THEN
+	MemManager.Free2(Data);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FillFrom" Id="{022b237b-0584-4ce7-a547-77e65ab3d048}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC FillFrom : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+END_VAR
+VAR
+	BytesCopied : ULINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF M.IsEmpty THEN
+	FillFrom := FALSE;
+	LogWarning('%s: Attempt to fill am empty matrix');
+	RETURN;
+END_IF
+
+IF NOT(IsEmpty) AND IsEqualSize(M) THEN
+	FillFrom := BufferSize =  M.CopyDataTo(Data,BufferSize);
+ELSE
+	FillFrom := TRUE;
+	FOR Ri := 0 TO MIN(Rows,M.Rows)-1 DO
+		FOR Ci := 0 TO MIN(Cols,M.Cols)-1 DO
+			SetRC(Ri,Ci,M.GetRC(Ri,Ci));
+		END_FOR
+	END_FOR
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FillTrapezoidal" Id="{f5fa3a45-37d2-08ef-0015-41ed1be8ef4b}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC FillTrapezoidal : BOOL
+VAR_INPUT
+	Diagonal : LREAL;
+	UpperRight : LREAL;
+	LowerLeft : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IsEmpty THEN
+	FillTrapezoidal := FALSE;
+	LogWarning('%s: Attempt to trapezoid fill an empty matrix');
+	RETURN;
+END_IF
+
+FillTrapezoidal := TRUE;
+
+FOR Ri := 0 TO Rows-1 DO
+	FOR Ci := 0 TO Cols-1 DO
+		IF Ri = Ci THEN
+			SetRC(Ri,Ci,Diagonal);
+		ELSIF Ri < Ci THEN
+			SetRC(Ri,Ci,UpperRight);
+		ELSE
+			SetRC(Ri,Ci,LowerLeft);
+		END_IF
+	END_FOR
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDeterminate" Id="{4690878e-585c-49dd-a170-b0f3c7ff17f5}" FolderPath="Getters\">
+      <Declaration><![CDATA[METHOD PUBLIC GetDeterminate : LREAL
+VAR_INPUT
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Matrix_Determinate(M := THIS^,Res => GetDeterminate)) THEN
+	LogWarning('%s: Unable to calculate determinate');
+	LogData('%s:');
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetI" Id="{15777527-77a2-42cc-8d9c-f624271cdfcd}" FolderPath="Getters\">
+      <Declaration><![CDATA[METHOD PUBLIC GetI : LREAL
+VAR_INPUT
+	I : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Data = 0 THEN
+	GetI := 0.0;
+	LogWarning('%s: Attempted I access of uninitialized Matrix');
+ELSIF I >= Length THEN
+	GetI := 0.0;
+	LogWarning('%s: Attempted I access of out-of-bounds Matrix data');
+ELSE
+	GetI := Data[I];
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetRC" Id="{fa44f9d9-95b5-4fc6-badf-738b5a3911f1}" FolderPath="Getters\">
+      <Declaration><![CDATA[METHOD PUBLIC GetRC : LREAL
+VAR_INPUT
+	Row : UINT;
+	Col : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Data = 0 THEN
+	GetRC := 0;
+	LogWarning('%s: Attempted RC access of uninitialized Matrix');
+ELSIF
+	Row >= Rows THEN
+	GetRC := 0;
+	LogWarning('%s: Attempted RC access of out-of-bound matrix row');
+ELSIF
+	Col >= Cols THEN
+	GetRC := 0;
+	LogWarning('%s: Attempted RC access of out-of-bounds Matrix column');
+ELSE
+	GetRC := GetI(RC2I(Row,Col));
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetSize" Id="{61a33f57-364a-4e27-9ba3-9caf9ad98b8f}" FolderPath="Getters\">
+      <Declaration><![CDATA[METHOD PUBLIC GetSize : UINT
+VAR_INPUT
+	Dim : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Dim = 0 THEN
+	GetSize := Rows;
+ELSIF Dim = 1 THEN
+	GetSize := Cols;
+ELSE
+	LogWarning('%s: Attempted to GetSize for a dimension other than 0 or 1');
+	GetSize := 0;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetStringLengthEstimate" Id="{105d6985-ce7b-0363-01e4-eb441c24368f}" FolderPath="Helpers\">
+      <Declaration><![CDATA[METHOD PUBLIC GetStringLengthEstimate : UDINT;
+VAR_INPUT
+END_VAR
+VAR
+	CharsPerElement : UDINT := 20;//15 point precision, decimal, sign, leading zero, comma, space
+	CharsPerRow : UDINT := 6;//space, semicolon, carriage return, line return, space, space
+	CharsPerMatrix : UDINT := 4;//open bracket, space ; space, closing bracket
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetStringLengthEstimate := 1+CharsPerMatrix + CharsPerRow * Rows + CharsPerElement * Length;//extra one for null character]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetVectorDotProduct" Id="{1658fad0-9792-0d13-3da1-4022c6478285}" FolderPath="Getters\">
+      <Declaration><![CDATA[METHOD PUBLIC GetVectorDotProduct : LREAL
+VAR_INPUT
+	V : Matrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Vector_DotProduct(V,THIS^,Res => GetVectorDotProduct)) THEN
+	LogWarning('%s: Unable to calculate vector dot product');
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Grow" Id="{f49d7c60-6f9e-4f54-b01b-3668e62342e3}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC Grow : BOOL
+VAR_INPUT
+	Row : UINT;
+	Col : UINT;
+	DiagVal : LREAL;
+	RowVal : LREAL;
+	ColVal : LREAL;
+END_VAR
+VAR
+	Temp : Matrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Temp.InitCopy(THIS^);
+Grow := AsGrown(Temp,Row,Col,DiagVal,RowVal,ColVal);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init" Id="{ef75234b-f0a2-0ba6-3c2d-bd5bff0db60c}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC Init : BOOL
+VAR_INPUT
+	Rows : UINT;
+	Cols : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Init := Resize(Rows,Cols,FALSE,FALSE);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitConstant" Id="{6665df21-10cf-041e-2560-fd1085528ad3}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC InitConstant : BOOL;
+VAR_INPUT
+	Rows : UINT;
+	Cols : UINT;
+	Val : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[InitConstant := InitTrapezoidal(Rows,Cols,Val,Val,Val);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitCopy" Id="{bcdd2e69-8663-4d69-9214-f5a0b970f2d2}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC InitCopy : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Init(M.Rows,M.Cols)) THEN
+	InitCopy := FALSE;
+	RETURN;
+END_IF
+
+InitCopy := FillFrom(M);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitIdentity" Id="{3034c14e-05ed-051b-118d-0a77fc4909a0}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC InitIdentity : BOOL;
+VAR_INPUT
+	Size : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[InitIdentity := InitTrapezoidal(Size,Size,1,0,0);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitMagicSquare" Id="{b6028141-d29b-0bb0-2bb8-954bb3757e26}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC InitMagicSquare : BOOL
+VAR_INPUT
+	Size : UINT;//must be an odd number!
+END_VAR
+VAR 
+	Result : BOOL;	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//source: https://en.wikipedia.org/wiki/Magic_square#A_method_for_constructing_a_magic_square_of_odd_order
+
+IF Size MOD 2 = 0 THEN
+	InitMagicSquare := FALSE;
+	RETURN;
+END_IF
+IF NOT(InitZeros(Size,Size)) THEN
+	InitMagicSquare := FALSE;
+	RETURN;
+END_IF
+
+InitMagicSquare := TRUE;
+
+Ri := (Rows - 1)/2;
+Ci := Cols-1;
+
+FOR I := 1 TO Length DO
+	SetRC(Ri,Ci,I);
+	IF GetRC((Ri + 1) MOD Rows,(Ci + 1) MOD Cols) = 0 THEN
+		Ri := (Ri + 1) MOD Rows;
+		Ci := (Ci + 1) MOD Cols;
+	ELSE
+		IF Ci = 0 THEN
+			Ci := Cols-1;
+		ELSE
+			Ci := Ci - 1;
+		END_IF
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitTrapezoidal" Id="{4953ae1d-3460-490d-987e-075e15022f4f}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC InitTrapezoidal : BOOL
+VAR_INPUT
+	Rows : UINT;
+	Cols : UINT;
+	Diagonal : LREAL;
+	UpperRight : LREAL;
+	LowerLeft : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Init(Rows,Cols)) THEN
+	InitTrapezoidal := FALSE;
+	RETURN;
+END_IF
+
+InitTrapezoidal := TRUE;
+
+FillTrapezoidal(Diagonal,UpperRight,LowerLeft);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitVector" Id="{7d76ba78-bfb1-0c87-0b22-1cb029ef8698}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC InitVector : BOOL
+VAR_INPUT
+	Length : UINT;
+	Value : LREAL;
+	Increment : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Init(Length,1)) THEN
+	InitVector := FALSE;
+	RETURN;
+END_IF
+
+InitVector := TRUE;
+
+IF Increment = 0 THEN
+	FillTrapezoidal(Value,Value,Value);
+ELSE
+	IF Length > 0 THEN
+		FOR I:= 0 TO Length-1 DO
+			SetI(I,Value + I * Increment);
+		END_FOR
+	END_IF;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitVector3" Id="{04e78a35-11fd-069c-24ba-dbf37da880d3}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC InitVector3 : BOOL
+VAR_INPUT
+	X : LREAL;
+	Y : LREAL;
+	Z : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Init(3,1)) THEN
+	InitVector3 := FALSE;
+	RETURN;
+END_IF
+
+InitVector3 := TRUE;
+
+SetI(0,X);
+SetI(1,Y);
+SetI(2,Z);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InitZeros" Id="{536c56ab-c302-073c-2f7f-5791158506f5}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC InitZeros : BOOL
+VAR_INPUT
+	Rows : UINT;
+	Cols : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[InitZeros := Resize(Rows,Cols,FALSE,TRUE);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="IsEmpty" Id="{c235a1c3-19da-47f7-9309-34932eb65324}" FolderPath="Helpers\">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsEmpty : Bool]]></Declaration>
+      <Get Name="Get" Id="{ae4f7dd7-6afa-42b8-914f-506a87feabaa}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsEmpty := (Rows * Cols) = 0;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="IsEqual" Id="{864b7d2e-c191-4c91-985a-939f8832c318}" FolderPath="Comparators\">
+      <Declaration><![CDATA[METHOD PUBLIC IsEqual : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IsEqual := IsEqualSize(M);//non equal case caught at beginning of for loop
+
+FOR Ri := 0 TO Rows-1 DO
+	FOR Ci := 0 TO Cols-1 DO
+		IF NOT(IsEqual) THEN
+			RETURN;
+		END_IF
+		IsEqual := (GetRC(Ri,Ci) = M.GetRC(Ri,Ci));
+	END_FOR
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IsEqualSize" Id="{27be0354-ccaa-4d4d-aa11-92c8ff0d05d2}" FolderPath="Comparators\">
+      <Declaration><![CDATA[METHOD PUBLIC IsEqualSize : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IsEqualSize := M.Rows = Rows AND M.Cols = Cols;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="IsSquare" Id="{e672b3bd-9ada-4884-9298-de073113df9b}" FolderPath="Helpers\">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsSquare : BOOL]]></Declaration>
+      <Get Name="Get" Id="{4255b8b2-db7d-4f6c-90fc-32930d8d75f2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsSquare := NOT(IsEmpty) AND Rows = Cols;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="IsVector" Id="{fa53e68e-f9cd-4264-b4bc-c5aa3563b636}" FolderPath="Helpers\">
+      <Declaration><![CDATA[PROPERTY PUBLIC IsVector : BOOL]]></Declaration>
+      <Get Name="Get" Id="{37d299d5-2a39-4c73-888a-5f06acc43d3e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IsVector := NOT(IsEmpty) AND (Rows = 1) OR (Cols = 1);]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Length" Id="{714bd4b8-1706-4a7f-87c9-a50761ad8c22}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY PUBLIC Length : UINT]]></Declaration>
+      <Get Name="Get" Id="{5cad3eac-bcc0-451a-a24c-a8068084f4b1}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Length := Rows * Cols;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="LogData" Id="{90177dcb-13b5-0277-11bc-c310b8752ac9}" FolderPath="Helpers\">
+      <Declaration><![CDATA[METHOD PUBLIC LogData : BOOL
+VAR_INPUT
+	Message : T_MaxString;
+END_VAR
+VAR
+	BufferLen : UDINT;
+	Buffer : POINTER TO STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[BufferLen := GetStringLengthEstimate();
+Buffer := MemManager.Alloc(BufferLen+INT_TO_UDINT(Len(Message))+2,FALSE);
+IF Buffer = 0 THEN
+	LogData := FALSE;
+	RETURN;
+END_IF
+Buffer^ := CONCAT(Message,'$R$L');//writes null character to first element?
+IF NOT(WriteDataToString(Buffer+INT_TO_DWORD(LEN(Message))+2,BufferLen)) THEN
+	LogData := FALSE;
+	MemManager.Free2(Buffer);
+	RETURN;
+END_IF
+ADSLOGSTR(ADSLOG_MSGTYPE_LOG OR ADSLOG_MSGTYPE_STRING, Buffer^,sPath);
+MemManager.Free2(Buffer);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogError" Id="{0d93f53f-aa75-038c-24c9-4008df3d6da2}" FolderPath="Helpers\">
+      <Declaration><![CDATA[METHOD PROTECTED LogError
+VAR_INPUT
+	Message : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ADSLOGSTR(ADSLOG_MSGTYPE_WARN,Message,sPath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogEvent" Id="{8171c1d6-5906-0bfd-0ba5-b722be9c1e72}" FolderPath="Helpers\">
+      <Declaration><![CDATA[METHOD PROTECTED LogEvent
+VAR_INPUT
+	Message : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ADSLOGSTR(ADSLOG_MSGTYPE_LOG,Message,sPath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogMessage" Id="{97d8748b-f9e0-0605-025f-e9b0af536375}" FolderPath="Helpers\">
+      <Declaration><![CDATA[METHOD PROTECTED LogMessage
+VAR_INPUT
+	Message : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ADSLOGSTR(ADSLOG_MSGTYPE_STRING,Message,sPath);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogWarning" Id="{9209617a-719a-05c3-2a97-800df97be0bd}" FolderPath="Helpers\">
+      <Declaration><![CDATA[METHOD PROTECTED LogWarning
+VAR_INPUT
+	Message : T_MaxString;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ADSLOGSTR(ADSLOG_MSGTYPE_WARN,Message,sPath);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="MaxVal" Id="{2e28b031-b417-0f4a-0152-01ef3cd1db57}" FolderPath="Aggregators\">
+      <Declaration><![CDATA[PROPERTY PUBLIC MaxVal : LREAL]]></Declaration>
+      <Get Name="Get" Id="{f7bebe36-e3d7-072e-0310-06c7d57e73dc}">
+        <Declaration><![CDATA[VAR
+	MaxVal_ : LREAL;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF IsEmpty THEN
+	MaxVal := 0;
+ELSE
+	MaxVal_ := GetI(0);
+	FOR I := 1 TO Length-1 DO
+		IF getI(I) < MaxVal_ THEN
+			MaxVal_ := GetI(I);
+		END_IF
+	END_FOR
+	MaxVal := MaxVal_;
+END_IF
+]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="MinVal" Id="{02b2c522-52fd-07a2-0002-77487d44cc65}" FolderPath="Aggregators\">
+      <Declaration><![CDATA[PROPERTY PUBLIC MinVal : LREAL]]></Declaration>
+      <Get Name="Get" Id="{cbaba9d2-d69b-0140-2c06-09a756014561}">
+        <Declaration><![CDATA[VAR
+	MinVal_ : LREAL;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF IsEmpty THEN
+	MinVal := 0;
+ELSE
+	MinVal_ := GetI(0);
+	FOR I := 1 TO Length-1 DO
+		IF getI(I) < MinVal_ THEN
+			MinVal_ := GetI(I);
+		END_IF
+	END_FOR
+	MinVal := MinVal_;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Power" Id="{554d7c44-e24f-0d64-3e72-fbca02a11c79}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC Power
+VAR_INPUT
+	Exponent : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR I := 0 TO Length-1 DO
+	SetI(I,EXPT(GetI(I),Exponent));
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RC2I" Id="{a76e2565-d4ef-4b3c-baf9-76f94e292fe8}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE RC2I : UINT
+VAR_INPUT
+	Row : UINT;
+	Col : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[RC2I := Row*Cols + Col;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Resize" Id="{86e43810-4b4c-4ed7-930f-0ccd5cc3ebc0}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC Resize : BOOL
+VAR_INPUT
+	NewRows : UINT;
+	NewCols : UINT;
+	RetainVals : BOOL;//retains 
+	ClearVals : BOOL;
+END_VAR
+VAR
+	Temp : MATRIX;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//case where desired size is an empty matrix
+IF NewRows * NewCols = 0 THEN
+	IF Data <> 0 THEN
+		MemManager.Free2(Data);
+		Data := 0;
+	END_IF
+	Resize := TRUE;
+	Rows_ := NewRows;
+	Cols_ := NewCols;
+	
+//case where desired size is a non=empty matrix
+ELSE
+	//backup data if there is any and we want to retain it
+	IF NOT(IsEmpty) AND RetainVals THEN
+		IF NOT(Temp.InitCopy(THIS^)) THEN
+			Resize := FALSE;
+			RETURN;//if we can't back up the data dont change anything
+		END_IF
+	END_IF
+	
+	//change buffer size
+	MemManager.Free2(Data);
+	Data := MemManager.Alloc(nSize := UINt_To_UDINT(NewRows) * UINt_To_UDINT(NewCols) * SIZEOF(LREAL), bReset := ClearVals);
+	
+	//error condition if memory cannot be allocated
+	IF Data = 0 THEN
+		Resize := FALSE;
+		Rows_ := 0;
+		Cols_ := 0;
+		ADSLOGSTR(ADSLOG_MSGTYPE_ERROR,'Unable to allocate memory when resizing matrix','');
+	ELSE
+		Resize := TRUE;
+		Rows_ := NewRows;
+		Cols_ := NewCols;
+	END_IF
+	
+	//copy data if the previous size was not empty, then free the old data
+	IF NOT(Temp.IsEmpty) AND NOT(IsEmpty) AND RetainVals THEN
+		IF NOT(FillFrom(Temp)) THEN
+			Resize := FALSE;
+		END_IF
+	END_IF
+
+	
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Rows" Id="{a484e950-f5df-4b14-b546-127f84129d02}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY PUBLIC Rows : UINT]]></Declaration>
+      <Get Name="Get" Id="{f1358e5b-6250-4c88-a86a-161a43d3a90c}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Rows := Rows_;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Scale" Id="{b7f3a516-3a74-41d5-8946-fd12d55e7c87}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC Scale
+VAR_INPUT
+	Scalar : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR I := 0 TO Length-1 DO
+	SetI(I,Scalar * GetI(I));
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetI" Id="{1887d363-8acf-46d8-a10f-82241082042b}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC SetI : BOOL
+VAR_INPUT
+	I : UINT;
+	Val : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Data = 0 THEN
+	SetI := FALSE;
+	LogWarning('%s: Attempt to set data using I access when data is not initialized');
+ELSIF I >= Length THEN
+	SetI := FALSE;
+	LogWarning('%s: Attempt to set data using I access when I is out of bounds');
+ELSE
+	SetI := TRUE;
+	Data[I] := Val;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetRC" Id="{95b644b0-5978-469a-8c47-6f924bbad114}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC SetRC : BOOL;
+VAR_INPUT
+	Row : UINT;
+	Col : UINT;
+	Val : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Data = 0 THEN
+	SetRC := FALSE;
+	LogWarning('%s: Attempt to set data using RC access when data is not initialized');
+ELSIF Row >= Rows THEN
+	SetRC := FALSE;
+	LogWarning('%s: Attempt to set data using RC access when Row is out of bounds');
+ELSIF Col >= Cols THEN
+	SetRC := FALSE;
+	LogWarning('%s: Attempt to set data using RC access when Col is out of bounds');
+ELSE
+	SetRC := SetI(RC2I(Row,Col),Val);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Shrink" Id="{b394fe74-6e86-4084-bac8-4e80abad3f51}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC Shrink : BOOL
+VAR_INPUT
+	Row : UINT;
+	Col : UINT;
+END_VAR
+VAR
+	Temp : Matrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IsEmpty THEN
+	Shrink := FALSE;
+	RETURN;
+END_IF
+
+Temp.InitCopy(THIS^);
+Shrink := AsShrunk(Temp,Row,Col);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="sPath" Id="{71b212c0-e2af-08e9-0666-16cfb7faa00b}" FolderPath="Properties\">
+      <Declaration><![CDATA[PROPERTY PUBLIC sPath : T_MaxString]]></Declaration>
+      <Get Name="Get" Id="{5efaf036-abb9-0591-2a9d-5c04faea0e41}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[sPath := sPath_;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Property Name="Sum" Id="{26264213-af04-0fe3-15b5-fce4debe5ded}" FolderPath="Aggregators\">
+      <Declaration><![CDATA[PROPERTY PUBLIC Sum : LREAL]]></Declaration>
+      <Get Name="Get" Id="{98d20894-bd36-02b2-129d-e600f0a5d072}">
+        <Declaration><![CDATA[VAR
+	Sum_ : LREAL;
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Sum_ := 0;
+IF NOT(IsEmpty) THEN
+	FOR I := 0 TO Length-1 DO
+		Sum_ := Sum_ + GetI(I);
+	END_FOR
+END_IF
+Sum := Sum_;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Transpose" Id="{f43fd8ce-1d5e-43a6-82ab-a48bfeceeb8e}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC Transpose : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	Temp : Matrix;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Temp.InitCopy(THIS^)) THEN
+	Transpose := FALSE;
+	RETURN;
+END_IF
+
+Transpose := AsTransposed(Temp);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WriteDataToString" Id="{7c9446a3-69a9-08e8-3b1c-3852339b4db4}" FolderPath="Helpers\">
+      <Declaration><![CDATA[METHOD PUBLIC WriteDataToString : BOOL
+VAR_INPUT
+	Buffer : POINTER TO STRING;
+	BufferLen : UDINT;
+END_VAR
+VAR
+	Temp : STRING(32);
+	Pos : UDINT;
+END_VAR
+VAR CONSTANT
+	ColSep : STRING(2) := ', ';
+	RowSep : STRING(6) := ' ;$R$L  ';
+	MatStart : STRING(2) := '[ ';
+	MatEnd : STRING(2) := ' ]';
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Pos := 0;
+IF NOT(STRNCPY(Buffer+Pos,ADR(MatStart),BufferLen-Pos)) THEN
+	WriteDataToString := FALSE;
+	RETURN;
+END_IF;
+Pos := Pos + LEN2(ADR(MatStart));
+
+FOR Ri := 0 TO Rows-1 DO
+	IF Ri <> 0 THEN
+		IF NOT(STRNCPY(Buffer+Pos,ADR(RowSep),BufferLen-Pos)) THEN
+			WriteDataToString := FALSE;
+			RETURN;
+		END_IF;
+		Pos := Pos + LEN2(ADR(RowSep));
+	END_IF;
+
+	FOR Ci := 0 TO Cols-1 DO
+		IF Ci <> 0 THEN
+			IF NOT(STRNCPY(Buffer+Pos,ADR(ColSep),BufferLen-Pos)) THEN
+				WriteDataToString := FALSE;
+				RETURN;
+			END_IF;
+			Pos := Pos + LEN2(ADR(ColSep));
+		END_IF;
+		
+		Temp := LREAL_TO_STRING(GetRC(Ri,Ci));
+		IF NOT(STRNCPY(Buffer+Pos,ADR(Temp),BufferLen-Pos)) THEN
+			WriteDataToString := FALSE;
+			RETURN;
+		END_IF;
+		Pos := Pos + LEN2(ADR(Temp));
+	END_FOR
+END_FOR
+
+IF NOT(STRNCPY(Buffer+Pos,ADR(MatEnd),BufferLen-Pos)) THEN
+	WriteDataToString := FALSE;
+	RETURN;
+END_IF;
+Pos := Pos + LEN2(ADR(MatEnd));
+WriteDataToString := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Matrix">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsColVector">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsElementProduct">
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsElementSum">
+      <LineId Id="29" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsGrown">
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsMatrixProduct">
+      <LineId Id="29" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="34" Count="3" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsRowVector">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsScaled">
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="29" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsShrunk">
+      <LineId Id="31" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsSubMatrix">
+      <LineId Id="25" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsTransposed">
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsVector3CrossProduct">
+      <LineId Id="11" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.AsVectorCrossProduct">
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Average.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.BufferSize.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Clear">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Cols.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.CopyDataTo">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.FB_exit">
+      <LineId Id="6" Count="2" />
+    </LineIds>
+    <LineIds Name="Matrix.FillFrom">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.FillTrapezoidal">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="20" Count="3" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.GetDeterminate">
+      <LineId Id="39" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="43" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.GetI">
+      <LineId Id="14" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.GetRC">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.GetSize">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="2" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.GetStringLengthEstimate">
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.GetVectorDotProduct">
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Grow">
+      <LineId Id="98" Count="0" />
+      <LineId Id="57" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Init">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.InitConstant">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.InitCopy">
+      <LineId Id="10" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.InitIdentity">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.InitMagicSquare">
+      <LineId Id="6" Count="3" />
+      <LineId Id="42" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="13" Count="5" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="57" Count="3" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.InitTrapezoidal">
+      <LineId Id="68" Count="6" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.InitVector">
+      <LineId Id="12" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="20" Count="3" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="24" Count="2" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.InitVector3">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="1" />
+    </LineIds>
+    <LineIds Name="Matrix.InitZeros">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.IsEmpty.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.IsEqual">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="2" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.IsEqualSize">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.IsSquare.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.IsVector.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Length.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.LogData">
+      <LineId Id="50" Count="12" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.LogError">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.LogEvent">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.LogMessage">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.LogWarning">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.MaxVal.Get">
+      <LineId Id="5" Count="8" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.MinVal.Get">
+      <LineId Id="5" Count="8" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Power">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.RC2I">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Resize">
+      <LineId Id="48" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="49" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="89" Count="3" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="93" Count="2" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="51" Count="1" />
+      <LineId Id="34" Count="1" />
+      <LineId Id="96" Count="1" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="99" Count="1" />
+      <LineId Id="37" Count="1" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="45" Count="2" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Rows.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Scale">
+      <LineId Id="5" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.SetI">
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.SetRC">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Shrink">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.sPath.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Sum.Get">
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="2" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.Transpose">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="31" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.WriteDataToString">
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="36" Count="2" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="42" Count="5" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="48" Count="1" />
+      <LineId Id="51" Count="3" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="28" Count="3" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="55" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

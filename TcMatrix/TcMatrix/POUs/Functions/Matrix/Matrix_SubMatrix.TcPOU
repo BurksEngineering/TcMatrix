@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_SubMatrix" Id="{e584d28a-8010-4956-af80-0bbe9d155507}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_SubMatrix : Bool
+VAR_INPUT
+	M_Super : REFERENCE TO Matrix;
+	M_Sub : REFERENCE TO Matrix;
+	RowStart : UINT;
+	RowCount : UINT;
+	ColStart : UINT;
+	ColCount : UINT;
+END_VAR
+
+VAR
+	Ri : UINT;
+	Ci : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF RowStart + RowCount > M_Super.Rows OR ColStart + ColCount > M_Super.Cols THEN
+	Matrix_SubMatrix := FALSE;
+	RETURN;
+END_IF
+IF M_Sub.Rows <> RowCount  OR M_Sub.Cols <> ColCount THEN
+	Matrix_SubMatrix := FALSE;
+	RETURN;
+END_IF
+
+Matrix_SubMatrix := TRUE;
+
+FOR Ri := 0 TO RowCount-1 DO
+	FOR Ci := 0 TO ColCount-1 DO
+		M_Sub.SetRC(Ri,Ci,M_Super.GetRC(RowStart+Ri,ColStart+Ci));
+	END_FOR
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_SubMatrix">
+      <LineId Id="20" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="29" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
