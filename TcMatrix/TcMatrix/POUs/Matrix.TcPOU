@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix" Id="{37681762-a9e8-4dd1-b97b-ca342c51c659}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'reflection'}
+    <Declaration><![CDATA[(*
+
+*)
+{attribute 'reflection'}
 FUNCTION_BLOCK Matrix
 VAR_INPUT
 END_VAR
@@ -24,7 +27,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[]]></ST>
+      <ST><![CDATA[LogMessage('%s: There is no need to call the main FB function for type Matrix');]]></ST>
     </Implementation>
     <Folder Name="Aggregators" Id="{c541bfa3-492b-0df6-1926-f02606816bce}" />
     <Folder Name="Comparators" Id="{b7fe62c6-6f13-454d-9f2a-eae01884c717}" />
@@ -43,7 +46,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AsColVector := AsSubMatrix(M,0,Rows,Col,1);]]></ST>
+        <ST><![CDATA[AsColVector := AsSubMatrix(M,0,M.Rows,Col,1);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsElementProduct" Id="{1d639892-7279-0584-2a80-52cd430c8d25}" FolderPath="Resultants\">
@@ -137,7 +140,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AsRowVector := AsSubMatrix(M,Row,1,0,Cols);]]></ST>
+        <ST><![CDATA[AsRowVector := AsSubMatrix(M,Row,1,0,M.Cols);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsScaled" Id="{b4ebfd3a-7f84-0c68-3eb7-f5f1a49c6aeb}" FolderPath="Resultants\">
@@ -214,22 +217,6 @@ END_VAR]]></Declaration>
 END_IF
 
 AsTransposed := Matrix_Transpose(M,THIS^);]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="AsVector3CrossProduct" Id="{cc12c619-77e5-0d6d-11ee-284c5bb52333}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsVector3CrossProduct : BOOL
-VAR_INPUT
-	A : REFERENCE TO Matrix;
-	B : REFERENCE TO Matrix;
-END_VAR
-VAR
-	Vectors : ARRAY[0..1] OF POINTER TO Matrix;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[Vectors[0] := ADR(A);
-Vectors[1] := ADR(B);
-AsVector3CrossProduct := AsVectorCrossProduct(Vectors);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsVectorCrossProduct" Id="{3ec0f3e8-0a31-090c-3d7c-88ea53422b02}" FolderPath="Resultants\">
@@ -334,7 +321,7 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF Data <> 0 AND NOT(bInCopyCode) THEN
+        <ST><![CDATA[IF Data <> 0 AND NOT(bInCopyCode) AND MemManager.nBufferCount > 0 THEN
 	MemManager.Free2(Data);
 END_IF]]></ST>
       </Implementation>
@@ -343,24 +330,46 @@ END_IF]]></ST>
       <Declaration><![CDATA[METHOD PUBLIC FillFrom : BOOL
 VAR_INPUT
 	M : REFERENCE TO Matrix;
-END_VAR
-VAR
-	BytesCopied : ULINT;
 END_VAR]]></Declaration>
       <Implementation>
+        <ST><![CDATA[FillFrom := FillFromAt(M,0,0);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FillFromAt" Id="{57397ef9-06ec-050d-1f21-ec905dd7b0ad}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC FillFromAt : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	RStart : UINT;
+	CStart : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
         <ST><![CDATA[IF M.IsEmpty THEN
-	FillFrom := FALSE;
+	FillFromAt := FALSE;
 	LogWarning('%s: Attempt to fill am empty matrix');
 	RETURN;
 END_IF
 
-IF NOT(IsEmpty) AND IsEqualSize(M) THEN
-	FillFrom := BufferSize =  M.CopyDataTo(Data,BufferSize);
+IF RStart >= Rows THEN
+	FillFromAt := FALSE;
+	LogWarning('%s: Attempt to fill out of bounds row of matrix');
+	RETURN;
+END_IF
+
+IF CStart >= Cols THEN
+	FillFromAt := FALSE;
+	LogWarning('%s: Attempt to fill out of bounds col of matrix');
+	RETURN;
+END_IF
+
+IF NOT(IsEmpty) AND IsEqualSize(M) AND RStart = 0 AND CStart = 0 THEN
+	//easy mode, just do a memcopy
+	FillFromAt := BufferSize =  M.CopyDataTo(Data,BufferSize);
 ELSE
-	FillFrom := TRUE;
-	FOR Ri := 0 TO MIN(Rows,M.Rows)-1 DO
-		FOR Ci := 0 TO MIN(Cols,M.Cols)-1 DO
-			SetRC(Ri,Ci,M.GetRC(Ri,Ci));
+	FillFromAt := TRUE;
+	FOR Ri := 0 TO MIN(Rows-RStart,M.Rows)-1 DO
+		FOR Ci := 0 TO MIN(Cols-CStart,M.Cols)-1 DO
+			SetRC(Ri+Rstart,Ci+CStart,M.GetRC(Ri,Ci));
 		END_FOR
 	END_FOR
 END_IF]]></ST>
@@ -643,27 +652,6 @@ ELSE
 		END_FOR
 	END_IF;
 END_IF]]></ST>
-      </Implementation>
-    </Method>
-    <Method Name="InitVector3" Id="{04e78a35-11fd-069c-24ba-dbf37da880d3}" FolderPath="Initializers\">
-      <Declaration><![CDATA[METHOD PUBLIC InitVector3 : BOOL
-VAR_INPUT
-	X : LREAL;
-	Y : LREAL;
-	Z : LREAL;
-END_VAR
-]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[IF NOT(Init(3,1)) THEN
-	InitVector3 := FALSE;
-	RETURN;
-END_IF
-
-InitVector3 := TRUE;
-
-SetI(0,X);
-SetI(1,Y);
-SetI(2,Z);]]></ST>
       </Implementation>
     </Method>
     <Method Name="InitZeros" Id="{536c56ab-c302-073c-2f7f-5791158506f5}" FolderPath="Initializers\">
@@ -1232,10 +1220,6 @@ WriteDataToString := TRUE;]]></ST>
       <LineId Id="17" Count="0" />
       <LineId Id="16" Count="0" />
     </LineIds>
-    <LineIds Name="Matrix.AsVector3CrossProduct">
-      <LineId Id="11" Count="1" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
     <LineIds Name="Matrix.AsVectorCrossProduct">
       <LineId Id="16" Count="0" />
       <LineId Id="19" Count="0" />
@@ -1283,18 +1267,10 @@ WriteDataToString := TRUE;]]></ST>
       <LineId Id="6" Count="2" />
     </LineIds>
     <LineIds Name="Matrix.FillFrom">
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="21" Count="2" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="17" Count="1" />
-      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.FillFromAt">
+      <LineId Id="51" Count="27" />
       <LineId Id="7" Count="0" />
     </LineIds>
     <LineIds Name="Matrix.FillTrapezoidal">
@@ -1413,17 +1389,6 @@ WriteDataToString := TRUE;]]></ST>
       <LineId Id="24" Count="2" />
       <LineId Id="38" Count="0" />
       <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.InitVector3">
-      <LineId Id="5" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="1" />
     </LineIds>
     <LineIds Name="Matrix.InitZeros">
       <LineId Id="5" Count="0" />

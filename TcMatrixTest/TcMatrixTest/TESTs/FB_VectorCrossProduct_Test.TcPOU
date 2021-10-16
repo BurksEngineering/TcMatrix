@@ -12,31 +12,73 @@ END_VAR
     <Implementation>
       <ST><![CDATA[WhenWrongSizeExpectError();
 WhenMatchingSizeExpectResult();
-]]></ST>
+WhenBackwardsExpectOppositeResult();]]></ST>
     </Implementation>
+    <Method Name="WhenBackwardsExpectOppositeResult" Id="{c4adfab1-3c64-086f-0455-f78b963aca2f}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenBackwardsExpectOppositeResult
+VAR_INPUT
+END_VAR
+VAR
+	MV : Matrix;
+	V1 : Matrix;
+	V2 : Matrix;
+	V3 : Matrix;
+	Vs : ARRAY[0..1] OF POINTER TO MAtrix;
+	M1 : Matrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenBackwardsExpectOppositeResult');
+
+// @TEST-RUN
+Vs[1] := ADR(V1);
+Vs[0] := ADR(V2);
+
+MV.InitIdentity(3);
+V1.AsColVector(MV,0);
+V2.AsColVector(MV,1);
+V3.AsColVector(MV,2);
+V3.Scale(-1);
+
+Result := M1.AsVectorCrossProduct(Vs);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertTrue(M1.IsEqual(V3),'Result is the correct vector');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="WhenMatchingSizeExpectResult" Id="{210123e9-79aa-07ab-204d-1d5b02cf36e9}">
       <Declaration><![CDATA[METHOD PRIVATE WhenMatchingSizeExpectResult
 VAR_INPUT
 END_VAR
 VAR
+	MV : Matrix;
 	V1 : Matrix;
 	V2 : Matrix;
+	V3 : Matrix;
+	Vs : ARRAY[0..1] OF POINTER TO MAtrix;
 	M1 : Matrix;
 	Result : BOOL;
-	V3 : Matrix;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('WhenMatchingSizeExpectResult');
 
 // @TEST-RUN
-V1.InitVector3(1,0,0);
-V2.InitVector3(0,1,0);
-Result := M1.AsVector3CrossProduct(V1,V2);
-V3.InitVector3(0,0,1);
+Vs[0] := ADR(V1);
+Vs[1] := ADR(V2);
+
+MV.InitIdentity(3);
+V1.AsColVector(MV,0);
+V2.AsColVector(MV,1);
+V3.AsColVector(MV,2);
+
+Result := M1.AsVectorCrossProduct(Vs);
 
 // @TEST-ASSERT
 AssertTrue(Result,'Main function call was not successful');
-AssertTrue(M1.IsEqual(V3),'Result is the correct vector');
+AssertTrue(M1.IsEqual(V3),'Result is not the correct vector');
 
 TEST_FINISHED();]]></ST>
       </Implementation>
@@ -48,6 +90,7 @@ END_VAR
 VAR
 	V1 : Matrix;
 	V2 : Matrix;
+	Vs : ARRAY [0..1] OF POINTER TO Matrix;
 	M1 : Matrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
@@ -55,9 +98,13 @@ END_VAR]]></Declaration>
         <ST><![CDATA[TEST('WhenWrongSizeExpectError');
 
 // @TEST-RUN
+Vs[0] := ADR(V1);
+Vs[1] := ADR(V2);
+
 V1.InitVector(3,1,1);
 V2.InitVector(4,1,1);
-Result := M1.AsVector3CrossProduct(V1,V2);
+
+Result := Vector_CrossProduct(M1,Vs);
 
 // @TEST-ASSERT
 AssertFalse(Result,'Main function call was unexpectedly successful');
@@ -70,14 +117,36 @@ TEST_FINISHED();]]></ST>
       <LineId Id="18" Count="0" />
       <LineId Id="10" Count="0" />
     </LineIds>
+    <LineIds Name="FB_VectorCrossProduct_Test.WhenBackwardsExpectOppositeResult">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="89" Count="2" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
     <LineIds Name="FB_VectorCrossProduct_Test.WhenMatchingSizeExpectResult">
       <LineId Id="5" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="10" Count="0" />
+      <LineId Id="89" Count="2" />
+      <LineId Id="76" Count="0" />
       <LineId Id="25" Count="0" />
       <LineId Id="37" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="92" Count="0" />
       <LineId Id="9" Count="0" />
-      <LineId Id="65" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="7" Count="0" />
       <LineId Id="17" Count="0" />
@@ -89,8 +158,11 @@ TEST_FINISHED();]]></ST>
       <LineId Id="5" Count="0" />
       <LineId Id="15" Count="0" />
       <LineId Id="10" Count="0" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="50" Count="0" />
       <LineId Id="25" Count="0" />
       <LineId Id="37" Count="0" />
+      <LineId Id="49" Count="0" />
       <LineId Id="9" Count="0" />
       <LineId Id="16" Count="0" />
       <LineId Id="7" Count="0" />
