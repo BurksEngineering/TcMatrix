@@ -17,8 +17,8 @@ END_VAR
 VAR_INPUT
 END_VAR
 VAR
-	M1 : Matrix;
-	V : Matrix;
+	M1 : DynamicMatrix;
+	V : DynamicMatrix;
 	Actual : LREAL;
 	Expected : LREAL := 15;
 	I : UINT;

@@ -18,7 +18,7 @@ WhenMatchingExpectResult();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	M1 : Matrix;
+	M1 : DynamicMatrix;
 	Result : BOOL;
 	Actual : LREAL;
 	Expected : LREAL := 360;
@@ -42,7 +42,7 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	M1 : Matrix;
+	M1 : DynamicMatrix;
 	Result : BOOL;
 	Actual : LREAL;
 	Expected : LREAL := 0;

@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="StaticMatrix" Id="{d79dcd61-649c-042a-2c3d-c130631ac3c2}" SpecialFunc="None">
+    <Declaration><![CDATA[(*
+Derived class must:
+- Declare a VAR array of LREAL named Data_
+- Call Init_ in FB_init, pointing to the local arrays, with Rows and Cols such that Rows*Cols <= Length(Data_)
+*)
+{attribute 'reflection'}
+{attribute 'no_assign'}
+FUNCTION_BLOCK ABSTRACT StaticMatrix EXTENDS Matrix
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Rows_ : UINT := 0;
+	Cols_ : UINT := 0;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Initialziers" Id="{08f59030-94f7-0073-0a6e-d3e1830889b4}" />
+    <Folder Name="Overrides" Id="{ae8f9fd6-d618-01fa-1ea5-e735cb12e13d}" />
+    <Property Name="Cols" Id="{cefe6429-a672-0a6c-0720-70da52f990a4}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Total number of columns in this matrix
+PROPERTY PUBLIC Cols : UINT]]></Declaration>
+      <Get Name="Get" Id="{19a27711-2729-023c-0ff4-6a64ec484c7e}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Cols := Cols_;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Init_" Id="{df58cd40-7645-032b-263b-57f75f4375c6}" FolderPath="Initialziers\">
+      <Declaration><![CDATA[METHOD PROTECTED Init_
+VAR_INPUT
+	RowCount : UINT;
+	ColCount : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Rows_ := RowCount;
+Cols_ := ColCount;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Rows" Id="{d7666184-3fb7-0897-1633-3a18d91e3046}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Total number of rows in this matrix
+PROPERTY PUBLIC Rows : UINT]]></Declaration>
+      <Get Name="Get" Id="{79065fd2-fc3e-00cb-257e-499471f5c52d}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[Rows := Rows_;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <LineIds Name="StaticMatrix">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="StaticMatrix.Cols.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="StaticMatrix.Init_">
+      <LineId Id="8" Count="1" />
+    </LineIds>
+    <LineIds Name="StaticMatrix.Rows.Get">
+      <LineId Id="2" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

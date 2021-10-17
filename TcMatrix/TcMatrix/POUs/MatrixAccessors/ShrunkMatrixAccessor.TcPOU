@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="ShrunkMatrixAccessor" Id="{f0bfcb10-4309-028c-1405-e53184e0781f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ShrunkMatrixAccessor EXTENDS MatrixAccessor
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	RowRemoved_ : UINT;
+	ColRemoved_ : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Initializers" Id="{45740341-dbbb-08f6-3340-7857963b9e64}" />
+    <Folder Name="Overrides" Id="{967fd700-932b-0466-3705-406f25b48dc3}" />
+    <Property Name="Cols" Id="{f3e7e618-58e0-0e81-02db-fc0fc539f3ee}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Total number of columns in this matrix
+PROPERTY PUBLIC Cols : UINT]]></Declaration>
+      <Get Name="Get" Id="{1c7f5a4f-f036-0f00-0aab-5b1385b88ad9}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	Cols := 0;
+	LogWarning('%s Attempted Cols access using uninitialized Matrix Accessor');
+ELSIF M_.Cols > 0 THEN
+	Cols := M_.Cols-1;
+ELSE
+	Cols := 0;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Init" Id="{9d266aca-2413-0651-3a78-fd0697cc15bb}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC Init
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	RowRemoved : UINT;
+	ColRemoved : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Init_(M);
+RowRemoved_ := RowRemoved;
+ColRemoved_ := ColRemoved;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Rows" Id="{7c4ed6f3-3d01-028d-1d23-3c66c33be3ce}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Total number of rows in this matrix
+PROPERTY PUBLIC Rows : UINT]]></Declaration>
+      <Get Name="Get" Id="{f08fb378-8ee8-0f98-35a7-7b3a88876ac2}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	Rows := 0;
+	LogWarning('%s Attempted Rows access using uninitialized Matrix Accessor');
+ELSIF M_.Rows > 0 THEN
+	Rows := M_.Rows-1;
+ELSE
+	Rows := 0;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="This2Parent" Id="{0063716a-7aa7-0c6f-17df-1e2c021e63a3}" FolderPath="Overrides\">
+      <Declaration><![CDATA[METHOD PROTECTED This2Parent : UINT
+VAR_INPUT
+	Index : UINT;
+END_VAR
+VAR
+	ThisR : UINT;
+	ThisC : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	LogWarning('%s Attempted This2Parent calculation using uninitialized Matrix Accessor');
+	This2Parent := 0;
+	RETURN;
+END_IF
+
+IC2RC(Index,Cols,Row => ThisR, Col => ThisC);
+
+This2Parent := RCC2I(ThisR+BOOL_TO_UINT(RowRemoved_<=ThisR),ThisC+BOOL_TO_UINT(ColRemoved_<=ThisC),M_.Cols);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ShrunkMatrixAccessor">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ShrunkMatrixAccessor.Cols.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="ShrunkMatrixAccessor.Init">
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="1" />
+    </LineIds>
+    <LineIds Name="ShrunkMatrixAccessor.Rows.Get">
+      <LineId Id="9" Count="2" />
+      <LineId Id="5" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="ShrunkMatrixAccessor.This2Parent">
+      <LineId Id="18" Count="1" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

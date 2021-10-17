@@ -18,23 +18,51 @@
     <Company>Burks Engineering</Company>
     <Released>false</Released>
     <Title>TcMatrix</Title>
-    <ProjectVersion>1.1.4</ProjectVersion>
+    <ProjectVersion>1.2.2</ProjectVersion>
     <DefaultNamespace>TcMatrix</DefaultNamespace>
     <Author>Andrew Burks</Author>
     <Description>Matrix arithmatic library</Description>
     <CombineIds>true</CombineIds>
     <PreserveCompiledLibComments>true</PreserveCompiledLibComments>
     <DocFormat>reStructuredText</DocFormat>
+    <LibraryCategories>
+      <LibraryCategory>
+        <Id>{d5875a41-817d-44f3-8af7-6c59eaddc95f}</Id>
+        <Version>1.0.0.0</Version>
+        <DefaultName>Burks</DefaultName>
+      </LibraryCategory>
+      <LibraryCategory>
+        <Id>{426a88ee-bb19-4918-8554-e1c9c24621f9}</Id>
+        <Version>1.0.0.0</Version>
+        <ParentCategory>
+          <Id>{d5875a41-817d-44f3-8af7-6c59eaddc95f}</Id>
+        </ParentCategory>
+        <DefaultName>Matrix</DefaultName>
+      </LibraryCategory>
+    </LibraryCategories>
+    <SelectedLibraryCategories>
+      <Id>{426a88ee-bb19-4918-8554-e1c9c24621f9}</Id>
+    </SelectedLibraryCategories>
   </PropertyGroup>
   <ItemGroup>
     <Folder Include="POUs" />
     <Folder Include="POUs\Functions\Matrix" />
     <Folder Include="POUs\Functions" />
     <Folder Include="POUs\Functions\Vector" />
+    <Folder Include="POUs\MatrixAccessors" />
     <Folder Include="Version" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="POUs\DynamicMatrix.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\ExternalStaticMatrix.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Matrix\Matrix_CanMult.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Matrix\Matrix_Copy.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Matrix\Matrix_Determinate.TcPOU">
@@ -52,6 +80,9 @@
     <Compile Include="POUs\Functions\Matrix\Matrix_Product.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="POUs\Functions\Matrix\Matrix_Scale.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="POUs\Functions\Matrix\Matrix_Shrink.TcPOU">
       <SubType>Code</SubType>
     </Compile>
@@ -59,6 +90,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Matrix\Matrix_Transpose.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Matrix\Matrix_TransposeSquare.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Vector\Vector_CrossProduct.TcPOU">
@@ -74,6 +108,21 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Matrix.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MatrixAccessors\MatrixAccessor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MatrixAccessors\ShrunkMatrixAccessor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MatrixAccessors\SubMatrixAccessor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\MatrixAccessors\TransposeMatrixAccessor.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\StaticMatrix.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Version\Global_Version.TcGVL">

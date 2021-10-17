@@ -3,8 +3,8 @@
   <POU Name="Matrix_Transpose" Id="{9e8611eb-e7e8-49d4-8541-b23bf7999d2e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_Transpose : Bool
 VAR_INPUT
-	M_From : Matrix;
-	M_To : Matrix;
+	M_From : REFERENCE TO Matrix;
+	M_To : REFERENCE TO Matrix;
 END_VAR
 VAR
 	Ri : UINT;

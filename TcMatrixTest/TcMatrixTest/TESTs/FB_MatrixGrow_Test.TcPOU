@@ -19,8 +19,8 @@ WhenGrownExpectNewDataFilled();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	M1 : Matrix;
-	M2 : Matrix;
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
@@ -41,9 +41,9 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	M1 : Matrix;
-	M2 : Matrix;
-	M3 : Matrix;
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
+	M3 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
@@ -66,8 +66,8 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	M1 : Matrix;
-	M2 : Matrix;
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>

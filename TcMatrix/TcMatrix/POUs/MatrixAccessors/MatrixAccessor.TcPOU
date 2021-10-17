@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="MatrixAccessor" Id="{e50a508d-f480-0127-320a-803982deccd5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT MatrixAccessor EXTENDS Matrix
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	M_ : REFERENCE TO Matrix;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Initializers" Id="{28431d55-f1be-0820-297a-111eb6985dc1}" />
+    <Folder Name="Mapping" Id="{8ff0265d-dfed-0d78-3f8a-9dc33a327da3}" />
+    <Folder Name="Overrides" Id="{8f59b246-ef31-06b6-3efd-d819bffceb36}" />
+    <Method Name="GetI" Id="{673a605f-ea3d-0fd4-108f-3cd0177f6697}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
+//:Prerequisites:
+// - I < Rows*Cols
+// - Matrix is not empty
+//If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
+METHOD PUBLIC GetI : LREAL//The value of the element at the specified index, or 0 if an invalid index is supplied
+VAR_INPUT
+	I : UINT;//The index of the element which should have its value returned
+END_VAR
+VAR
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	GetI := 0.0;
+	LogWarning('%s Attempted I access to uninitialized Matrix Accessor');
+ELSIF IsEmpty THEN
+	GetI := 0.0;
+	LogWarning('%s: Attempted I access of empty Matrix Accessor');
+ELSIF I >= Length THEN
+	GetI := 0.0;
+	LogWarning('%s: Attempted I access beyond limits of Matrix Accessor');
+ELSE
+	GetI := M_.GetI(This2Parent(I));
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init_" Id="{9d2c7dae-b3ad-036a-18e1-5c95ffea17d1}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PROTECTED Init_
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[M_ REF= M;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetI" Id="{2a187707-0985-02db-070b-3fa74894917a}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Sets the element specified by the supplied index to the suppleid value, assuming the data of the matrix is stored in a 1D row-major array
+//:Prerequisites: - I < Rows*Cols
+METHOD PUBLIC SetI : BOOL//TRUE if the specified index is valid and the data is copied. FLASE otherwise
+VAR_INPUT
+	I : UINT;//The index specifying which element should be modified
+	Val : LREAL;//The value copied to the corresponding element
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	SetI := FALSE;
+	LogWarning('%s Attempted I access to uninitialized Matrix Accessor');
+ELSIF IsEmpty THEN
+	SetI := FALSE;
+	LogWarning('%s: Attempted I access of empty Matrix Accessor');
+ELSIF I >= Length THEN
+	SetI := FALSE;
+	LogWarning('%s: Attempted I access beyond limits of Matrix Accessor');
+ELSE
+	SetI := M_.SetI(This2Parent(I),Val);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="This2Parent" Id="{dfb72d27-38c6-0ee1-3757-2606a49a2af4}" FolderPath="Mapping\">
+      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT This2Parent : UINT
+VAR_INPUT
+	Index : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="MatrixAccessor">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="MatrixAccessor.GetI">
+      <LineId Id="14" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="MatrixAccessor.Init_">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="MatrixAccessor.SetI">
+      <LineId Id="40" Count="2" />
+      <LineId Id="34" Count="5" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="MatrixAccessor.This2Parent">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

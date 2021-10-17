@@ -19,12 +19,12 @@ WhenBackwardsExpectOppositeResult();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	MV : Matrix;
-	V1 : Matrix;
-	V2 : Matrix;
-	V3 : Matrix;
+	MV : DynamicMatrix;
+	V1 : DynamicMatrix;
+	V2 : DynamicMatrix;
+	V3 : DynamicMatrix;
 	Vs : ARRAY[0..1] OF POINTER TO MAtrix;
-	M1 : Matrix;
+	M1 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
@@ -54,12 +54,12 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	MV : Matrix;
-	V1 : Matrix;
-	V2 : Matrix;
-	V3 : Matrix;
+	MV : DynamicMatrix;
+	V1 : DynamicMatrix;
+	V2 : DynamicMatrix;
+	V3 : DynamicMatrix;
 	Vs : ARRAY[0..1] OF POINTER TO MAtrix;
-	M1 : Matrix;
+	M1 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
@@ -88,10 +88,10 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	V1 : Matrix;
-	V2 : Matrix;
+	V1 : DynamicMatrix;
+	V2 : DynamicMatrix;
 	Vs : ARRAY [0..1] OF POINTER TO Matrix;
-	M1 : Matrix;
+	M1 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>

@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="TransposeMatrixAccessor" Id="{9a28d6e8-49de-0d4d-265c-dd2a9870f8ee}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK TransposeMatrixAccessor EXTENDS MatrixAccessor
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	RowRemoved_ : UINT;
+	ColRemoved_ : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Initializers" Id="{7c0114cd-41d1-0d49-1cd5-8a0554f73bcf}" />
+    <Folder Name="Overrides" Id="{c3ed05e4-8f1f-022e-21ba-86d9c4d0a320}" />
+    <Property Name="Cols" Id="{bf0da9f9-be70-0115-3902-7943e66150d7}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Total number of columns in this matrix
+PROPERTY PUBLIC Cols : UINT]]></Declaration>
+      <Get Name="Get" Id="{cb7fdd63-8d83-06fd-2e61-15e9782a8d8f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	Cols := 0;
+	LogWarning('%s Attempted Cols access using uninitialized Matrix Accessor');
+ELSE
+	Cols := M_.Rows;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Init" Id="{cce5b477-a9bd-0f97-0e9c-4e49f12ee13b}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC Init
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Init_(M);]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Rows" Id="{5191cf39-179d-048b-094b-53b45da5d542}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Total number of rows in this matrix
+PROPERTY PUBLIC Rows : UINT]]></Declaration>
+      <Get Name="Get" Id="{f7be0edf-342d-0112-1abb-ce9cd40f7cf7}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	Rows := 0;
+	LogWarning('%s Attempted Rows access using uninitialized Matrix Accessor');
+ELSE
+	Rows := M_.Cols;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="This2Parent" Id="{82b9f386-d002-0cf1-1dd5-3226c42f62b8}" FolderPath="Overrides\">
+      <Declaration><![CDATA[METHOD PROTECTED This2Parent : UINT
+VAR_INPUT
+	Index : UINT;
+END_VAR
+VAR
+	ThisR : UINT;
+	ThisC : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	LogWarning('%s Attempted This2Parent calculation using uninitialized Matrix Accessor');
+	This2Parent := 0;
+	RETURN;
+END_IF
+
+IC2RC(Index,Cols,Row => ThisR, Col => ThisC);
+
+This2Parent := RCC2I(ThisC,ThisR,M_.Cols);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="TransposeMatrixAccessor">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="TransposeMatrixAccessor.Cols.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="TransposeMatrixAccessor.Init">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="TransposeMatrixAccessor.Rows.Get">
+      <LineId Id="9" Count="2" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="TransposeMatrixAccessor.This2Parent">
+      <LineId Id="18" Count="1" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

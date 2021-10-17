@@ -1,0 +1,53 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_TransposeSquare" Id="{cddc94bc-80ef-0bdc-2507-33761c831052}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_TransposeSquare : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+END_VAR
+VAR
+	Ri : UINT;
+	Ci : UINT;
+	Temp : LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT(M.IsSquare)THEN
+	Matrix_TransposeSquare := FALSE;
+	RETURN;
+END_IF
+
+Matrix_TransposeSquare := TRUE;
+
+IF M.Length <= 1 THEN
+	RETURN;
+END_IF
+
+FOR Ri := 0 TO M.Rows-2 DO
+	FOR Ci := Ri+1 TO M.Cols-1 DO
+		Temp := M.GetRC(Ri,Ci);
+		M.SetRC(Ri,Ci,M.GetRC(Ci,Ri));
+		M.SetRC(Ci,Ri,Temp);
+	END_FOR
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_TransposeSquare">
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="23" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

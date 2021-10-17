@@ -9,8 +9,8 @@ VAR
 	Ri : UINT;
 	Ci : UINT;
 	I : DINT;
-	M_Vectors : Matrix;
-	M_Det : Matrix;
+	M_Vectors : DynamicMatrix;
+	M_Det : ShrunkMatrixAccessor;
 	Det : LREAL;
 END_VAR
 VAR_IN_OUT
@@ -37,29 +37,36 @@ FOR I := LOWER_BOUND(Vectors,1) TO UPPER_BOUND(Vectors,1) DO
 	END_IF
 END_FOR
 
-//first row is garbage, just for shrinking
+
 IF NOT(M_Vectors.Init(Res.Length,Res.Length)) THEN
 	Vector_CrossProduct := FALSE;
 	RETURN;
 END_IF
-IF NOT(M_Det.Init(Res.Length-1,Res.Length-1)) THEN
+
+
+//build aggregate matrix
+FOR Ri := 0 TO M_Vectors.Rows-1 DO
+	FOR Ci := 0 TO M_Vectors.Cols-1 DO
+		IF Ri = 0 THEN
+			M_Vectors.SetRC(Ri,Ci,1);
+		ELSE
+			I := LOWER_BOUND(Vectors,1)-1 + Ri;
+			M_Vectors.SetRC(Ri,Ci,Vectors[I]^.GetI(Ci));
+		END_IF
+	END_FOR
+END_FOR
+
+//if some vectors are parallel or whatever there is no 'one' cross product, so return false
+IF M_Vectors.GetDeterminant() = 0 THEN
 	Vector_CrossProduct := FALSE;
 	RETURN;
 END_IF
 
 Vector_CrossProduct := TRUE;
 
-//build aggregate matrix
-FOR Ri := 1 TO M_Vectors.Rows-1 DO
-	I := LOWER_BOUND(Vectors,1) + Ri-1;
-	FOR Ci := 0 TO M_Vectors.Cols-1 DO
-		M_Vectors.SetRC(Ri,Ci,Vectors[I]^.GetI(Ci));
-	END_FOR
-END_FOR
-
 //take determiantes
 FOR Ci := 0 TO M_Vectors.Cols-1 DO
-	Matrix_Shrink(M_Vectors,M_Det,0,Ci);
+	M_Det.Init(M_Vectors,0,Ci);
 	IF NOT(Matrix_Determinate(M_Det, Res=>Det)) THEN
 		Vector_CrossProduct := FALSE;
 		RETURN;
@@ -70,50 +77,27 @@ END_FOR
 ]]></ST>
     </Implementation>
     <LineIds Name="Vector_CrossProduct">
-      <LineId Id="38" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="49" Count="1" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="51" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="59" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="75" Count="2" />
-      <LineId Id="74" Count="0" />
-      <LineId Id="46" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="43" Count="1" />
-      <LineId Id="36" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="78" Count="0" />
-      <LineId Id="93" Count="0" />
-      <LineId Id="95" Count="0" />
-      <LineId Id="97" Count="0" />
-      <LineId Id="96" Count="0" />
-      <LineId Id="56" Count="1" />
-      <LineId Id="48" Count="0" />
+      <LineId Id="162" Count="23" />
+      <LineId Id="191" Count="3" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="211" Count="1" />
+      <LineId Id="214" Count="0" />
+      <LineId Id="216" Count="0" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="198" Count="1" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="222" Count="0" />
+      <LineId Id="217" Count="0" />
+      <LineId Id="200" Count="0" />
+      <LineId Id="218" Count="0" />
+      <LineId Id="201" Count="1" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="204" Count="6" />
       <LineId Id="47" Count="0" />
     </LineIds>
   </POU>

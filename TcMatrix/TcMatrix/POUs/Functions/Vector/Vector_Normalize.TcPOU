@@ -17,7 +17,10 @@ END_VAR
 	RETURN;
 END_IF
 
-Mag := Vector_Magnitude(In);
+IF NOT(Vector_Magnitude(In,Res=>Mag)) THEN
+	Vector_Normalize := FALSE;
+	RETURN;
+END_IF
 
 //dont use copy because vectors might be in different orientations
 FOR I:= 0 TO Res.Length-1 DO
@@ -31,6 +34,9 @@ END_FOR]]></ST>
       <LineId Id="11" Count="0" />
       <LineId Id="14" Count="0" />
       <LineId Id="13" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="32" Count="0" />
       <LineId Id="21" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="16" Count="0" />

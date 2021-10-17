@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="ExternalStaticMatrix" Id="{5b159a29-4d48-0710-367d-ddb55ec87279}" SpecialFunc="None">
+    <Declaration><![CDATA[{attribute 'reflection'}
+{attribute 'no_assign'}
+FUNCTION_BLOCK ExternalStaticMatrix EXTENDS StaticMatrix
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	Length_ : UINT;
+	Data : POINTER TO LREAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Initializers" Id="{5822050c-0c80-0707-31a1-3c552739c65e}" />
+    <Folder Name="Overrides" Id="{fab6d9a1-db67-00dd-2f3e-ebf9953ff9e5}" />
+    <Method Name="GetI" Id="{ae7d2383-cb95-0e9e-07e8-2a6bcfaf546b}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
+//:Prerequisites:
+// - I < Rows*Cols
+// - Matrix is not empty
+//If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
+METHOD PUBLIC GetI : LREAL//The value of the element at the specified index, or 0 if an invalid index is supplied
+VAR_INPUT
+	I : UINT;//The index of the element which should have its value returned
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Data = 0 THEN
+	GetI := 0.0;
+	LogWarning('%s: Attempted I access of uninitialized Matrix');
+ELSIF I >= Length THEN
+	GetI := 0.0;
+	LogWarning('%s: Attempted I access of out-of-bounds Matrix data');
+ELSE
+	GetI := Data[I];
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init" Id="{d9100bed-2d4d-011e-0d0a-c69a8129f804}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC Init
+VAR_INPUT
+	Buffer : POINTER TO LREAL;//must be at least length of Rows * cols!
+	RowCount : UINT;
+	ColCount : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Init_(RowCount,ColCount);
+Data := BUFFER;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetI" Id="{8782231e-8005-09b5-02c8-d20a443b3036}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Sets the element specified by the supplied index to the suppleid value, assuming the data of the matrix is stored in a 1D row-major array
+//:Prerequisites: - I < Rows*Cols
+METHOD PUBLIC SetI : BOOL//TRUE if the specified index is valid and the data is copied. FLASE otherwise
+VAR_INPUT
+	I : UINT;//The index specifying which element should be modified
+	Val : LREAL;//The value copied to the corresponding element
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Data = 0 THEN
+	SetI := FALSE;
+	LogWarning('%s: Attempt to set data using I access when data is not initialized');
+ELSIF I >= Length THEN
+	SetI := FALSE;
+	LogWarning('%s: Attempt to set data using I access when I is out of bounds');
+ELSE
+	SetI := TRUE;
+	Data[I] := Val;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ExternalStaticMatrix">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="ExternalStaticMatrix.GetI">
+      <LineId Id="14" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="ExternalStaticMatrix.Init">
+      <LineId Id="9" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="ExternalStaticMatrix.SetI">
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="8" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -20,9 +20,9 @@ WhenWithIdentityExpectSame();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	V1 : Matrix;
-	V2 : Matrix;
-	M1 : Matrix;
+	V1 : DynamicMatrix;
+	V2 : DynamicMatrix;
+	M1 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
@@ -44,9 +44,9 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	V1 : Matrix;
-	V2 : Matrix;
-	M1 : Matrix;
+	V1 : DynamicMatrix;
+	V2 : DynamicMatrix;
+	M1 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
@@ -71,9 +71,9 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	V1 : Matrix;
-	V2 : Matrix;
-	M1 : Matrix;
+	V1 : DynamicMatrix;
+	V2 : DynamicMatrix;
+	M1 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>
@@ -98,9 +98,9 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	V1 : Matrix;
-	MI : Matrix;
-	M1 : Matrix;
+	V1 : DynamicMatrix;
+	MI : DynamicMatrix;
+	M1 : DynamicMatrix;
 	Result : BOOL;
 END_VAR]]></Declaration>
       <Implementation>

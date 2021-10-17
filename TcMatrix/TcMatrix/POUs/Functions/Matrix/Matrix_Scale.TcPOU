@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_Scale" Id="{0a70bdcb-e9cf-0eec-2ebf-e6289b9019aa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_Scale : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	Scalar : LREAL;
+END_VAR
+VAR
+	I : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Matrix_Scale := TRUE;
+
+IF M.IsEmpty THEN
+	RETURN;
+END_IF
+
+FOR I := 0 TO M.Length-1 DO
+	M.SetI(I,Scalar * M.GetI(I));
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_Scale">
+      <LineId Id="12" Count="1" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="1" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

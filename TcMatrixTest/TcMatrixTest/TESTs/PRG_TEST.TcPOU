@@ -3,7 +3,7 @@
   <POU Name="PRG_TEST" Id="{5f2716c6-31ed-49cd-815d-6106c2eebb72}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM PRG_TEST
 VAR
-	fbMatrixTest : FB_Matrix_Test;
+	fbDynamicMatrix : FB_DynamicMatrix_Test;
 	fbMatrixGetMagicSquare : FB_MatrixGetMagicSquare_Test;
 	fbMatrixSubmatrix : FB_MatrixSubMatrix_Test;
 	fbMatrixGrow : FB_MatrixGrow_Test;
@@ -13,6 +13,8 @@ VAR
 	fbMatrixDeterminate : FB_MatrixDeterminate_Test;
 	fbMatrixMatrixProduct : FB_MatrixMatrixProduct_Test;
 	fbVectorCrossProdcut : FB_VectorCrossProduct_Test;
+	fbStaticMatrix : FB_StaticMatrix_Test;
+	fbMatrixTranspose : FB_MatrixTranspose_Test;
 END_VAR
 ]]></Declaration>
     <Implementation>

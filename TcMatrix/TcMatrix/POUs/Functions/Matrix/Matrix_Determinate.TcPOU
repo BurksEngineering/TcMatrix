@@ -11,7 +11,7 @@ END_VAR
 VAR
 	Sum : LREAL;
 	Sign : LREAL;
-	SubMatrix : Matrix;
+	SubMatrix : ShrunkMatrixAccessor;
 	
 	Ci : UINT;
 END_VAR]]></Declaration>
@@ -22,24 +22,16 @@ END_VAR]]></Declaration>
 	RETURN;
 END_IF
 
+Matrix_Determinate := TRUE;
 
 IF M.Length = 1 THEN
-	Matrix_Determinate := TRUE;
 	Res := M.GetRC(0,0);
 ELSE
-	IF NOT(SubMatrix.Resize(M.Rows-1,M.Cols-1,FALSE,FALSE)) THEN
-		Matrix_Determinate := FALSE;
-		Res := 0;
-		RETURN;
-	END_IF
-	
-	Matrix_Determinate := TRUE;
-	
 	Sum := 0;
 	FOR Ci := 0 TO M.Cols-1 DO
 		Sign := ((UINT_TO_INT(Ci)+1) MOD 2)*2 -1;//even columns are positive, odd columns are negative
-		Matrix_Shrink(M,SubMatrix,0,Ci);
-		Sum := Sum + Sign * M.GetRC(0,Ci) * SubMatrix.GetDeterminate();//direct recursion is not accessible, but this should work
+		SubMatrix := M.GetShrunkMatrixAccessor(0,Ci);
+		Sum := Sum + Sign * M.GetRC(0,Ci) * SubMatrix.GetDeterminant();//direct recursion is not accessible, but this should work
 	END_FOR
 	Res := Sum;
 END_IF
@@ -47,28 +39,11 @@ END_IF
 ]]></ST>
     </Implementation>
     <LineIds Name="Matrix_Determinate">
-      <LineId Id="54" Count="0" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="58" Count="0" />
-      <LineId Id="57" Count="0" />
-      <LineId Id="62" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="86" Count="0" />
-      <LineId Id="43" Count="1" />
-      <LineId Id="84" Count="1" />
-      <LineId Id="105" Count="0" />
-      <LineId Id="88" Count="0" />
-      <LineId Id="83" Count="0" />
-      <LineId Id="89" Count="0" />
-      <LineId Id="87" Count="0" />
-      <LineId Id="90" Count="0" />
-      <LineId Id="64" Count="0" />
-      <LineId Id="45" Count="4" />
-      <LineId Id="65" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="52" Count="0" />
+      <LineId Id="119" Count="4" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="124" Count="2" />
+      <LineId Id="128" Count="1" />
+      <LineId Id="138" Count="8" />
       <LineId Id="7" Count="0" />
     </LineIds>
   </POU>

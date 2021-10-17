@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_MatrixTranspose_Test" Id="{147655d9-cff1-0aa5-2fc1-2f8f88d3c84f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MatrixTranspose_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenSquareExpectTranspose();
+WhenDynamicRectangleExpectTranspose();
+WhenStaticRectangleExpectTranspose();]]></ST>
+    </Implementation>
+    <Method Name="WhenDynamicRectangleExpectTranspose" Id="{ce969640-cff8-0df9-227e-a427be52db2e}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenDynamicRectangleExpectTranspose
+VAR_INPUT
+END_VAR
+VAR
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
+	
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenDynamicRectangleExpectTranspose');
+
+// @TEST-RUN
+M1.InitTrapezoidal(3,4,1,2,3);
+Result := M1.Transpose();
+M2.InitTrapezoidal(4,3,1,3,2);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+
+AssertTrue(M1.IsEqual(M2),'Data was not properly transposed');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenSquareExpectTranspose" Id="{5c35744f-5cb4-0f0b-31e7-bc6b7a691f23}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenSquareExpectTranspose
+VAR_INPUT
+END_VAR
+VAR
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
+	
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenSquareExpectTranspose');
+
+// @TEST-RUN
+M1.InitTrapezoidal(3,3,1,2,3);
+Result := M1.Transpose();
+M2.InitTrapezoidal(3,3,1,3,2);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+
+AssertTrue(M1.IsEqual(M2),'Data was not properly transposed');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenStaticRectangleExpectTranspose" Id="{287850a9-1ce0-03f7-1c4d-70bce798d08a}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenStaticRectangleExpectTranspose
+VAR_INPUT
+END_VAR
+VAR
+	M1 : ExternalStaticMatrix;
+	M2 : DynamicMatrix;
+	MT : TransposeMatrixAccessor;
+	
+	Data : ARRAY[0..11] OF LREAL;
+	
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenStaticRectangleExpectTranspose');
+
+// @TEST-RUN
+M1.Init(ADR(Data),3,4);
+M1.FillTrapezoidal(1,2,3);
+Mt := M1.GetTransposeMatrixAccessor();
+M2.InitTrapezoidal(4,3,1,3,2);
+
+// @TEST-ASSERT
+AssertTrue(M2.IsEqual(MT),'Data was not properly transposed');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_MatrixTranspose_Test">
+      <LineId Id="9" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_MatrixTranspose_Test.WhenDynamicRectangleExpectTranspose">
+      <LineId Id="9" Count="2" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixTranspose_Test.WhenSquareExpectTranspose">
+      <LineId Id="9" Count="2" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixTranspose_Test.WhenStaticRectangleExpectTranspose">
+      <LineId Id="9" Count="2" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="14" Count="2" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

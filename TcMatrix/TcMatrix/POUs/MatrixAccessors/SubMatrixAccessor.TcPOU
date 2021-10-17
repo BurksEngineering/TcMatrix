@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="SubMatrixAccessor" Id="{837da318-dc80-05cd-2c43-97c65ce7fbf9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK SubMatrixAccessor EXTENDS MatrixAccessor
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	RowStart_ : UINT;
+	RowCount_ : UINT;
+	ColStart_ : UINT;
+	ColCount_ : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Folder Name="Initializers" Id="{c4ff6fb8-d426-06a0-2de0-6e817d8e8673}" />
+    <Folder Name="Overrides" Id="{db7b0a8d-ca29-0b51-32da-29239fddaa39}" />
+    <Property Name="Cols" Id="{a38b3dd4-923d-0130-3754-ff352bbd92f6}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Total number of columns in this matrix
+PROPERTY PUBLIC Cols : UINT]]></Declaration>
+      <Get Name="Get" Id="{7ed751df-7924-05b4-3c5e-07a9c0bf5d5b}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	Cols := 0;
+	LogWarning('%s Attempted Cols access using uninitialized Matrix Accessor');
+ELSIF ColStart_+ColCount_ > M_.Cols THEN
+	Cols := 0;
+ELSE
+	Cols := ColCount_;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="Init" Id="{02301136-81ef-0875-20e7-a750b4730cef}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC Init
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	RowStart : UINT;
+	RowCount : UINT;
+	ColStart : UINT;
+	ColCount : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Init_(M);
+RowStart_ := RowStart;
+RowCount_ := RowCount;
+ColStart_ := ColStart;
+ColCount_ := ColCount;]]></ST>
+      </Implementation>
+    </Method>
+    <Property Name="Rows" Id="{aee046b9-e47f-08ab-02ba-83dd133dbd4a}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Total number of rows in this matrix
+PROPERTY PUBLIC Rows : UINT]]></Declaration>
+      <Get Name="Get" Id="{2e0f523c-22c0-0b7f-3ffa-dd5110d1775f}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	Rows := 0;
+	LogWarning('%s Attempted Rows access using uninitialized Matrix Accessor');
+ELSIF RowStart_+RowCount_ > M_.Rows THEN
+	Rows := 0;
+ELSE
+	Rows := RowCount_;
+END_IF]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
+    <Method Name="This2Parent" Id="{1ea19cef-413c-0755-3d31-b7394334adea}" FolderPath="Overrides\">
+      <Declaration><![CDATA[METHOD PROTECTED This2Parent : UINT
+VAR_INPUT
+	Index : UINT;
+END_VAR
+VAR
+	ThisR : UINT;
+	ThisC : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT __ISVALIDREF(M_) THEN
+	LogWarning('%s Attempted This2Parent calculation using uninitialized Matrix Accessor');
+	This2Parent := 0;
+	RETURN;
+END_IF
+
+IC2RC(Index,Cols,Row => ThisR, Col => ThisC);
+This2Parent := RCC2I(ThisR+RowStart_,ThisC+ColStart_,M_.Cols);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="SubMatrixAccessor">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="SubMatrixAccessor.Cols.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="1" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="SubMatrixAccessor.Init">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="3" />
+    </LineIds>
+    <LineIds Name="SubMatrixAccessor.Rows.Get">
+      <LineId Id="9" Count="2" />
+      <LineId Id="5" Count="3" />
+      <LineId Id="2" Count="0" />
+    </LineIds>
+    <LineIds Name="SubMatrixAccessor.This2Parent">
+      <LineId Id="18" Count="1" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

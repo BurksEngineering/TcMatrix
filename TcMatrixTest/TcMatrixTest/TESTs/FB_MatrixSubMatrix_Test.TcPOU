@@ -18,8 +18,8 @@ END_VAR
 VAR_INPUT
 END_VAR
 VAR
-	M1 : Matrix;
-	M2 : Matrix;
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
 	Result : BOOL;
 	
 	Ri : UINT;

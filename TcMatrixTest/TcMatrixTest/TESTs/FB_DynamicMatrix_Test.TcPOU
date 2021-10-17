@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
-  <POU Name="FB_Matrix_Test" Id="{54635403-dd01-0e43-181c-428b6dbc359d}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK FB_Matrix_Test EXTENDS FB_TestSuite
+  <POU Name="FB_DynamicMatrix_Test" Id="{54635403-dd01-0e43-181c-428b6dbc359d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DynamicMatrix_Test EXTENDS FB_TestSuite
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -16,14 +16,13 @@ WhenResizedBiggerExpectMoreMemoryAllocated();
 WhenResizedSmallerExpectLessMemoryAllocated();
 WhenResizedToZeroExpectNoMemoryAllocated();]]></ST>
     </Implementation>
-    <Folder Name="Access" Id="{6e13e87e-8a9a-048e-3a8c-43fa554b38ad}" />
     <Folder Name="Resize" Id="{bfa23fd9-95bb-0df9-1e4f-a4e0bf87e25f}" />
     <Method Name="WhenDeclaredExpectNoMemoryAllocated" Id="{e76f40f2-9e5f-0e70-0e41-efbd9edc0c41}" FolderPath="Resize\">
       <Declaration><![CDATA[METHOD PRIVATE WhenDeclaredExpectNoMemoryAllocated
 VAR_INPUT
 END_VAR
 VAR
-	M : Matrix;
+	M : DynamicMatrix;
 	
 	ExpectedBufferSize : ULINT := 0;
 	ExpectedBufferCount : ULINT := 0;
@@ -56,7 +55,7 @@ VAR_INPUT
 END_VAR
 
 VAR
-	M : Matrix;
+	M : DynamicMatrix;
 	ResizeSuccess : BOOL;
 	
 	ExpectedBufferSize : ULINT := 1*SIZEOF(LREAL) + SIZEOF(ULINT);
@@ -93,7 +92,7 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	M : Matrix;
+	M : DynamicMatrix;
 	InitialResizeSuccess : BOOL;
 	SecondResizeSuccess : BOOL;
 	
@@ -133,7 +132,7 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	M : Matrix;
+	M : DynamicMatrix;
 	InitialResizeSuccess : BOOL;
 	SecondResizeSuccess : BOOL;
 	
@@ -173,7 +172,7 @@ TEST_FINISHED();]]></ST>
 VAR_INPUT
 END_VAR
 VAR
-	M : Matrix;
+	M : DynamicMatrix;
 	InitialResizeSuccess : BOOL;
 	SecondResizeSuccess : BOOL;
 	
@@ -208,10 +207,10 @@ AssertEquals(Expected := ExpectedBufferCount,
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="FB_Matrix_Test">
+    <LineIds Name="FB_DynamicMatrix_Test">
       <LineId Id="9" Count="4" />
     </LineIds>
-    <LineIds Name="FB_Matrix_Test.WhenDeclaredExpectNoMemoryAllocated">
+    <LineIds Name="FB_DynamicMatrix_Test.WhenDeclaredExpectNoMemoryAllocated">
       <LineId Id="5" Count="0" />
       <LineId Id="180" Count="0" />
       <LineId Id="167" Count="0" />
@@ -226,7 +225,7 @@ TEST_FINISHED();]]></ST>
       <LineId Id="29" Count="0" />
       <LineId Id="51" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Matrix_Test.WhenInitiallyResizedExpectMemoryAllocated">
+    <LineIds Name="FB_DynamicMatrix_Test.WhenInitiallyResizedExpectMemoryAllocated">
       <LineId Id="6" Count="0" />
       <LineId Id="39" Count="0" />
       <LineId Id="38" Count="0" />
@@ -236,7 +235,7 @@ TEST_FINISHED();]]></ST>
       <LineId Id="40" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Matrix_Test.WhenResizedBiggerExpectMoreMemoryAllocated">
+    <LineIds Name="FB_DynamicMatrix_Test.WhenResizedBiggerExpectMoreMemoryAllocated">
       <LineId Id="157" Count="0" />
       <LineId Id="176" Count="0" />
       <LineId Id="175" Count="0" />
@@ -249,7 +248,7 @@ TEST_FINISHED();]]></ST>
       <LineId Id="177" Count="1" />
       <LineId Id="51" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Matrix_Test.WhenResizedSmallerExpectLessMemoryAllocated">
+    <LineIds Name="FB_DynamicMatrix_Test.WhenResizedSmallerExpectLessMemoryAllocated">
       <LineId Id="163" Count="0" />
       <LineId Id="185" Count="0" />
       <LineId Id="184" Count="0" />
@@ -260,7 +259,7 @@ TEST_FINISHED();]]></ST>
       <LineId Id="186" Count="1" />
       <LineId Id="51" Count="0" />
     </LineIds>
-    <LineIds Name="FB_Matrix_Test.WhenResizedToZeroExpectNoMemoryAllocated">
+    <LineIds Name="FB_DynamicMatrix_Test.WhenResizedToZeroExpectNoMemoryAllocated">
       <LineId Id="163" Count="0" />
       <LineId Id="192" Count="0" />
       <LineId Id="191" Count="0" />

@@ -3,8 +3,8 @@
   <POU Name="Matrix_Shrink" Id="{d21782ed-5125-47a2-8d89-29ac4702d315}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_Shrink : Bool
 VAR_INPUT
-	M_From : Matrix;
-	M_To : Matrix;
+	M_From : REFERENCE TO Matrix;
+	M_To : REFERENCE TO Matrix;
 	Row : UINT;
 	Col : UINT;
 END_VAR

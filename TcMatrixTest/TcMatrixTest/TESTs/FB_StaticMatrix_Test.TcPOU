@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_StaticMatrix_Test" Id="{87892744-99b1-0998-358b-247090a4c803}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_StaticMatrix_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenCreatedExpectDataAssignable();]]></ST>
+    </Implementation>
+    <Method Name="WhenCreatedExpectDataAssignable" Id="{3d9f6a97-0f3a-0add-2595-58c98258ff46}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenCreatedExpectDataAssignable
+VAR_INPUT
+END_VAR
+VAR
+	M1 : ExternalStaticMatrix;
+	M2 : DynamicMatrix;
+	Data : ARRAY[0..8] OF LREAL;
+	
+	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenCreatedExpectDataAssignable');
+
+// @TEST-RUN
+M2.InitMagicSquare(3);
+M1.Init(ADR(Data),3,3);
+M1.FillFrom(M2);
+
+
+// @TEST-ASSERT
+AssertTrue(M1.IsEqual(M2),'Data was not all assigned');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_StaticMatrix_Test">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_StaticMatrix_Test.WhenCreatedExpectDataAssignable">
+      <LineId Id="9" Count="2" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

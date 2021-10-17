@@ -52,7 +52,13 @@
     <Compile Include="TESTs\FB_MatrixSubMatrix_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TESTs\FB_Matrix_Test.TcPOU">
+    <Compile Include="TESTs\FB_DynamicMatrix_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TESTs\FB_MatrixTranspose_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TESTs\FB_StaticMatrix_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TESTs\FB_VectorCrossProduct_Test.TcPOU">

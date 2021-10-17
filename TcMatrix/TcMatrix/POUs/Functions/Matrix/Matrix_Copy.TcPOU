@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_Copy" Id="{0778dcde-058a-04aa-1a54-6d2a95b13461}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_Copy : BOOL
+VAR_INPUT
+	M_From : REFERENCE TO Matrix;
+	M_To : REFERENCE TO Matrix;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF M_From.IsEmpty OR M_To.IsEmpty OR NOT(M_From.IsEqualSize(M_To)) THEN
+	Matrix_Copy := FALSE;
+	RETURN;
+END_IF
+
+Matrix_Copy := TRUE;
+
+M_To.FillFrom(M_From);]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_Copy">
+      <LineId Id="21" Count="6" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
