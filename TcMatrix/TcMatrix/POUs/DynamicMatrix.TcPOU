@@ -98,6 +98,23 @@ END_IF
 AsGrown := Matrix_Grow(M,THIS^,Row,Col,DiagVal,RowVal,ColVal);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="AsInverse" Id="{fffae31c-4722-0c74-25e1-98f5de4d08c5}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsInverse : BOOL
+VAR_INPUT
+	M : REFERENCE TO MAtrix;
+	Tolerance : LREAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(M.IsSquare) OR M.IsEmpty THEN
+	AsInverse := FALSE;
+	RETURN;
+END_IF
+
+THIS^.InitCopy(M);
+AsInverse := THIS^.InvertSquare(Tolerance);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="AsMatrixProduct" Id="{53280527-f75b-06ac-01d7-498318ada10c}" FolderPath="Resultants\">
       <Declaration><![CDATA[METHOD PUBLIC AsMatrixProduct : BOOL
 VAR_INPUT
@@ -677,6 +694,15 @@ END_IF]]></ST>
       <LineId Id="17" Count="0" />
       <LineId Id="16" Count="0" />
     </LineIds>
+    <LineIds Name="DynamicMatrix.AsInverse">
+      <LineId Id="9" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
     <LineIds Name="DynamicMatrix.AsMatrixProduct">
       <LineId Id="29" Count="1" />
       <LineId Id="42" Count="0" />
@@ -911,16 +937,7 @@ END_IF]]></ST>
       <LineId Id="20" Count="0" />
     </LineIds>
     <LineIds Name="DynamicMatrix.Transpose">
-      <LineId Id="12" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="17" Count="0" />
+      <LineId Id="29" Count="10" />
       <LineId Id="16" Count="0" />
     </LineIds>
   </POU>

@@ -1,0 +1,131 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_MatrixInvert_Test" Id="{58e64662-6852-0ee1-3386-4bd0e41d7b01}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_MatrixInvert_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenIdentityExpectIdentity();
+WhenSingularExpectError();
+WhenSolvableExpectSolution();
+]]></ST>
+    </Implementation>
+    <Method Name="WhenIdentityExpectIdentity" Id="{78d2eada-d22c-013f-2c4c-82c721cf973f}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenIdentityExpectIdentity
+VAR_INPUT
+END_VAR
+VAR
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenIdentityExpectIdentity');
+
+// @TEST-RUN
+M1.InitIdentity(3);
+M2.InitIdentity(3);
+Result := M2.InvertSquare(1E-9);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertTrue(M1.IsNearlyEqual(M2,1E-6),'Result was not the same');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenSingularExpectError" Id="{4b469611-5b6d-0dd5-3f12-a06b3d86ec57}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenSingularExpectError
+VAR_INPUT
+END_VAR
+VAR
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenSingularExpectError');
+
+// @TEST-RUN
+M1.InitTrapezoidal(3,3,1,1,1);
+Result := M2.AsInverse(M1,1E-9);
+
+// @TEST-ASSERT
+AssertFalse(Result,'Main function call was surprisingly successful');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenSolvableExpectSolution" Id="{99550ef7-96d5-0f67-03af-0b05c32633ba}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenSolvableExpectSolution
+VAR_INPUT
+END_VAR
+VAR
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
+	M3 : DynamicMatrix;
+	M4 : DynamicMatrix;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenSolvableExpectSolution');
+
+// @TEST-RUN
+M1.InitIdentity(3);
+M2.InitMagicSquare(3);
+Result := M3.AsInverse(M2,1E-9);
+M4.AsMatrixProduct(M2,M3);
+
+// @TEST-ASSERT
+AssertTrue(Result,'Main function call was not successful');
+AssertTrue(M1.IsNearlyEqual(M4,1E-6),'Result was not a true inverse');
+
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_MatrixInvert_Test">
+      <LineId Id="33" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="12" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixInvert_Test.WhenIdentityExpectIdentity">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixInvert_Test.WhenSingularExpectError">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="50" Count="5" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_MatrixInvert_Test.WhenSolvableExpectSolution">
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="69" Count="1" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="72" Count="2" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

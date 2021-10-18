@@ -439,6 +439,21 @@ FOR I := 0 TO Length-1 DO
 END_FOR]]></ST>
       </Implementation>
     </Method>
+    <Method Name="InvertSquare" Id="{a64d1a3c-dedb-0302-0073-1fce8da4a4ec}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[//Inverts the matrix. May fail if the matrix is too close to being singular. Use the tolerance input to specify how close to go (1E-6 to 1E-9 is porbably good).
+//
+//:Prerequisites:
+//- This matrix is square
+//- This matrix is not empty
+METHOD PUBLIC InvertSquare : BOOL//True if the inverse has been calculated. False if a precondition was not met, or a near-singularity was detected (data may be malformed).
+VAR_INPUT
+	Tolerance : LREAL;//The smallest magnitude of number that is allowed to be used as a denominator in the calculation of the inverse
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[InvertSquare := Matrix_InvertSquare(THIS^,Tolerance);]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="IsEmpty" Id="{c235a1c3-19da-47f7-9309-34932eb65324}" FolderPath="Helpers\">
       <Declaration><![CDATA[//Returns true if the matrix does not have any addresible elements
 PROPERTY PUBLIC IsEmpty : Bool]]></Declaration>
@@ -860,6 +875,22 @@ Sum := Sum_;]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Method Name="TransposeSquare" Id="{e53a992d-b14e-03c8-244a-30c9a5ab7640}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[//Transposes the matrix.
+//
+//:Prerequisites:
+//- This matrix is square
+//- This matrix is not emptyMETHOD PUBLIC TransposeSquare : BOOL
+METHOD PUBLIC TransposeSquare : BOOL
+VAR_INPUT
+END_VAR
+VAR
+	Temp : DynamicMatrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TransposeSquare := Matrix_TransposeSquare(THIS^);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="WriteDataToString" Id="{7c9446a3-69a9-08e8-3b1c-3852339b4db4}" FolderPath="Helpers\">
       <Declaration><![CDATA[//Writes the elements of this matrix to a string in a human-readable way, up to the specified length.
 //
@@ -1066,6 +1097,9 @@ END_VAR
       <LineId Id="9" Count="0" />
       <LineId Id="8" Count="0" />
     </LineIds>
+    <LineIds Name="Matrix.InvertSquare">
+      <LineId Id="9" Count="0" />
+    </LineIds>
     <LineIds Name="Matrix.IsEmpty.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
@@ -1214,6 +1248,9 @@ END_VAR
       <LineId Id="9" Count="0" />
       <LineId Id="12" Count="1" />
       <LineId Id="2" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.TransposeSquare">
       <LineId Id="16" Count="0" />
     </LineIds>
     <LineIds Name="Matrix.WriteDataToString">

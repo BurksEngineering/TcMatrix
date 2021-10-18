@@ -15,6 +15,7 @@ VAR
 	fbVectorCrossProdcut : FB_VectorCrossProduct_Test;
 	fbStaticMatrix : FB_StaticMatrix_Test;
 	fbMatrixTranspose : FB_MatrixTranspose_Test;
+	fbMatrixInvert : FB_MatrixInvert_Test;
 END_VAR
 ]]></Declaration>
     <Implementation>

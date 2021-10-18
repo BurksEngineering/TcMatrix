@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_InvertSquare" Id="{b101bfa5-3cd4-0d28-0025-8721c0566043}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_InvertSquare : BOOL
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+	Tolerance : LREAL;//numbers with a smaller magnitude than this will not be used as denominators, sintead resulting in an abort
+END_VAR
+VAR
+	Ri : UINT;
+	Ci : UINT;
+	Ni : UINT;
+	Mi : UINT;
+	temp : LREAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT(M.IsSquare)THEN
+	Matrix_InvertSquare := FALSE;
+	RETURN;
+END_IF
+
+Matrix_InvertSquare := TRUE;
+
+IF M.Length <= 1 THEN
+	RETURN;
+END_IF
+
+FOR Mi := 0 TO M.Cols-1 DO
+	//for each element RC(Ni,Ni)....
+	temp := M.GetRC(Mi,Mi);//used as denominator everywhere
+	IF ABS(temp) < Tolerance THEN
+		Matrix_InvertSquare := FALSE;
+		RETURN;
+	END_IF;
+	
+	//Kron reduction
+	FOR Ri := 0 TO M.Rows-1 DO
+		IF Ri <> Mi THEN
+			FOR Ci := 0 TO M.Cols-1 DO
+				IF Ci <> Mi THEN
+					M.SetRC(Ri,Ci,M.GetRC(Ri,Ci) - M.GetRC(Ri,Mi)*M.GetRC(Mi,Ci)/temp);
+				END_IF
+			END_FOR
+		END_IF;
+	END_FOR
+	
+	temp := -1/temp;
+	M.SetRC(Mi,Mi,temp);
+	FOR Ni := 0 TO M.Cols-1 DO
+		IF Ni <> Mi THEN
+			M.SetRC(Mi,Ni,M.GetRC(Mi,Ni)*temp);
+			M.SetRC(Ni,Mi,M.GetRC(Ni,Mi)*temp);
+		END_IF;
+	END_FOR
+	
+END_FOR
+
+M.Scale(-1);
+]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_InvertSquare">
+      <LineId Id="8" Count="30" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="40" Count="1" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="42" Count="4" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

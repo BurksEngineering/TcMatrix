@@ -12,7 +12,7 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF NOT(M.IsSquare)THEN
+      <ST><![CDATA[IF NOT(M.IsSquare) OR M.isempty THEN
 	Matrix_TransposeSquare := FALSE;
 	RETURN;
 END_IF

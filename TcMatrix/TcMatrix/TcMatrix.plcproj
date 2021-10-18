@@ -18,7 +18,7 @@
     <Company>Burks Engineering</Company>
     <Released>false</Released>
     <Title>TcMatrix</Title>
-    <ProjectVersion>1.2.2</ProjectVersion>
+    <ProjectVersion>1.2.10</ProjectVersion>
     <DefaultNamespace>TcMatrix</DefaultNamespace>
     <Author>Andrew Burks</Author>
     <Description>Matrix arithmatic library</Description>
@@ -75,6 +75,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Matrix\Matrix_Grow.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Matrix\Matrix_InvertSquare.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Matrix\Matrix_Product.TcPOU">

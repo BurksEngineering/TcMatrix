@@ -43,6 +43,9 @@
     <Compile Include="TESTs\FB_MatrixMatrixProduct_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TESTs\FB_MatrixInvert_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="TESTs\FB_MatrixShrink_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
