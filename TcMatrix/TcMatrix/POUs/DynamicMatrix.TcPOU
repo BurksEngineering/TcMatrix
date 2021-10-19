@@ -36,6 +36,27 @@ END_VAR
         <ST><![CDATA[AsColVector := AsSubMatrix(M,0,M.Rows,Col,1);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="AsElementDifference" Id="{6b700784-8326-0bcf-2c9d-ca6331de219c}" FolderPath="Resultants\">
+      <Declaration><![CDATA[METHOD PUBLIC AsElementDifference : BOOL
+VAR_INPUT
+	Minuend : REFERENCE TO Matrix;
+	Subtrahend : REFERENCE TO Matrix;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT(Minuend.IsEqualSize(subtrahend)) THEN
+	AsElementDifference := FALSE;
+	LogWarning('%s: Matricies supplied to AsElementDifference were not the same size');
+	RETURN;
+END_IF
+
+IF NOT(Init(Minuend.Rows,Minuend.Cols)) THEN
+	AsElementDifference := FALSE;
+	RETURN;
+END_IF
+
+AsElementDifference := Matrix_ElementSum(Minuend,Subtrahend,THIS^);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="AsElementProduct" Id="{1d639892-7279-0584-2a80-52cd430c8d25}" FolderPath="Resultants\">
       <Declaration><![CDATA[METHOD PUBLIC AsElementProduct : BOOL
 VAR_INPUT
@@ -659,6 +680,17 @@ END_IF]]></ST>
     </LineIds>
     <LineIds Name="DynamicMatrix.AsColVector">
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DynamicMatrix.AsElementDifference">
+      <LineId Id="29" Count="1" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="31" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
     </LineIds>
     <LineIds Name="DynamicMatrix.AsElementProduct">
       <LineId Id="29" Count="0" />

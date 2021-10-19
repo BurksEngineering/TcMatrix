@@ -18,7 +18,7 @@
     <Company>Burks Engineering</Company>
     <Released>false</Released>
     <Title>TcMatrix</Title>
-    <ProjectVersion>1.2.10</ProjectVersion>
+    <ProjectVersion>1.2.15</ProjectVersion>
     <DefaultNamespace>TcMatrix</DefaultNamespace>
     <Author>Andrew Burks</Author>
     <Description>Matrix arithmatic library</Description>
@@ -65,13 +65,16 @@
     <Compile Include="POUs\Functions\Matrix\Matrix_Copy.TcPOU">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="POUs\Functions\Matrix\Matrix_Determinate.TcPOU">
+    <Compile Include="POUs\Functions\Matrix\Matrix_DeterminateSquare.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Matrix\Matrix_ElementProduct.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Matrix\Matrix_ElementSum.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="POUs\Functions\Matrix\Matrix_ElementDifference.TcPOU">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="POUs\Functions\Matrix\Matrix_Grow.TcPOU">

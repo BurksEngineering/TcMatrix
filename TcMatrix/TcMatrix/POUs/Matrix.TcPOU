@@ -134,6 +134,66 @@ END_VAR
         <ST><![CDATA[CopyTo := Matrix_Copy(THIS^,M);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="ElementDifference" Id="{e1125626-a54e-0cea-3fa3-0f21fba9398c}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[(*
+For each element in this matrix, calculate a new value by Subtracting the value of the corresponding element of the supplied matrix from the value in this matrix
+
+THIS := THIS - M
+
+:Prerequisites:
+ - This matrix is the same size as the supplied matrix
+ - Neither matrix is empty
+ 
+ *)
+METHOD PUBLIC ElementDifference : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
+VAR_INPUT
+	M : REFERENCE TO Matrix;//the subtrahend in the subtraction
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ElementDifference := Matrix_ElementDifference(THIS^,M,THIS^);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ElementProduct" Id="{0f328a92-3951-078e-3107-736a766f63a8}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[(*
+For each element in this matrix, calculate a new value by Multiplying the value of the corresponding element of the supplied matrix with the value in this matrix
+
+THIS := THIS .* M
+
+:Prerequisites:
+ - This matrix is the same size as the supplied matrix
+ - Neither matrix is empty
+ 
+ *)
+METHOD PUBLIC ElementProduct : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
+VAR_INPUT
+	M : REFERENCE TO Matrix;//the supplied matrix to be multiplied element-by-element to this matrix
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ElementProduct := Matrix_ElementProduct(THIS^,M,THIS^);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ElementSum" Id="{009657bb-27d7-0cc7-0f12-e292b249bb77}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[(*
+For each element in this matrix, calculate a new value by Adding the value of the corresponding element of the supplied matrix with the value in this matrix
+
+THIS := THIS + M
+
+:Prerequisites:
+ - This matrix is the same size as the supplied matrix
+ - Neither matrix is empty
+ 
+ *)
+METHOD PUBLIC ElementSum : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
+VAR_INPUT
+	M : REFERENCE TO Matrix;//the supplied matrix to be added to this matrix
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ElementSum := Matrix_ElementSum(THIS^,M,THIS^);]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="FillFrom" Id="{022b237b-0584-4ce7-a547-77e65ab3d048}" FolderPath="Modifiers\">
       <Declaration><![CDATA[(*
 For every element that exist in both this matrix and the source matrix, copy the value from the source matrix into this matrix
@@ -187,7 +247,7 @@ IF CStart >= Cols THEN
 	RETURN;
 END_IF
 
-SubMatrix := M.GetSubMatrixAccessor(RStart,Rows-Rstart,CStart,Cols-CStart);
+SubMatrix := GetSubMatrixAccessor(RStart,Rows-Rstart,CStart,Cols-CStart);
 SubMatrix.FillFrom(M);]]></ST>
       </Implementation>
     </Method>
@@ -235,7 +295,7 @@ VAR
 	Res : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF NOT(Matrix_Determinate(M := THIS^,Res => Res)) THEN
+        <ST><![CDATA[IF NOT(Matrix_DeterminateSquare(M := THIS^,Res => Res)) THEN
 	LogWarning('%s: Unable to calculate determinate');
 	GetDeterminant := 0;
 ELSE
@@ -880,8 +940,8 @@ Sum := Sum_;]]></ST>
 //
 //:Prerequisites:
 //- This matrix is square
-//- This matrix is not emptyMETHOD PUBLIC TransposeSquare : BOOL
-METHOD PUBLIC TransposeSquare : BOOL
+//- This matrix is not empty
+METHOD PUBLIC TransposeSquare : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
 VAR_INPUT
 END_VAR
 VAR
@@ -996,6 +1056,15 @@ END_VAR
     </LineIds>
     <LineIds Name="Matrix.CopyTo">
       <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.ElementDifference">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.ElementProduct">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.ElementSum">
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Matrix.FillFrom">
       <LineId Id="19" Count="0" />

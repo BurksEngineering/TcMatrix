@@ -78,13 +78,13 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="This2Parent" Id="{dfb72d27-38c6-0ee1-3757-2606a49a2af4}" FolderPath="Mapping\">
-      <Declaration><![CDATA[METHOD PROTECTED ABSTRACT This2Parent : UINT
+      <Declaration><![CDATA[METHOD PROTECTED This2Parent : UINT
 VAR_INPUT
 	Index : UINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[]]></ST>
+        <ST><![CDATA[This2Parent := Index;]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="MatrixAccessor">

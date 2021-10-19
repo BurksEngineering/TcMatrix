@@ -12,6 +12,7 @@ VAR
 	M_Vectors : DynamicMatrix;
 	M_Det : ShrunkMatrixAccessor;
 	Det : LREAL;
+	Sign : LREAL;
 END_VAR
 VAR_IN_OUT
 	Vectors : ARRAY[*] OF POINTER TO Matrix;
@@ -67,11 +68,12 @@ Vector_CrossProduct := TRUE;
 //take determiantes
 FOR Ci := 0 TO M_Vectors.Cols-1 DO
 	M_Det.Init(M_Vectors,0,Ci);
-	IF NOT(Matrix_Determinate(M_Det, Res=>Det)) THEN
+	IF NOT(Matrix_DeterminateSquare(M_Det, Res=>Det)) THEN
 		Vector_CrossProduct := FALSE;
 		RETURN;
 	END_IF
-	Res.SetI(Ci,Det);
+	Sign := ((UINT_TO_INT(Ci)+1) MOD 2)*2 -1;//even columns are positive, odd columns are negative
+	Res.SetI(Ci,Det*Sign);
 END_FOR
 
 ]]></ST>
@@ -97,7 +99,9 @@ END_FOR
       <LineId Id="218" Count="0" />
       <LineId Id="201" Count="1" />
       <LineId Id="225" Count="0" />
-      <LineId Id="204" Count="6" />
+      <LineId Id="204" Count="3" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="208" Count="2" />
       <LineId Id="47" Count="0" />
     </LineIds>
   </POU>

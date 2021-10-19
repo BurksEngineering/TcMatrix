@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_ElementDifference" Id="{f74edede-e315-0158-3390-9afe49ecc709}" SpecialFunc="None">
+    <Declaration><![CDATA[//Res := Minuend - Subtrahend
+FUNCTION Matrix_ElementDifference : BOOL
+VAR_INPUT
+	Minuend : REFERENCE TO Matrix;
+	Subtrahend : REFERENCE TO Matrix;
+	Res : REFERENCE TO Matrix;
+END_VAR
+VAR
+	I : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT(Minuend.IsEqualSize(Res)) OR Minuend.IsEmpty THEN
+	Matrix_ElementDifference := FALSE;
+	RETURN;
+END_IF
+
+IF NOT(Subtrahend.IsEqualSize(Res)) OR Subtrahend.IsEmpty THEN
+	Matrix_ElementDifference := FALSE;
+	RETURN;
+END_IF
+
+Matrix_ElementDifference := TRUE;
+
+FOR I := 0 TO Res.Length - 1 DO
+	Res.SetI(I,Minuend.GetI(I)-Subtrahend.GetI(I));
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_ElementDifference">
+      <LineId Id="45" Count="13" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

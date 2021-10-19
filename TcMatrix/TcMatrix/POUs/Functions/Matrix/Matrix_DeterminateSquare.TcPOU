@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
-  <POU Name="Matrix_Determinate" Id="{eb8e9d71-3179-0365-01f4-1666dd276213}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION Matrix_Determinate : BOOL
+  <POU Name="Matrix_DeterminateSquare" Id="{eb8e9d71-3179-0365-01f4-1666dd276213}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_DeterminateSquare : BOOL
 VAR_INPUT
 	M : REFERENCE TO Matrix;
 END_VAR
@@ -17,12 +17,12 @@ VAR
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[IF NOT(M.IsSquare) OR M.IsEmpty THEN
-	Matrix_Determinate := FALSE;
+	Matrix_DeterminateSquare := FALSE;
 	Res := 0;
 	RETURN;
 END_IF
 
-Matrix_Determinate := TRUE;
+Matrix_DeterminateSquare := TRUE;
 
 IF M.Length = 1 THEN
 	Res := M.GetRC(0,0);
@@ -38,12 +38,8 @@ END_IF
 
 ]]></ST>
     </Implementation>
-    <LineIds Name="Matrix_Determinate">
-      <LineId Id="119" Count="4" />
-      <LineId Id="147" Count="0" />
-      <LineId Id="124" Count="2" />
-      <LineId Id="128" Count="1" />
-      <LineId Id="138" Count="8" />
+    <LineIds Name="Matrix_DeterminateSquare">
+      <LineId Id="174" Count="19" />
       <LineId Id="7" Count="0" />
     </LineIds>
   </POU>

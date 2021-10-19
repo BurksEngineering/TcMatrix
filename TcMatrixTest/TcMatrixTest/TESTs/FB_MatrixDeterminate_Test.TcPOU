@@ -28,7 +28,7 @@ END_VAR]]></Declaration>
 
 // @TEST-RUN
 M1.InitMagicSquare(3);
-Result := Matrix_Determinate(M := M1,Res => Actual);
+Result := Matrix_DeterminateSquare(M := M1,Res => Actual);
 
 // @TEST-ASSERT
 AssertTrue(Result,'Main function call was not successful');
@@ -52,7 +52,7 @@ END_VAR]]></Declaration>
 
 // @TEST-RUN
 M1.InitTrapezoidal(2,3,1,1,1);
-Result := Matrix_Determinate(M := M1,Res => Actual);
+Result := Matrix_DeterminateSquare(M := M1,Res => Actual);
 
 // @TEST-ASSERT
 AssertFalse(Result,'Main function call was unexpectedly successful');
