@@ -1,0 +1,296 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="MatrixCsvReader" Id="{57e330de-3a6c-0c50-1c55-a24f6c132b53}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK MatrixCsvReader
+VAR_INPUT
+	bExecute : BOOL;
+	M : REFERENCE TO Matrix;
+	sPathName : T_MaxString;
+	tTimeout : TIME;//timeout applied indidivudally to each file operation
+	nHeaderLines : UDINT;//number of lines to skip at the beginning
+END_VAR
+VAR_OUTPUT
+	bBusy : BOOL;
+	bError : BOOL;
+	nErrId : UDINT;
+	nErrStep : UDINT;
+	nRows : UINT;
+	nCols : UINT;
+	nVals : UINT;
+END_VAR
+VAR
+	FileOpen : FB_FileOpen;
+	CsvRead : FB_CSVMemBufferReader;
+	FileRead : FB_FileRead;
+	FileSeek : FB_FileSeek;
+	FileClose : FB_FileClose;
+	
+	hFile : UINT;
+	readEOF : BOOL;
+	bytesRead : DINT;
+	bytesParsed : DINT;
+	buffer : STRING(bufferSize);
+	step : UDINT;
+	
+	Hi : UINT;
+	Ri : UINT;
+	Ci : UINT;
+	BuffCmd : E_EnumCmdType;
+END_VAR
+VAR CONSTANT
+	bufferSize : UDINT := 1024;
+	dataSize : UDINT := 16;	
+
+	stepReady : UDINT := 0;
+	stepOpenFile : UDINT := 1;
+	stepFillBuffer : UDINT := 2;
+	stepReadBuffer : UDINT := 3;
+	stepMovePointer : UDINT := 4;
+	stepCloseFile : UDINT := 5;
+	stepDone : UDINT := 6;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FileOpen(
+	sNetId := '',
+	sPathName := spathname,
+	nMode := FOPEN_MODEREAD,
+	ePath := E_OpenPath.PATH_GENERIC,
+	bExecute := step = stepOpenFile,
+	tTimeout := tTimeout);
+FileRead(snetId := '',
+	hFile := hFile,
+	pReadBuff := ADR(buffer),
+	cbReadLen := bufferSize,
+	bExecute := step = stepFillBuffer,
+	tTimeout := tTimeout);
+FileSeek(snetID := '',
+	hFile := hFile,
+	//nSeekPos := 0,
+	eOrigin := E_SeekOrigin.SEEK_CUR,
+	bExecute := step = stepMovePointer,
+	tTimeout := tTimeout);
+FileClose(
+	snetId := '',
+	hFile := hFile,
+	bexecute := step = stepCloseFile,
+	tTimeout := tTimeout);
+			
+CASE step OF
+	stepReady:
+		bError := FALSE;
+		nErrId := 0;
+		nErrStep := 0;
+		
+		hFile := 0;
+		readEOF := FALSE;
+		
+		Hi := 0;
+		Ri := 0;
+		Ci := 0;
+		nRows := 0;
+		nCols := 0;
+		
+		IF bExecute AND __ISVALIDREF(M) THEN
+			IF NOT M.IsEmpty THEN
+				bBusy := TRUE;
+				step := stepOpenFile;
+			END_IF
+		END_IF
+		
+	stepOpenFile:
+		
+		IF FileOpen.bError THEN
+			bError := TRUE;
+			nErrId := FileOpen.nErrId;
+			nErrStep := step;
+			step := stepDone;
+		ELSIF NOT(FileOpen.bBusy) THEN
+			hFile := FileOpen.hFile;
+			step := stepFillBuffer;
+		END_IF
+		
+	stepFillBuffer:
+		bytesRead := 0;
+		IF FileRead.bError THEN
+			bError := TRUE;
+			nErrId := FileRead.nErrId;
+			nErrStep := step;
+			step := stepCloseFile;
+		ELSIF NOT(FileRead.bBusy) THEN
+			bytesRead := UDINT_TO_DINT(FileRead.cbRead);
+			readEOF := FileRead.bEOF;//it looks like EOF is mutually exclusive with actually reading bytes. so kind of useless.
+			IF bytesRead = 0 THEN
+				step := stepCloseFile;
+			ELSE
+				step := stepReadBuffer;
+			END_IF
+		END_IF
+		
+	stepReadBuffer:
+		BuffCmd := E_EnumCmdType.eEnumCmd_First;
+		bytesParsed := 0;
+		REPEAT
+			CsvRead(eCmd := BuffCmd,
+				pBuffer := ADR(Buffer),
+				cbBuffer := DINT_TO_UDINT(bytesRead));
+			BuffCmd := E_EnumCmdType.eEnumCmd_Next;
+			
+			IF CsvRead.bOk THEN
+				bytesparsed := bytesparsed + UDINT_TO_DINT(CsvRead.cbRead);
+				IF Hi < nHeaderLines THEN
+					IF CsvRead.bCRLF THEN
+						Hi := Hi + 1;
+					END_IF
+				ELSE
+					IF Ri >= M.Rows OR Ci >= M.Cols THEN
+						bError := TRUE;
+						nErrId :=1;
+						nErrStep := step;
+						step := stepCloseFile;
+						RETURN;
+					END_IF
+					M.SetRC(Ri,Ci,STRING_TO_LREAL(CsvRead.getValue));
+					Ci := Ci + 1;
+					nVals := NVals + 1;
+					IF CsvRead.bCRLF THEN
+						Ri := Ri + 1;
+						Ci := 0;
+						nRows := Ri;
+					END_IF
+					IF Ci > nCols THEN
+						nCols := Ci;
+					END_IF
+				END_IF
+			END_IF
+		UNTIL
+			NOT(CsvRead.bOk)
+		END_REPEAT
+		IF readEOF THEN//this probably will never happen because EOF seems to be mutually exclusive with reading bytes
+			step := stepCloseFile;
+		ELSE
+			//move pointer backwards to where it was before the read, then forward based on how much data was read from the CSV buffer. This re-reads any partial cells that were not parsed
+			FileSeek.nSeekPos := bytesParsed - bytesRead;
+			IF FileSeek.nSeekPos <> 0 THEN
+				step := stepMovePointer;
+			ELSE
+				step := stepFillBuffer;
+			END_IF;
+		END_IF
+		
+	
+		
+	stepMovePointer:
+		IF FileSeek.bError AND NOT bError THEN
+			bError := TRUE;
+			nErrId := FileSeek.nErrId;
+			nErrStep := step;
+			step := stepDone;
+		ELSIF NOT(FileSeek.bBusy) THEN
+			step := stepFillBuffer;
+		END_IF
+		
+	stepCloseFile:
+		
+		IF FileClose.bError AND NOT bError THEN
+			bError := TRUE;
+			nErrId := FileClose.nErrId;
+			nErrStep := step;
+			step := stepDone;
+		ELSIF NOT(FileClose.bBusy) THEN
+			step := stepDone;
+		END_IF
+		
+		
+	stepDone:
+		bBusy := FALSE;
+END_CASE
+
+IF NOT bExecute THEN
+	step := stepReady;
+	bBusy := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="MatrixCsvReader">
+      <LineId Id="35" Count="7" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="240" Count="1" />
+      <LineId Id="46" Count="1" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="256" Count="4" />
+      <LineId Id="48" Count="3" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="60" Count="3" />
+      <LineId Id="378" Count="1" />
+      <LineId Id="381" Count="0" />
+      <LineId Id="380" Count="0" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="319" Count="1" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="69" Count="9" />
+      <LineId Id="377" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="237" Count="1" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="242" Count="5" />
+      <LineId Id="383" Count="0" />
+      <LineId Id="375" Count="0" />
+      <LineId Id="384" Count="1" />
+      <LineId Id="387" Count="1" />
+      <LineId Id="386" Count="0" />
+      <LineId Id="239" Count="0" />
+      <LineId Id="261" Count="2" />
+      <LineId Id="392" Count="0" />
+      <LineId Id="264" Count="1" />
+      <LineId Id="267" Count="1" />
+      <LineId Id="274" Count="0" />
+      <LineId Id="372" Count="0" />
+      <LineId Id="297" Count="0" />
+      <LineId Id="391" Count="0" />
+      <LineId Id="271" Count="1" />
+      <LineId Id="303" Count="1" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="301" Count="0" />
+      <LineId Id="312" Count="2" />
+      <LineId Id="310" Count="0" />
+      <LineId Id="373" Count="0" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="309" Count="0" />
+      <LineId Id="325" Count="0" />
+      <LineId Id="306" Count="2" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="321" Count="2" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="298" Count="0" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="276" Count="1" />
+      <LineId Id="280" Count="1" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="389" Count="0" />
+      <LineId Id="285" Count="1" />
+      <LineId Id="284" Count="0" />
+      <LineId Id="287" Count="2" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="290" Count="6" />
+      <LineId Id="279" Count="0" />
+      <LineId Id="278" Count="0" />
+      <LineId Id="131" Count="12" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="145" Count="4" />
+      <LineId Id="144" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

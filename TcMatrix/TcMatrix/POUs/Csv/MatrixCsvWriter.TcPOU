@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="MatrixCsvWriter" Id="{b9c4277f-dd1d-07b9-250c-5d70c700e57b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK MatrixCsvWriter
+VAR_INPUT
+	bExecute : BOOL;
+	M : REFERENCE TO Matrix;
+	sPathName : T_MaxString;
+	tTimeout : TIME;//timeout applied indidivudally to each file operation
+	pHeader : POINTER TO STRING;
+	cbHeaderLen : UDINT;
+END_VAR
+VAR_OUTPUT
+	bBusy : BOOL;
+	bError : BOOL;
+	nErrId : UDINT;
+	nErrStep : UDINT;
+END_VAR
+VAR
+	FileOpen : FB_FileOpen;
+	CsvWrite : FB_CSVMemBufferWriter;
+	FileWrite : FB_FileWrite;
+	FileClose : FB_FileClose;
+	
+	hFile : UINT;
+	buffer : STRING(bufferSize+1);
+	bufferOffset : UINT;//0 or 1
+	step : UDINT;
+	
+	Ri : UINT;
+	Ci : UINT;
+	BuffCmd : E_EnumCmdType;
+END_VAR
+VAR CONSTANT
+	bufferSize : UDINT := 1024;
+	dataSize : UDINT := 16;	
+
+	stepReady : UDINT := 0;
+	stepOpenFile : UDINT := 1;
+	stepWriteHeader : UDINT := 2;
+	stepFillBuffer : UDINT := 3;
+	stepWriteBuffer : UDINT := 4;
+	stepCloseFile : UDINT := 5;
+	stepDone : UDINT := 6;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[FileOpen(
+			sNetId := '',
+			sPathName := spathname,
+			nMode := FOPEN_MODEWRITE,
+			ePath := E_OpenPath.PATH_GENERIC,
+			bExecute := step = stepOpenFile,
+			tTimeout := tTimeout);
+FileWrite(snetId := '',
+			hFile := hFile,
+			//pWriteBuff := SET INDIVIDUALLY
+			//cbWriteLen := SET INDIVIDUALLY
+			bExecute := step = stepWriteBuffer OR step = stepWriteHeader,
+			tTimeout := tTimeout);
+FileClose(
+			snetId := '',
+			hFile := hFile,
+			bexecute := step = stepCloseFile,
+			tTimeout := tTimeout);
+			
+CASE step OF
+	stepReady:
+		bError := FALSE;
+		nErrId := 0;
+		nErrStep := 0;
+		Ri := 0;
+		Ci := 0;
+		
+		IF bExecute AND __ISVALIDREF(M) THEN
+			IF NOT M.IsEmpty THEN
+				bBusy := TRUE;
+				step := stepOpenFile;
+			END_IF
+		END_IF
+		
+	stepOpenFile:
+		
+		IF FileOpen.bError THEN
+			bError := TRUE;
+			nErrId := FileOpen.nErrId;
+			nErrStep := step;
+			step := stepDone;
+		ELSIF NOT(FileOpen.bBusy) THEN
+			hFile := FileOpen.hFile;
+			IF pHeader <> 0 AND cbHeaderLen > 0 THEN
+				step := stepWriteHeader;
+				FileWrite.pWriteBuff := pHeader;
+				FileWrite.cbWriteLen := cbHeaderLen;
+			ELSE
+				step := stepFillBuffer;
+			END_IF;
+		END_IF
+		
+	stepWriteHeader:
+		IF FileWrite.bError THEN
+			bError := TRUE;
+			nErrId := FileWrite.nErrId;
+			nErrStep := step;
+			step := stepCloseFile;
+		ELSIF NOT(FileWrite.bBusy) THEN
+			step := stepFillBuffer;
+		END_IF
+		
+		
+	stepFillBuffer:
+		//add field divider manually at the beginning of the write block
+		IF Ci > 0 THEN
+			buffer[0] := DEFAULT_CSV_FIELD_SEP;
+			bufferOffset := 1;
+		ELSE
+			bufferOffset := 0;
+		END_IF
+		
+		BuffCmd := E_EnumCmdType.eEnumCmd_First;
+		REPEAT
+			CsvWrite(eCmd := BuffCmd,
+				putValue := LREAL_TO_STRING(M.GetRC(Ri,Ci)),
+				bCRLF := M.Cols = Ci+1,
+				pBuffer := ADR(buffer)+bufferOffset,
+				cbBuffer := bufferSize-bufferOffset);
+				
+			IF NOT(CsvWrite.bOk) THEN
+				bError := TRUE;
+				nErrId := 1;
+				nErrStep := step;
+				step := stepCloseFile;
+				RETURN;
+			END_IF
+				
+			BuffCmd := E_EnumCmdType.eEnumCmd_Next;
+			Ci := Ci + 1;
+			IF Ci >= M.Cols THEN
+				Ci := 0;
+				Ri := Ri + 1;
+			END_IF
+		UNTIL 
+			Ri >= M.Rows OR CsvWrite.cbFree < dataSize
+		END_REPEAT 
+		step := stepWriteBuffer;
+		FileWrite.pWriteBuff := ADR(buffer);
+		FileWrite.cbWriteLen := CsvWrite.cbSize+bufferOffset;
+		
+		
+	stepWriteBuffer:
+		
+		IF FileWrite.bError THEN
+			bError := TRUE;
+			nErrId := FileWrite.nErrId;
+			nErrStep := step;
+			step := stepDone;
+		ELSIF NOT(FileWrite.bBusy) THEN
+			IF Ri >= M.Rows THEN
+				step := stepCloseFile;
+			ELSE
+				step := stepFillBuffer;
+			END_IF
+		END_IF
+		
+	stepCloseFile:
+		
+		IF FileClose.bError AND NOT bError THEN
+			bError := TRUE;
+			nErrId := FileClose.nErrId;
+			nErrStep := step;
+			step := stepDone;
+		ELSIF NOT(FileClose.bBusy) THEN
+			step := stepDone;
+		END_IF
+		
+		
+	stepDone:
+		bBusy := FALSE;
+END_CASE
+
+IF NOT bExecute THEN
+	step := stepReady;
+	bBusy := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="MatrixCsvWriter">
+      <LineId Id="35" Count="16" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="56" Count="1" />
+      <LineId Id="60" Count="4" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="69" Count="9" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="205" Count="1" />
+      <LineId Id="154" Count="2" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="196" Count="1" />
+      <LineId Id="207" Count="5" />
+      <LineId Id="215" Count="0" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="81" Count="1" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="258" Count="1" />
+      <LineId Id="265" Count="0" />
+      <LineId Id="262" Count="1" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="172" Count="0" />
+      <LineId Id="165" Count="4" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="187" Count="2" />
+      <LineId Id="185" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="173" Count="0" />
+      <LineId Id="177" Count="1" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="179" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="200" Count="1" />
+      <LineId Id="118" Count="9" />
+      <LineId Id="158" Count="1" />
+      <LineId Id="161" Count="1" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="129" Count="14" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="145" Count="4" />
+      <LineId Id="144" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

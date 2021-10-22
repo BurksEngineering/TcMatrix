@@ -1,0 +1,99 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_CsvReadWrite_Test" Id="{96a2305f-2caa-0454-2213-7f2fef397e05}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_CsvReadWrite_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenWrittenThenReadExpectSame();]]></ST>
+    </Implementation>
+    <Method Name="WhenWrittenThenReadExpectSame" Id="{f3b1091c-632e-0dd2-2399-8f7cda36576b}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenWrittenThenReadExpectSame
+VAR_INPUT
+END_VAR
+VAR_INST
+	M1 : DynamicMatrix;
+	M2 : DynamicMatrix;
+	FilePath : T_MaxString := 'C:\ProgramData\TwinCAT PLC Control\Temporary Files\TcMatrix_CsvReadWriteTest_WhenWrittenThenReadExpectSame.csv';
+	Writer : MatrixCsvWriter;
+	Reader : MatrixCsvReader;
+	
+	step : UINT := 0;
+	
+	WriteError : BOOL;
+	ReadError : BOOL;
+END_VAR
+VAR CONSTANT
+	stepSetup : UINT := 0;
+	stepWrite : UINT := 1;
+	stepRead : UINT := 2;
+	stepEvaluate : UINT := 3;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Writer(bExecute := step = stepWrite,
+	M := M1,
+	sPathname := FilePath,
+	tTimeout := T#5S,
+	pHeader := 0,
+	cbHeaderLen := 0);
+	
+Reader(bExecute := step = stepRead,
+	M := M2,
+	sPathName := FilePath,
+	tTimeout := T#5S,
+	nHeaderLines := 0);
+
+CASE step OF
+	stepSetup:
+		TEST('WhenWrittenThenReadExpectSame');
+		M1.InitMagicSquare(25);
+		M2.InitZeros(M1.Rows,M1.Cols);
+		step := stepWrite;
+		
+	stepWrite:
+		IF NOT Writer.bBusy THEN
+			WriteError := Writer.bError;
+			step := stepRead;
+		END_IF
+		
+	stepRead:
+		IF NOT Reader.bBusy THEN
+			ReadError := Reader.bError;
+			step := stepEvaluate;
+		END_IF
+		
+	stepEvaluate:
+		AssertTrue(NOT (WriteError), 'Writer error');
+		AssertTrue(NOT  (ReadError), 'Reader error');
+		AssertTrue(M1.IsEqual(M2), 'Data not transferred');
+		TEST_FINISHED();
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_CsvReadWrite_Test">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_CsvReadWrite_Test.WhenWrittenThenReadExpectSame">
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="10" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="36" Count="5" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="50" Count="3" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="55" Count="5" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

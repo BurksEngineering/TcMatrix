@@ -25,9 +25,7 @@ END_IF
 
 FOR Ri := 0 TO M.Rows-2 DO
 	FOR Ci := Ri+1 TO M.Cols-1 DO
-		Temp := M.GetRC(Ri,Ci);
-		M.SetRC(Ri,Ci,M.GetRC(Ci,Ri));
-		M.SetRC(Ci,Ri,Temp);
+		M.SwapRC(Ri,Ci,Ci,Ri);
 	END_FOR
 END_FOR]]></ST>
     </Implementation>
@@ -44,8 +42,7 @@ END_FOR]]></ST>
       <LineId Id="19" Count="0" />
       <LineId Id="18" Count="0" />
       <LineId Id="22" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="27" Count="1" />
+      <LineId Id="28" Count="0" />
       <LineId Id="25" Count="0" />
       <LineId Id="23" Count="0" />
     </LineIds>

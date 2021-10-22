@@ -294,7 +294,7 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <Method Name="FB_exit" Id="{5b5dff2f-9433-4a66-972b-13ea86797369}">
+    <Method Name="FB_exit" Id="{5b5dff2f-9433-4a66-972b-13ea86797369}" FolderPath="Overrides\">
       <Declaration><![CDATA[METHOD FB_exit : BOOL
 VAR_INPUT
 	bInCopyCode : BOOL; // if TRUE, the exit method is called for exiting an instance that is copied afterwards (online change).
@@ -302,12 +302,33 @@ END_VAR
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT(bInCopyCode)THEN
-	Rows_ := 0;
-	Cols_ := 0;
-	IF Data <> 0 THEN
-		MemManager.Free2(Data);
-	END_IF;
+	Free();
 END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_init" Id="{178232b5-fc73-0185-232f-1e38184a5aea}" FolderPath="Overrides\">
+      <Declaration><![CDATA[METHOD FB_init : BOOL
+VAR_INPUT
+	bInitRetains : BOOL; // if TRUE, the retain variables are initialized (warm start / cold start)
+	bInCopyCode : BOOL;  // if TRUE, the instance afterwards gets moved into the copy code (online change)
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Free();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Free" Id="{ed9227e7-8e2a-060e-3b7c-fa220c6f8eaf}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC Free
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Resize(0,0,FALSE,FALSE);
+Rows_ := 0;
+Cols_ := 0;
+IF Data <> 0 THEN
+	MemManager.Free2(Data);
+END_IF;]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetI" Id="{a2b5b528-33de-0111-2730-98e9e03688a1}" FolderPath="Overrides\">
@@ -820,11 +841,16 @@ END_IF]]></ST>
     </LineIds>
     <LineIds Name="DynamicMatrix.FB_exit">
       <LineId Id="6" Count="0" />
-      <LineId Id="13" Count="1" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="7" Count="0" />
       <LineId Id="17" Count="0" />
       <LineId Id="8" Count="0" />
+    </LineIds>
+    <LineIds Name="DynamicMatrix.FB_init">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="DynamicMatrix.Free">
+      <LineId Id="10" Count="0" />
+      <LineId Id="6" Count="3" />
+      <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="DynamicMatrix.GetI">
       <LineId Id="14" Count="1" />

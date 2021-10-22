@@ -904,6 +904,42 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
+    <Method Name="SortByColAsc" Id="{ea20e01d-e4b6-07c7-3aa6-8ff1eae01e44}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[//In-place bubble sort of rows by the specified col, into ascending order
+//
+//algorithm is 'stable', meaning that two equivalent rows will maintain their relative position after sorting.
+//This is nice because it lets you sort by secondary/tertiary/etc columns (if you do them in reverse)
+METHOD PUBLIC SortByColAsc : BOOL
+VAR_INPUT
+	SortCol : UINT;
+END_VAR
+VAR
+	lastUnsortedRow : UINT;
+	lastSwappedRow : UINT;
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ISEmpty OR Rows <= 1 THEN
+	SortByColAsc := FALSE;
+	RETURN;
+END_IF
+
+lastUnsortedRow := Rows-1;
+Result := TRUE;
+REPEAT
+	lastSwappedRow := 0;
+	FOR Ri := 1 TO lastUnsortedRow DO
+		IF GetRC(Ri-1,SortCol) >GetRC(Ri,SortCol) THEN
+			Result := Result AND SwapRow(Ri-1,Ri);
+			lastSwappedRow := Ri;
+		END_IF
+	END_FOR
+	lastUnsortedRow := lastSwappedRow-1;
+UNTIL
+	lastSwappedRow = 0
+END_REPEAT]]></ST>
+      </Implementation>
+    </Method>
     <Property Name="sPath" Id="{71b212c0-e2af-08e9-0666-16cfb7faa00b}" FolderPath="Properties\">
       <Declaration><![CDATA[//The symbolic path to this matrix in memory
 PROPERTY PUBLIC sPath : T_MaxString]]></Declaration>
@@ -935,6 +971,72 @@ Sum := Sum_;]]></ST>
         </Implementation>
       </Get>
     </Property>
+    <Method Name="SwapI" Id="{9903fd37-3838-001f-0889-4b12e9ed20cb}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC SwapI : BOOL
+VAR_INPUT
+	I1 : UINT;
+	I2 : UINT;
+END_VAR
+VAR
+	Temp : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IsEmpty OR I1 >= Length OR I2 >= Length THEN
+	SwapI := FALSE;
+	RETURN;
+END_IF
+Temp := GetI(I1);
+SwapI := SetI(I1,GetI(I2));
+SwapI := SwapI AND SetI(I2,Temp);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SwapRC" Id="{2c8eb746-15d7-0307-168a-2971c506e35a}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC SwapRC : BOOL
+VAR_INPUT
+	R1 : UINT;
+	C1 : UINT;
+	R2 : UINT;
+	C2 : UINT;
+END_VAR
+VAR
+	Temp : LREAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IsEmpty OR R1 >= Rows OR R2 >= Rows OR C1 >= Cols OR C2 >= Cols THEN
+	SwapRC := FALSE;
+	RETURN;
+END_IF
+Temp := GetRC(R1,C1);
+SwapRC := SetRC(R1,C1,GetRC(R2,C2));
+SwapRC := SwapRC AND SetRC(R2,C2,Temp);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SwapRow" Id="{4b7c7a69-fd7e-02b2-3da1-2a7e363dfa18}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[METHOD PUBLIC SwapRow : BOOL
+VAR_INPUT
+	R1 : UINT;
+	R2 : UINT;
+END_VAR
+VAR
+	Result : BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IsEmpty OR R1 >= Rows OR R2 >= Rows THEN
+	SwapRow := FALSE;
+	RETURN;
+END_IF
+
+
+FOR Ci := 0 TO Cols-1 DO
+	IF NOT(SwapRC(R1,Ci,R2,Ci)) THEN
+		SwapRow := FALSE;
+		RETURN;
+	END_IF
+END_FOR
+
+SwapRow := TRUE;]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="TransposeSquare" Id="{e53a992d-b14e-03c8-244a-30c9a5ab7640}" FolderPath="Modifiers\">
       <Declaration><![CDATA[//Transposes the matrix.
 //
@@ -1308,6 +1410,25 @@ END_VAR
       <LineId Id="18" Count="1" />
       <LineId Id="13" Count="0" />
     </LineIds>
+    <LineIds Name="Matrix.SortByColAsc">
+      <LineId Id="12" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
     <LineIds Name="Matrix.sPath.Get">
       <LineId Id="2" Count="0" />
     </LineIds>
@@ -1318,6 +1439,36 @@ END_VAR
       <LineId Id="12" Count="1" />
       <LineId Id="2" Count="0" />
       <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.SwapI">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="13" Count="2" />
+    </LineIds>
+    <LineIds Name="Matrix.SwapRC">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="13" Count="2" />
+    </LineIds>
+    <LineIds Name="Matrix.SwapRow">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="20" Count="0" />
     </LineIds>
     <LineIds Name="Matrix.TransposeSquare">
       <LineId Id="16" Count="0" />
