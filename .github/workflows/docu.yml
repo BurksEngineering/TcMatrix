@@ -15,7 +15,7 @@ jobs:
         with:
           args: docu/TcMatrixDocu/docfx.json
       - name: Publish to GitHubPages
-      - uses: maxheld83/ghpages@v0.3.0
+        uses: maxheld83/ghpages@v0.3.0
         env:
           BUILD_DIR: : docu/TcMatrixDocu/_site
           GH_PAT: ${{ secrets.GH_PAT }}
