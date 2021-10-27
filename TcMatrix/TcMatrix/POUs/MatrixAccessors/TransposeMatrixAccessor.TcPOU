@@ -1,7 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="TransposeMatrixAccessor" Id="{9a28d6e8-49de-0d4d-265c-dd2a9870f8ee}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK TransposeMatrixAccessor EXTENDS MatrixAccessor
+    <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+		 	 <see cref="MatrixAccessor">See Matrix accessor</see>
+			 Allows access to the elements of the parent matrix as if it were transposed
+		</summary>			
+	</docu>
+~*)
+FUNCTION_BLOCK TransposeMatrixAccessor EXTENDS MatrixAccessor
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -17,7 +25,11 @@ END_VAR
     <Folder Name="Initializers" Id="{7c0114cd-41d1-0d49-1cd5-8a0554f73bcf}" />
     <Folder Name="Overrides" Id="{c3ed05e4-8f1f-022e-21ba-86d9c4d0a320}" />
     <Property Name="Cols" Id="{bf0da9f9-be70-0115-3902-7943e66150d7}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Total number of columns in this matrix
+      <Declaration><![CDATA[(*~
+<docu>
+	<inheritdoc/>			
+</docu>
+~*)
 PROPERTY PUBLIC Cols : UINT]]></Declaration>
       <Get Name="Get" Id="{cb7fdd63-8d83-06fd-2e61-15e9782a8d8f}">
         <Declaration><![CDATA[VAR
@@ -44,7 +56,11 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="Rows" Id="{5191cf39-179d-048b-094b-53b45da5d542}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Total number of rows in this matrix
+      <Declaration><![CDATA[(*~
+	<docu>
+		<inheritdoc/>			
+	</docu>
+~*)
 PROPERTY PUBLIC Rows : UINT]]></Declaration>
       <Get Name="Get" Id="{f7be0edf-342d-0112-1abb-ce9cd40f7cf7}">
         <Declaration><![CDATA[VAR
@@ -82,32 +98,5 @@ IC2RC(Index,Cols,Row => ThisR, Col => ThisC);
 This2Parent := RCC2I(ThisC,ThisR,M_.Cols);]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="TransposeMatrixAccessor">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="TransposeMatrixAccessor.Cols.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="6" Count="0" />
-    </LineIds>
-    <LineIds Name="TransposeMatrixAccessor.Init">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="TransposeMatrixAccessor.Rows.Get">
-      <LineId Id="9" Count="2" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="TransposeMatrixAccessor.This2Parent">
-      <LineId Id="18" Count="1" />
-      <LineId Id="21" Count="1" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

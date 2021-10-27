@@ -1,0 +1,1215 @@
+### YamlMime:ManagedReference
+items:
+- uid: PlcDocu.TcMatrix.MatrixCsvReader
+  commentId: T:PlcDocu.TcMatrix.MatrixCsvReader
+  id: MatrixCsvReader
+  parent: PlcDocu.TcMatrix
+  children:
+  - PlcDocu.TcMatrix.MatrixCsvReader.bBusy
+  - PlcDocu.TcMatrix.MatrixCsvReader.bError
+  - PlcDocu.TcMatrix.MatrixCsvReader.bExecute
+  - PlcDocu.TcMatrix.MatrixCsvReader.BuffCmd
+  - PlcDocu.TcMatrix.MatrixCsvReader.buffer
+  - PlcDocu.TcMatrix.MatrixCsvReader.bufferSize
+  - PlcDocu.TcMatrix.MatrixCsvReader.bytesParsed
+  - PlcDocu.TcMatrix.MatrixCsvReader.bytesRead
+  - PlcDocu.TcMatrix.MatrixCsvReader.Ci
+  - PlcDocu.TcMatrix.MatrixCsvReader.CsvRead
+  - PlcDocu.TcMatrix.MatrixCsvReader.dataSize
+  - PlcDocu.TcMatrix.MatrixCsvReader.FileClose
+  - PlcDocu.TcMatrix.MatrixCsvReader.FileOpen
+  - PlcDocu.TcMatrix.MatrixCsvReader.FileRead
+  - PlcDocu.TcMatrix.MatrixCsvReader.FileSeek
+  - PlcDocu.TcMatrix.MatrixCsvReader.hFile
+  - PlcDocu.TcMatrix.MatrixCsvReader.Hi
+  - PlcDocu.TcMatrix.MatrixCsvReader.M
+  - PlcDocu.TcMatrix.MatrixCsvReader.nCols
+  - PlcDocu.TcMatrix.MatrixCsvReader.nErrId
+  - PlcDocu.TcMatrix.MatrixCsvReader.nErrStep
+  - PlcDocu.TcMatrix.MatrixCsvReader.nHeaderLines
+  - PlcDocu.TcMatrix.MatrixCsvReader.nRows
+  - PlcDocu.TcMatrix.MatrixCsvReader.nVals
+  - PlcDocu.TcMatrix.MatrixCsvReader.readEOF
+  - PlcDocu.TcMatrix.MatrixCsvReader.Ri
+  - PlcDocu.TcMatrix.MatrixCsvReader.sPathName
+  - PlcDocu.TcMatrix.MatrixCsvReader.step
+  - PlcDocu.TcMatrix.MatrixCsvReader.stepCloseFile
+  - PlcDocu.TcMatrix.MatrixCsvReader.stepDone
+  - PlcDocu.TcMatrix.MatrixCsvReader.stepFillBuffer
+  - PlcDocu.TcMatrix.MatrixCsvReader.stepMovePointer
+  - PlcDocu.TcMatrix.MatrixCsvReader.stepOpenFile
+  - PlcDocu.TcMatrix.MatrixCsvReader.stepReadBuffer
+  - PlcDocu.TcMatrix.MatrixCsvReader.stepReady
+  - PlcDocu.TcMatrix.MatrixCsvReader.tTimeout
+  langs:
+  - csharp
+  - vb
+  name: MatrixCsvReader
+  nameWithType: MatrixCsvReader
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader
+  type: Class
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: MatrixCsvReader
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 5
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public abstract class MatrixCsvReader
+    content.vb: Public MustInherit Class MatrixCsvReader
+  inheritance:
+  - System.Object
+  modifiers.csharp:
+  - public
+  - abstract
+  - class
+  modifiers.vb:
+  - Public
+  - MustInherit
+  - Class
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.bExecute
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.bExecute
+  id: bExecute
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: bExecute
+  nameWithType: MatrixCsvReader.bExecute
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.bExecute
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: bExecute
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 8
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object bExecute
+    return:
+      type: System.Object
+    content.vb: Public bExecute As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.M
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.M
+  id: M
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: M
+  nameWithType: MatrixCsvReader.M
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.M
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: M
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 9
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public Matrix M
+    return:
+      type: PlcDocu.TcMatrix.Matrix
+    content.vb: Public M As Matrix
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.sPathName
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.sPathName
+  id: sPathName
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: sPathName
+  nameWithType: MatrixCsvReader.sPathName
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.sPathName
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: sPathName
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 10
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object sPathName
+    return:
+      type: System.Object
+    content.vb: Public sPathName As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.tTimeout
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.tTimeout
+  id: tTimeout
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: tTimeout
+  nameWithType: MatrixCsvReader.tTimeout
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.tTimeout
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: tTimeout
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 11
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object tTimeout
+    return:
+      type: System.Object
+    content.vb: Public tTimeout As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.nHeaderLines
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.nHeaderLines
+  id: nHeaderLines
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: nHeaderLines
+  nameWithType: MatrixCsvReader.nHeaderLines
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.nHeaderLines
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: nHeaderLines
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 12
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object nHeaderLines
+    return:
+      type: System.Object
+    content.vb: Public nHeaderLines As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.bBusy
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.bBusy
+  id: bBusy
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: bBusy
+  nameWithType: MatrixCsvReader.bBusy
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.bBusy
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: bBusy
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 13
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object bBusy
+    return:
+      type: System.Object
+    content.vb: Public bBusy As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.bError
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.bError
+  id: bError
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: bError
+  nameWithType: MatrixCsvReader.bError
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.bError
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: bError
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 14
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object bError
+    return:
+      type: System.Object
+    content.vb: Public bError As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.nErrId
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.nErrId
+  id: nErrId
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: nErrId
+  nameWithType: MatrixCsvReader.nErrId
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.nErrId
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: nErrId
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 15
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object nErrId
+    return:
+      type: System.Object
+    content.vb: Public nErrId As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.nErrStep
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.nErrStep
+  id: nErrStep
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: nErrStep
+  nameWithType: MatrixCsvReader.nErrStep
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.nErrStep
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: nErrStep
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 16
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object nErrStep
+    return:
+      type: System.Object
+    content.vb: Public nErrStep As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.nRows
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.nRows
+  id: nRows
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: nRows
+  nameWithType: MatrixCsvReader.nRows
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.nRows
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: nRows
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 17
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object nRows
+    return:
+      type: System.Object
+    content.vb: Public nRows As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.nCols
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.nCols
+  id: nCols
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: nCols
+  nameWithType: MatrixCsvReader.nCols
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.nCols
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: nCols
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 18
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object nCols
+    return:
+      type: System.Object
+    content.vb: Public nCols As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.nVals
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.nVals
+  id: nVals
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: nVals
+  nameWithType: MatrixCsvReader.nVals
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.nVals
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: nVals
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 19
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object nVals
+    return:
+      type: System.Object
+    content.vb: Public nVals As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.FileOpen
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.FileOpen
+  id: FileOpen
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: FileOpen
+  nameWithType: MatrixCsvReader.FileOpen
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.FileOpen
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: FileOpen
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 20
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object FileOpen
+    return:
+      type: System.Object
+    content.vb: Public FileOpen As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.CsvRead
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.CsvRead
+  id: CsvRead
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: CsvRead
+  nameWithType: MatrixCsvReader.CsvRead
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.CsvRead
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: CsvRead
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 21
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object CsvRead
+    return:
+      type: System.Object
+    content.vb: Public CsvRead As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.FileRead
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.FileRead
+  id: FileRead
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: FileRead
+  nameWithType: MatrixCsvReader.FileRead
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.FileRead
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: FileRead
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 22
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object FileRead
+    return:
+      type: System.Object
+    content.vb: Public FileRead As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.FileSeek
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.FileSeek
+  id: FileSeek
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: FileSeek
+  nameWithType: MatrixCsvReader.FileSeek
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.FileSeek
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: FileSeek
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 23
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object FileSeek
+    return:
+      type: System.Object
+    content.vb: Public FileSeek As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.FileClose
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.FileClose
+  id: FileClose
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: FileClose
+  nameWithType: MatrixCsvReader.FileClose
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.FileClose
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: FileClose
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 24
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object FileClose
+    return:
+      type: System.Object
+    content.vb: Public FileClose As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.hFile
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.hFile
+  id: hFile
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: hFile
+  nameWithType: MatrixCsvReader.hFile
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.hFile
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: hFile
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 25
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object hFile
+    return:
+      type: System.Object
+    content.vb: Public hFile As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.readEOF
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.readEOF
+  id: readEOF
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: readEOF
+  nameWithType: MatrixCsvReader.readEOF
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.readEOF
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: readEOF
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 26
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object readEOF
+    return:
+      type: System.Object
+    content.vb: Public readEOF As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.bytesRead
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.bytesRead
+  id: bytesRead
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: bytesRead
+  nameWithType: MatrixCsvReader.bytesRead
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.bytesRead
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: bytesRead
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 27
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object bytesRead
+    return:
+      type: System.Object
+    content.vb: Public bytesRead As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.bytesParsed
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.bytesParsed
+  id: bytesParsed
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: bytesParsed
+  nameWithType: MatrixCsvReader.bytesParsed
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.bytesParsed
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: bytesParsed
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 28
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object bytesParsed
+    return:
+      type: System.Object
+    content.vb: Public bytesParsed As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.buffer
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.buffer
+  id: buffer
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: buffer
+  nameWithType: MatrixCsvReader.buffer
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.buffer
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: buffer
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 29
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object buffer
+    return:
+      type: System.Object
+    content.vb: Public buffer As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.step
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.step
+  id: step
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: step
+  nameWithType: MatrixCsvReader.step
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.step
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: step
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 30
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object step
+    return:
+      type: System.Object
+    content.vb: Public step As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.Hi
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.Hi
+  id: Hi
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: Hi
+  nameWithType: MatrixCsvReader.Hi
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.Hi
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Hi
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 31
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object Hi
+    return:
+      type: System.Object
+    content.vb: Public Hi As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.Ri
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.Ri
+  id: Ri
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: Ri
+  nameWithType: MatrixCsvReader.Ri
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.Ri
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Ri
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 32
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object Ri
+    return:
+      type: System.Object
+    content.vb: Public Ri As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.Ci
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.Ci
+  id: Ci
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: Ci
+  nameWithType: MatrixCsvReader.Ci
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.Ci
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Ci
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 33
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object Ci
+    return:
+      type: System.Object
+    content.vb: Public Ci As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.BuffCmd
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.BuffCmd
+  id: BuffCmd
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: BuffCmd
+  nameWithType: MatrixCsvReader.BuffCmd
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.BuffCmd
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: BuffCmd
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 34
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object BuffCmd
+    return:
+      type: System.Object
+    content.vb: Public BuffCmd As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.bufferSize
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.bufferSize
+  id: bufferSize
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: bufferSize
+  nameWithType: MatrixCsvReader.bufferSize
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.bufferSize
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: bufferSize
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 35
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object bufferSize
+    return:
+      type: System.Object
+    content.vb: Public bufferSize As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.dataSize
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.dataSize
+  id: dataSize
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: dataSize
+  nameWithType: MatrixCsvReader.dataSize
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.dataSize
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: dataSize
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 36
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object dataSize
+    return:
+      type: System.Object
+    content.vb: Public dataSize As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.stepReady
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.stepReady
+  id: stepReady
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: stepReady
+  nameWithType: MatrixCsvReader.stepReady
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.stepReady
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: stepReady
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 37
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object stepReady
+    return:
+      type: System.Object
+    content.vb: Public stepReady As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.stepOpenFile
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.stepOpenFile
+  id: stepOpenFile
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: stepOpenFile
+  nameWithType: MatrixCsvReader.stepOpenFile
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.stepOpenFile
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: stepOpenFile
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 38
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object stepOpenFile
+    return:
+      type: System.Object
+    content.vb: Public stepOpenFile As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.stepFillBuffer
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.stepFillBuffer
+  id: stepFillBuffer
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: stepFillBuffer
+  nameWithType: MatrixCsvReader.stepFillBuffer
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.stepFillBuffer
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: stepFillBuffer
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 39
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object stepFillBuffer
+    return:
+      type: System.Object
+    content.vb: Public stepFillBuffer As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.stepReadBuffer
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.stepReadBuffer
+  id: stepReadBuffer
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: stepReadBuffer
+  nameWithType: MatrixCsvReader.stepReadBuffer
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.stepReadBuffer
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: stepReadBuffer
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 40
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object stepReadBuffer
+    return:
+      type: System.Object
+    content.vb: Public stepReadBuffer As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.stepMovePointer
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.stepMovePointer
+  id: stepMovePointer
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: stepMovePointer
+  nameWithType: MatrixCsvReader.stepMovePointer
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.stepMovePointer
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: stepMovePointer
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 41
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object stepMovePointer
+    return:
+      type: System.Object
+    content.vb: Public stepMovePointer As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.stepCloseFile
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.stepCloseFile
+  id: stepCloseFile
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: stepCloseFile
+  nameWithType: MatrixCsvReader.stepCloseFile
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.stepCloseFile
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: stepCloseFile
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 42
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object stepCloseFile
+    return:
+      type: System.Object
+    content.vb: Public stepCloseFile As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.MatrixCsvReader.stepDone
+  commentId: F:PlcDocu.TcMatrix.MatrixCsvReader.stepDone
+  id: stepDone
+  parent: PlcDocu.TcMatrix.MatrixCsvReader
+  langs:
+  - csharp
+  - vb
+  name: stepDone
+  nameWithType: MatrixCsvReader.stepDone
+  fullName: PlcDocu.TcMatrix.MatrixCsvReader.stepDone
+  type: Field
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: stepDone
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuMatrixCsvReader.g.cs
+    startLine: 43
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  syntax:
+    content: public object stepDone
+    return:
+      type: System.Object
+    content.vb: Public stepDone As Object
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+references:
+- uid: PlcDocu.TcMatrix
+  commentId: N:PlcDocu.TcMatrix
+  name: PlcDocu.TcMatrix
+  nameWithType: PlcDocu.TcMatrix
+  fullName: PlcDocu.TcMatrix
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: PlcDocu.TcMatrix.Matrix
+  commentId: T:PlcDocu.TcMatrix.Matrix
+  parent: PlcDocu.TcMatrix
+  name: Matrix
+  nameWithType: Matrix
+  fullName: PlcDocu.TcMatrix.Matrix

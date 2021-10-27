@@ -1,0 +1,1681 @@
+### YamlMime:ManagedReference
+items:
+- uid: PlcDocu.TcMatrix.DynamicMatrix
+  commentId: T:PlcDocu.TcMatrix.DynamicMatrix
+  id: DynamicMatrix
+  parent: PlcDocu.TcMatrix
+  children:
+  - PlcDocu.TcMatrix.DynamicMatrix.Cols
+  - PlcDocu.TcMatrix.DynamicMatrix.Free
+  - PlcDocu.TcMatrix.DynamicMatrix.GetI(System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.Init(System.Object,System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.InitConstant(System.Object,System.Object,System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.InitCopy(System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.InitIdentity(System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.InitTrapezoidal(System.Object,System.Object,System.Object,System.Object,System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.InitVector(System.Object,System.Object,System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.InitZeros(System.Object,System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.Resize(System.Object,System.Object,System.Object,System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.Rows
+  - PlcDocu.TcMatrix.DynamicMatrix.SetI(System.Object,System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.Shrink(System.Object,System.Object)
+  - PlcDocu.TcMatrix.DynamicMatrix.Transpose
+  langs:
+  - csharp
+  - vb
+  name: DynamicMatrix
+  nameWithType: DynamicMatrix
+  fullName: PlcDocu.TcMatrix.DynamicMatrix
+  type: Class
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: DynamicMatrix
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 21
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nThe DynamicMatrix class uses the FB_DynMem_Manager2 to dynamically allocate as much memory as required for the given operation.\nThis amazing flexibility comes at the cost of some restrictions on use in order to avoid memory leaks.\n<remarks>			\n<div class=\"WARNING\"><h5>warning</h5><p>\n	Using the assignment operator (:=) to copy a DynamicMatrix will result in the new matrix retaining a pointer to the data of the old matrix! For this reason, the pragma {attribute &apos;no_assign&apos;} is used to block assignment at compile-time, but inheriting sub-classes will need to include this pragma themselves.\n	Note that using DynamicMatrix as the return value of a function is essentially an assignment operation and will also not work. Therefore, it is recommended to always pass DynamicMatrix objects in and out of functions using the REFERENCE TO keyword. To alleviate the pain of these assignment rules there are a ton of &apos;Resultant&apos; helper functions available to use which initialize a new DynamicMatrix as the result of some operation on other matrix objects.	\n</p></div>\n</remarks>	\nThe DynamicMatrix FB will automatically free its memory when an instance of the class is created, or goes out of scope.\nThis prevents memory leaks and page faults, but it also prevents you from instantiating a DynamicMatrix inside of a function and then passing a REFERENCE TO it back up the call chain.\nAnother consequnce is that a DynamicMatrix cannot be retained after power-loss. \nA DynamicMatrix within a GVL will free its memory when the program terminates.							\n"
+  example: []
+  syntax:
+    content: 'public abstract class DynamicMatrix : Matrix'
+    content.vb: >-
+      Public MustInherit Class DynamicMatrix
+          Inherits Matrix
+  inheritance:
+  - System.Object
+  - PlcDocu.TcMatrix.Matrix
+  inheritedMembers:
+  - PlcDocu.TcMatrix.Matrix.Clear
+  - PlcDocu.TcMatrix.Matrix.CopyFrom(System.Object)
+  - PlcDocu.TcMatrix.Matrix.ElementDifference(System.Object)
+  - PlcDocu.TcMatrix.Matrix.ElementProduct(System.Object)
+  - PlcDocu.TcMatrix.Matrix.ElementSum(System.Object)
+  - PlcDocu.TcMatrix.Matrix.FillFrom(System.Object)
+  - PlcDocu.TcMatrix.Matrix.FillTrapezoidal(System.Object,System.Object,System.Object)
+  - PlcDocu.TcMatrix.Matrix.GetRC(System.Object,System.Object)
+  - PlcDocu.TcMatrix.Matrix.GetSize(System.Object)
+  - PlcDocu.TcMatrix.Matrix.GetVectorMagnitude
+  - PlcDocu.TcMatrix.Matrix.InvertSquare(System.Object)
+  - PlcDocu.TcMatrix.Matrix.IsEqualSize(System.Object)
+  - PlcDocu.TcMatrix.Matrix.IsNearlyEqual(System.Object,System.Object)
+  - PlcDocu.TcMatrix.Matrix.Power(System.Object)
+  - PlcDocu.TcMatrix.Matrix.Scale(System.Object)
+  - PlcDocu.TcMatrix.Matrix.SetRC(System.Object,System.Object,System.Object)
+  - PlcDocu.TcMatrix.Matrix.SortByColAsc(System.Object)
+  - PlcDocu.TcMatrix.Matrix.TransposeSquare
+  - PlcDocu.TcMatrix.Matrix.Average
+  - PlcDocu.TcMatrix.Matrix.IsEmpty
+  - PlcDocu.TcMatrix.Matrix.IsSquare
+  - PlcDocu.TcMatrix.Matrix.IsVector
+  - PlcDocu.TcMatrix.Matrix.Length
+  - PlcDocu.TcMatrix.Matrix.MaxVal
+  - PlcDocu.TcMatrix.Matrix.MinVal
+  - PlcDocu.TcMatrix.Matrix.Sum
+  modifiers.csharp:
+  - public
+  - abstract
+  - class
+  modifiers.vb:
+  - Public
+  - MustInherit
+  - Class
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Free
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.Free
+  id: Free
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: Free()
+  nameWithType: DynamicMatrix.Free()
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Free()
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Free
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 31
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nFrees all dynamically allocated memory and resets the size of the matrix to 0x0\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public void Free()
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Sub Free
+  overload: PlcDocu.TcMatrix.DynamicMatrix.Free*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.GetI(System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.GetI(System.Object)
+  id: GetI(System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: GetI(Object)
+  nameWithType: DynamicMatrix.GetI(Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.GetI(System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: GetI
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 59
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nGets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array\nPrerequisites:\n- I &lt; Rows*Cols\n- Matrix is not empty\n<remarks>			\n<div class=\"NOTE\"><h5>note</h5><p>\n	If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List\n</p></div>\n</remarks>\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic GetI(dynamic I)
+    parameters:
+    - id: I
+      type: System.Object
+      description: The index of the element which should have its value returned
+    return:
+      type: System.Object
+      description: The value of the element at the specified index, or 0 if an invalid index is supplied
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function GetI(I As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.GetI*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Init(System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.Init(System.Object,System.Object)
+  id: Init(System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: Init(Object, Object)
+  nameWithType: DynamicMatrix.Init(Object, Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Init(System.Object, System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Init
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 85
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nInitializes a RxC matrix, with potentially random non-zero values\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic Init(dynamic Rows, dynamic Cols)
+    parameters:
+    - id: Rows
+      type: System.Object
+      description: The number of  rows to create
+    - id: Cols
+      type: System.Object
+      description: The number of collumns to create
+    return:
+      type: System.Object
+      description: Returns True if success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function Init(Rows As Object, Cols As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.Init*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitConstant(System.Object,System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.InitConstant(System.Object,System.Object,System.Object)
+  id: InitConstant(System.Object,System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: InitConstant(Object, Object, Object)
+  nameWithType: DynamicMatrix.InitConstant(Object, Object, Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitConstant(System.Object, System.Object, System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: InitConstant
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 117
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nInitializes a RxC matrix where every element is equal to the supplied value\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic InitConstant(dynamic Rows, dynamic Cols, dynamic Val)
+    parameters:
+    - id: Rows
+      type: System.Object
+      description: Number of rows to create
+    - id: Cols
+      type: System.Object
+      description: Number of columns to create
+    - id: Val
+      type: System.Object
+      description: The value to to initiliaze with
+    return:
+      type: System.Object
+      description: Returns True if success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function InitConstant(Rows As Object, Cols As Object, Val As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.InitConstant*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitCopy(System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.InitCopy(System.Object)
+  id: InitCopy(System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: InitCopy(Object)
+  nameWithType: DynamicMatrix.InitCopy(Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitCopy(System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: InitCopy
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 137
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nInitializes a matrix with the exact size and contents of the supplied matrix\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic InitCopy(dynamic M)
+    parameters:
+    - id: M
+      type: System.Object
+      description: Supplied matrix
+    return:
+      type: System.Object
+      description: Returns True if success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function InitCopy(M As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.InitCopy*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitIdentity(System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.InitIdentity(System.Object)
+  id: InitIdentity(System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: InitIdentity(Object)
+  nameWithType: DynamicMatrix.InitIdentity(Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitIdentity(System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: InitIdentity
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 157
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nInitializes a square identity matrix of size Size x Size\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic InitIdentity(dynamic Size)
+    parameters:
+    - id: Size
+      type: System.Object
+      description: Size of the square matrix
+    return:
+      type: System.Object
+      description: Returns True if success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function InitIdentity(Size As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.InitIdentity*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitTrapezoidal(System.Object,System.Object,System.Object,System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.InitTrapezoidal(System.Object,System.Object,System.Object,System.Object,System.Object)
+  id: InitTrapezoidal(System.Object,System.Object,System.Object,System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: InitTrapezoidal(Object, Object, Object, Object, Object)
+  nameWithType: DynamicMatrix.InitTrapezoidal(Object, Object, Object, Object, Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitTrapezoidal(System.Object, System.Object, System.Object, System.Object, System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: InitTrapezoidal
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 201
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nInitializes a RxC matrix then fills is using FillTrapezoidal()\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic InitTrapezoidal(dynamic Rows, dynamic Cols, dynamic Diagonal, dynamic UpperRight, dynamic LowerLeft)
+    parameters:
+    - id: Rows
+      type: System.Object
+      description: Number of rows to create
+    - id: Cols
+      type: System.Object
+      description: Number of columns to create
+    - id: Diagonal
+      type: System.Object
+      description: Every element on the main diagonal of the matrix is set to this value.
+    - id: UpperRight
+      type: System.Object
+      description: Every element above or to the right of the main diagonal is set to this value
+    - id: LowerLeft
+      type: System.Object
+      description: Every element below or to the left of the main diagonal is set to this value
+    return:
+      type: System.Object
+      description: Returns True if success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function InitTrapezoidal(Rows As Object, Cols As Object, Diagonal As Object, UpperRight As Object, LowerLeft As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.InitTrapezoidal*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitVector(System.Object,System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.InitVector(System.Object,System.Object,System.Object)
+  id: InitVector(System.Object,System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: InitVector(Object, Object, Object)
+  nameWithType: DynamicMatrix.InitVector(Object, Object, Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitVector(System.Object, System.Object, System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: InitVector
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 233
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nInitializes an Lx1 column vector where the 0th element is equal to Val and every subsequent element is Inc larger than the previous\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic InitVector(dynamic Length, dynamic Value, dynamic Increment)
+    parameters:
+    - id: Length
+      type: System.Object
+      description: Length of the vector
+    - id: Value
+      type: System.Object
+      description: Value of 0th element
+    - id: Increment
+      type: System.Object
+      description: Value by witch every other value is incremented by
+    return:
+      type: System.Object
+      description: Returns True if success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function InitVector(Length As Object, Value As Object, Increment As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.InitVector*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitZeros(System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.InitZeros(System.Object,System.Object)
+  id: InitZeros(System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: InitZeros(Object, Object)
+  nameWithType: DynamicMatrix.InitZeros(Object, Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitZeros(System.Object, System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: InitZeros
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 259
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nInitializes a RxC matrix where every element is equal to 0.0\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic InitZeros(dynamic Rows, dynamic Cols)
+    parameters:
+    - id: Rows
+      type: System.Object
+      description: The number of  rows to create
+    - id: Cols
+      type: System.Object
+      description: The number of collumns to create
+    return:
+      type: System.Object
+      description: Returns True if success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function InitZeros(Rows As Object, Cols As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.InitZeros*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Resize(System.Object,System.Object,System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.Resize(System.Object,System.Object,System.Object,System.Object)
+  id: Resize(System.Object,System.Object,System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: Resize(Object, Object, Object, Object)
+  nameWithType: DynamicMatrix.Resize(Object, Object, Object, Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Resize(System.Object, System.Object, System.Object, System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Resize
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 299
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nChanges the total number of Rows and Cols in the matrix. \nIf Retain is seleced then any element within the bounds of both the initial and resulting matrix will have its value retained.\nIf Init is selected then any newly created element will have its value set to zero.\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic Resize(dynamic NewRows, dynamic NewCols, dynamic RetainVals, dynamic ClearVals)
+    parameters:
+    - id: NewRows
+      type: System.Object
+      description: The row of the element to fetch
+    - id: NewCols
+      type: System.Object
+      description: The column of the element to fetch
+    - id: RetainVals
+      type: System.Object
+      description: If  selected then  any element within the bounds of both the initial and resulting matrix will have its value retained.
+    - id: ClearVals
+      type: System.Object
+      description: If  selected then any newly created element will have its value set to zero.
+    return:
+      type: System.Object
+      description: Returns TRUE on success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function Resize(NewRows As Object, NewCols As Object, RetainVals As Object, ClearVals As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.Resize*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.SetI(System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.SetI(System.Object,System.Object)
+  id: SetI(System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: SetI(Object, Object)
+  nameWithType: DynamicMatrix.SetI(Object, Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.SetI(System.Object, System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: SetI
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 326
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nSets the element specified BY the supplied index TO the suppleid value, assuming the data OF the matrix is stored in a 1D row-major ARRAY\nPrerequisites: - I &lt; Rows*Cols\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic SetI(dynamic I, dynamic Val)
+    parameters:
+    - id: I
+      type: System.Object
+      description: The index specifying which element should be modified
+    - id: Val
+      type: System.Object
+      description: The value copied to the corresponding element
+    return:
+      type: System.Object
+      description: TRUE if the specified index is valid and the data is copied. FLASE otherwise
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function SetI(I As Object, Val As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.SetI*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Shrink(System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.Shrink(System.Object,System.Object)
+  id: Shrink(System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: Shrink(Object, Object)
+  nameWithType: DynamicMatrix.Shrink(Object, Object)
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Shrink(System.Object, System.Object)
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Shrink
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 351
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nRemoves the specified Row and Column from the matrix, resuling in a new size of (Rows-1,Cols-1).\nNo dimension can be shrunk from 1 to 0 (therefore vectors only shrink in one direction).\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic Shrink(dynamic Row, dynamic Col)
+    parameters:
+    - id: Row
+      type: System.Object
+      description: "\n<p>Plc type : UINT [VAR_INPUT]; Twin type : <xref href=\"Vortex.Connector.ValueTypes.OnlinerUInt\" data-throw-if-not-resolved=\"false\"></xref></p>\n<p></p>\n"
+    - id: Col
+      type: System.Object
+      description: "\n<p>Plc type : UINT [VAR_INPUT]; Twin type : <xref href=\"Vortex.Connector.ValueTypes.OnlinerUInt\" data-throw-if-not-resolved=\"false\"></xref></p>\n<p></p>\n"
+    return:
+      type: System.Object
+      description: Returns TRUE on success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function Shrink(Row As Object, Col As Object) As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.Shrink*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Transpose
+  commentId: M:PlcDocu.TcMatrix.DynamicMatrix.Transpose
+  id: Transpose
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: Transpose()
+  nameWithType: DynamicMatrix.Transpose()
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Transpose()
+  type: Method
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Transpose
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 365
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: "\nSimilar to <xref href=\"PlcDocu.TcMatrix.Matrix.TransposeSquare\" data-throw-if-not-resolved=\"false\"></xref>, however it works on rectangular matricies (swapping Rows and Cols)\n"
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic Transpose()
+    return:
+      type: System.Object
+      description: Returns TRUE on success
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public Function Transpose As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.Transpose*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  modifiers.vb:
+  - Public
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Cols
+  commentId: P:PlcDocu.TcMatrix.DynamicMatrix.Cols
+  id: Cols
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: Cols
+  nameWithType: DynamicMatrix.Cols
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Cols
+  type: Property
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Cols
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 376
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: <div class="NOTE"><h5>note</h5><p>This is PLC property. This method is accessible only from the PLC code.</p></div>
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic Cols { get; }
+    parameters: []
+    return:
+      type: System.Object
+      description: 'Plc type UINT; Twin type: <xref href="Vortex.Connector.ValueTypes.OnlinerUInt" data-throw-if-not-resolved="false"></xref>'
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public ReadOnly Property Cols As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.Cols*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Rows
+  commentId: P:PlcDocu.TcMatrix.DynamicMatrix.Rows
+  id: Rows
+  parent: PlcDocu.TcMatrix.DynamicMatrix
+  langs:
+  - csharp
+  - vb
+  name: Rows
+  nameWithType: DynamicMatrix.Rows
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Rows
+  type: Property
+  source:
+    remote:
+      path: TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+      branch: main
+      repo: https://github.com/jozefchmelar/TcMatrix.git
+    id: Rows
+    path: ../TcMatrixConnector/_generated/PlcDocumentation/PlcDocuDynamicMatrix.g.cs
+    startLine: 390
+  assemblies:
+  - TcMatrixConnector
+  namespace: PlcDocu.TcMatrix
+  summary: <div class="NOTE"><h5>note</h5><p>This is PLC property. This method is accessible only from the PLC code.</p></div>
+  example: []
+  syntax:
+    content: >-
+      [IgnoreReflection]
+
+      public dynamic Rows { get; }
+    parameters: []
+    return:
+      type: System.Object
+      description: 'Plc type UINT; Twin type: <xref href="Vortex.Connector.ValueTypes.OnlinerUInt" data-throw-if-not-resolved="false"></xref>'
+    content.vb: >-
+      <IgnoreReflection>
+
+      Public ReadOnly Property Rows As Object
+  overload: PlcDocu.TcMatrix.DynamicMatrix.Rows*
+  attributes:
+  - type: Vortex.Connector.IgnoreReflectionAttribute
+    ctor: Vortex.Connector.IgnoreReflectionAttribute.#ctor
+    arguments: []
+  modifiers.csharp:
+  - public
+  - get
+  modifiers.vb:
+  - Public
+  - ReadOnly
+references:
+- uid: PlcDocu.TcMatrix
+  commentId: N:PlcDocu.TcMatrix
+  name: PlcDocu.TcMatrix
+  nameWithType: PlcDocu.TcMatrix
+  fullName: PlcDocu.TcMatrix
+- uid: System.Object
+  commentId: T:System.Object
+  parent: System
+  isExternal: true
+  name: Object
+  nameWithType: Object
+  fullName: System.Object
+- uid: PlcDocu.TcMatrix.Matrix
+  commentId: T:PlcDocu.TcMatrix.Matrix
+  parent: PlcDocu.TcMatrix
+  name: Matrix
+  nameWithType: Matrix
+  fullName: PlcDocu.TcMatrix.Matrix
+- uid: PlcDocu.TcMatrix.Matrix.Clear
+  commentId: M:PlcDocu.TcMatrix.Matrix.Clear
+  parent: PlcDocu.TcMatrix.Matrix
+  name: Clear()
+  nameWithType: Matrix.Clear()
+  fullName: PlcDocu.TcMatrix.Matrix.Clear()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.Clear
+    name: Clear
+    nameWithType: Matrix.Clear
+    fullName: PlcDocu.TcMatrix.Matrix.Clear
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.Clear
+    name: Clear
+    nameWithType: Matrix.Clear
+    fullName: PlcDocu.TcMatrix.Matrix.Clear
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.CopyFrom(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.CopyFrom(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: CopyFrom(Object)
+  nameWithType: Matrix.CopyFrom(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.CopyFrom(System.Object)
+  nameWithType.vb: Matrix.CopyFrom()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.CopyFrom()
+  name.vb: CopyFrom()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.CopyFrom(System.Object)
+    name: CopyFrom
+    nameWithType: Matrix.CopyFrom
+    fullName: PlcDocu.TcMatrix.Matrix.CopyFrom
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.CopyFrom(System.Object)
+    name: CopyFrom
+    nameWithType: Matrix.CopyFrom
+    fullName: PlcDocu.TcMatrix.Matrix.CopyFrom
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.ElementDifference(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.ElementDifference(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: ElementDifference(Object)
+  nameWithType: Matrix.ElementDifference(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.ElementDifference(System.Object)
+  nameWithType.vb: Matrix.ElementDifference()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.ElementDifference()
+  name.vb: ElementDifference()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.ElementDifference(System.Object)
+    name: ElementDifference
+    nameWithType: Matrix.ElementDifference
+    fullName: PlcDocu.TcMatrix.Matrix.ElementDifference
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.ElementDifference(System.Object)
+    name: ElementDifference
+    nameWithType: Matrix.ElementDifference
+    fullName: PlcDocu.TcMatrix.Matrix.ElementDifference
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.ElementProduct(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.ElementProduct(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: ElementProduct(Object)
+  nameWithType: Matrix.ElementProduct(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.ElementProduct(System.Object)
+  nameWithType.vb: Matrix.ElementProduct()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.ElementProduct()
+  name.vb: ElementProduct()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.ElementProduct(System.Object)
+    name: ElementProduct
+    nameWithType: Matrix.ElementProduct
+    fullName: PlcDocu.TcMatrix.Matrix.ElementProduct
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.ElementProduct(System.Object)
+    name: ElementProduct
+    nameWithType: Matrix.ElementProduct
+    fullName: PlcDocu.TcMatrix.Matrix.ElementProduct
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.ElementSum(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.ElementSum(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: ElementSum(Object)
+  nameWithType: Matrix.ElementSum(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.ElementSum(System.Object)
+  nameWithType.vb: Matrix.ElementSum()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.ElementSum()
+  name.vb: ElementSum()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.ElementSum(System.Object)
+    name: ElementSum
+    nameWithType: Matrix.ElementSum
+    fullName: PlcDocu.TcMatrix.Matrix.ElementSum
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.ElementSum(System.Object)
+    name: ElementSum
+    nameWithType: Matrix.ElementSum
+    fullName: PlcDocu.TcMatrix.Matrix.ElementSum
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.FillFrom(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.FillFrom(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: FillFrom(Object)
+  nameWithType: Matrix.FillFrom(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.FillFrom(System.Object)
+  nameWithType.vb: Matrix.FillFrom()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.FillFrom()
+  name.vb: FillFrom()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.FillFrom(System.Object)
+    name: FillFrom
+    nameWithType: Matrix.FillFrom
+    fullName: PlcDocu.TcMatrix.Matrix.FillFrom
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.FillFrom(System.Object)
+    name: FillFrom
+    nameWithType: Matrix.FillFrom
+    fullName: PlcDocu.TcMatrix.Matrix.FillFrom
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.FillTrapezoidal(System.Object,System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.FillTrapezoidal(System.Object,System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: FillTrapezoidal(Object, Object, Object)
+  nameWithType: Matrix.FillTrapezoidal(Object, Object, Object)
+  fullName: PlcDocu.TcMatrix.Matrix.FillTrapezoidal(System.Object, System.Object, System.Object)
+  nameWithType.vb: Matrix.FillTrapezoidal(, , )
+  fullName.vb: PlcDocu.TcMatrix.Matrix.FillTrapezoidal(, , )
+  name.vb: FillTrapezoidal(, , )
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.FillTrapezoidal(System.Object,System.Object,System.Object)
+    name: FillTrapezoidal
+    nameWithType: Matrix.FillTrapezoidal
+    fullName: PlcDocu.TcMatrix.Matrix.FillTrapezoidal
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.FillTrapezoidal(System.Object,System.Object,System.Object)
+    name: FillTrapezoidal
+    nameWithType: Matrix.FillTrapezoidal
+    fullName: PlcDocu.TcMatrix.Matrix.FillTrapezoidal
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.GetRC(System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.GetRC(System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: GetRC(Object, Object)
+  nameWithType: Matrix.GetRC(Object, Object)
+  fullName: PlcDocu.TcMatrix.Matrix.GetRC(System.Object, System.Object)
+  nameWithType.vb: Matrix.GetRC(, )
+  fullName.vb: PlcDocu.TcMatrix.Matrix.GetRC(, )
+  name.vb: GetRC(, )
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.GetRC(System.Object,System.Object)
+    name: GetRC
+    nameWithType: Matrix.GetRC
+    fullName: PlcDocu.TcMatrix.Matrix.GetRC
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.GetRC(System.Object,System.Object)
+    name: GetRC
+    nameWithType: Matrix.GetRC
+    fullName: PlcDocu.TcMatrix.Matrix.GetRC
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.GetSize(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.GetSize(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: GetSize(Object)
+  nameWithType: Matrix.GetSize(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.GetSize(System.Object)
+  nameWithType.vb: Matrix.GetSize()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.GetSize()
+  name.vb: GetSize()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.GetSize(System.Object)
+    name: GetSize
+    nameWithType: Matrix.GetSize
+    fullName: PlcDocu.TcMatrix.Matrix.GetSize
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.GetSize(System.Object)
+    name: GetSize
+    nameWithType: Matrix.GetSize
+    fullName: PlcDocu.TcMatrix.Matrix.GetSize
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.GetVectorMagnitude
+  commentId: M:PlcDocu.TcMatrix.Matrix.GetVectorMagnitude
+  parent: PlcDocu.TcMatrix.Matrix
+  name: GetVectorMagnitude()
+  nameWithType: Matrix.GetVectorMagnitude()
+  fullName: PlcDocu.TcMatrix.Matrix.GetVectorMagnitude()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.GetVectorMagnitude
+    name: GetVectorMagnitude
+    nameWithType: Matrix.GetVectorMagnitude
+    fullName: PlcDocu.TcMatrix.Matrix.GetVectorMagnitude
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.GetVectorMagnitude
+    name: GetVectorMagnitude
+    nameWithType: Matrix.GetVectorMagnitude
+    fullName: PlcDocu.TcMatrix.Matrix.GetVectorMagnitude
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.InvertSquare(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.InvertSquare(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: InvertSquare(Object)
+  nameWithType: Matrix.InvertSquare(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.InvertSquare(System.Object)
+  nameWithType.vb: Matrix.InvertSquare()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.InvertSquare()
+  name.vb: InvertSquare()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.InvertSquare(System.Object)
+    name: InvertSquare
+    nameWithType: Matrix.InvertSquare
+    fullName: PlcDocu.TcMatrix.Matrix.InvertSquare
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.InvertSquare(System.Object)
+    name: InvertSquare
+    nameWithType: Matrix.InvertSquare
+    fullName: PlcDocu.TcMatrix.Matrix.InvertSquare
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.IsEqualSize(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.IsEqualSize(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: IsEqualSize(Object)
+  nameWithType: Matrix.IsEqualSize(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.IsEqualSize(System.Object)
+  nameWithType.vb: Matrix.IsEqualSize()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.IsEqualSize()
+  name.vb: IsEqualSize()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.IsEqualSize(System.Object)
+    name: IsEqualSize
+    nameWithType: Matrix.IsEqualSize
+    fullName: PlcDocu.TcMatrix.Matrix.IsEqualSize
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.IsEqualSize(System.Object)
+    name: IsEqualSize
+    nameWithType: Matrix.IsEqualSize
+    fullName: PlcDocu.TcMatrix.Matrix.IsEqualSize
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.IsNearlyEqual(System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.IsNearlyEqual(System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: IsNearlyEqual(Object, Object)
+  nameWithType: Matrix.IsNearlyEqual(Object, Object)
+  fullName: PlcDocu.TcMatrix.Matrix.IsNearlyEqual(System.Object, System.Object)
+  nameWithType.vb: Matrix.IsNearlyEqual(, )
+  fullName.vb: PlcDocu.TcMatrix.Matrix.IsNearlyEqual(, )
+  name.vb: IsNearlyEqual(, )
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.IsNearlyEqual(System.Object,System.Object)
+    name: IsNearlyEqual
+    nameWithType: Matrix.IsNearlyEqual
+    fullName: PlcDocu.TcMatrix.Matrix.IsNearlyEqual
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.IsNearlyEqual(System.Object,System.Object)
+    name: IsNearlyEqual
+    nameWithType: Matrix.IsNearlyEqual
+    fullName: PlcDocu.TcMatrix.Matrix.IsNearlyEqual
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.Power(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.Power(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: Power(Object)
+  nameWithType: Matrix.Power(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.Power(System.Object)
+  nameWithType.vb: Matrix.Power()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.Power()
+  name.vb: Power()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.Power(System.Object)
+    name: Power
+    nameWithType: Matrix.Power
+    fullName: PlcDocu.TcMatrix.Matrix.Power
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.Power(System.Object)
+    name: Power
+    nameWithType: Matrix.Power
+    fullName: PlcDocu.TcMatrix.Matrix.Power
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.Scale(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.Scale(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: Scale(Object)
+  nameWithType: Matrix.Scale(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.Scale(System.Object)
+  nameWithType.vb: Matrix.Scale()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.Scale()
+  name.vb: Scale()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.Scale(System.Object)
+    name: Scale
+    nameWithType: Matrix.Scale
+    fullName: PlcDocu.TcMatrix.Matrix.Scale
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.Scale(System.Object)
+    name: Scale
+    nameWithType: Matrix.Scale
+    fullName: PlcDocu.TcMatrix.Matrix.Scale
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.SetRC(System.Object,System.Object,System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.SetRC(System.Object,System.Object,System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: SetRC(Object, Object, Object)
+  nameWithType: Matrix.SetRC(Object, Object, Object)
+  fullName: PlcDocu.TcMatrix.Matrix.SetRC(System.Object, System.Object, System.Object)
+  nameWithType.vb: Matrix.SetRC(, , )
+  fullName.vb: PlcDocu.TcMatrix.Matrix.SetRC(, , )
+  name.vb: SetRC(, , )
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.SetRC(System.Object,System.Object,System.Object)
+    name: SetRC
+    nameWithType: Matrix.SetRC
+    fullName: PlcDocu.TcMatrix.Matrix.SetRC
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.SetRC(System.Object,System.Object,System.Object)
+    name: SetRC
+    nameWithType: Matrix.SetRC
+    fullName: PlcDocu.TcMatrix.Matrix.SetRC
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: ', '
+    nameWithType: ', '
+    fullName: ', '
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.SortByColAsc(System.Object)
+  commentId: M:PlcDocu.TcMatrix.Matrix.SortByColAsc(System.Object)
+  parent: PlcDocu.TcMatrix.Matrix
+  name: SortByColAsc(Object)
+  nameWithType: Matrix.SortByColAsc(Object)
+  fullName: PlcDocu.TcMatrix.Matrix.SortByColAsc(System.Object)
+  nameWithType.vb: Matrix.SortByColAsc()
+  fullName.vb: PlcDocu.TcMatrix.Matrix.SortByColAsc()
+  name.vb: SortByColAsc()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.SortByColAsc(System.Object)
+    name: SortByColAsc
+    nameWithType: Matrix.SortByColAsc
+    fullName: PlcDocu.TcMatrix.Matrix.SortByColAsc
+  - name: (
+    nameWithType: (
+    fullName: (
+  - uid: System.Object
+    name: Object
+    nameWithType: Object
+    fullName: System.Object
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.SortByColAsc(System.Object)
+    name: SortByColAsc
+    nameWithType: Matrix.SortByColAsc
+    fullName: PlcDocu.TcMatrix.Matrix.SortByColAsc
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.TransposeSquare
+  commentId: M:PlcDocu.TcMatrix.Matrix.TransposeSquare
+  parent: PlcDocu.TcMatrix.Matrix
+  name: TransposeSquare()
+  nameWithType: Matrix.TransposeSquare()
+  fullName: PlcDocu.TcMatrix.Matrix.TransposeSquare()
+  spec.csharp:
+  - uid: PlcDocu.TcMatrix.Matrix.TransposeSquare
+    name: TransposeSquare
+    nameWithType: Matrix.TransposeSquare
+    fullName: PlcDocu.TcMatrix.Matrix.TransposeSquare
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+  spec.vb:
+  - uid: PlcDocu.TcMatrix.Matrix.TransposeSquare
+    name: TransposeSquare
+    nameWithType: Matrix.TransposeSquare
+    fullName: PlcDocu.TcMatrix.Matrix.TransposeSquare
+  - name: (
+    nameWithType: (
+    fullName: (
+  - name: )
+    nameWithType: )
+    fullName: )
+- uid: PlcDocu.TcMatrix.Matrix.Average
+  commentId: P:PlcDocu.TcMatrix.Matrix.Average
+  parent: PlcDocu.TcMatrix.Matrix
+  name: Average
+  nameWithType: Matrix.Average
+  fullName: PlcDocu.TcMatrix.Matrix.Average
+- uid: PlcDocu.TcMatrix.Matrix.IsEmpty
+  commentId: P:PlcDocu.TcMatrix.Matrix.IsEmpty
+  parent: PlcDocu.TcMatrix.Matrix
+  name: IsEmpty
+  nameWithType: Matrix.IsEmpty
+  fullName: PlcDocu.TcMatrix.Matrix.IsEmpty
+- uid: PlcDocu.TcMatrix.Matrix.IsSquare
+  commentId: P:PlcDocu.TcMatrix.Matrix.IsSquare
+  parent: PlcDocu.TcMatrix.Matrix
+  name: IsSquare
+  nameWithType: Matrix.IsSquare
+  fullName: PlcDocu.TcMatrix.Matrix.IsSquare
+- uid: PlcDocu.TcMatrix.Matrix.IsVector
+  commentId: P:PlcDocu.TcMatrix.Matrix.IsVector
+  parent: PlcDocu.TcMatrix.Matrix
+  name: IsVector
+  nameWithType: Matrix.IsVector
+  fullName: PlcDocu.TcMatrix.Matrix.IsVector
+- uid: PlcDocu.TcMatrix.Matrix.Length
+  commentId: P:PlcDocu.TcMatrix.Matrix.Length
+  parent: PlcDocu.TcMatrix.Matrix
+  name: Length
+  nameWithType: Matrix.Length
+  fullName: PlcDocu.TcMatrix.Matrix.Length
+- uid: PlcDocu.TcMatrix.Matrix.MaxVal
+  commentId: P:PlcDocu.TcMatrix.Matrix.MaxVal
+  parent: PlcDocu.TcMatrix.Matrix
+  name: MaxVal
+  nameWithType: Matrix.MaxVal
+  fullName: PlcDocu.TcMatrix.Matrix.MaxVal
+- uid: PlcDocu.TcMatrix.Matrix.MinVal
+  commentId: P:PlcDocu.TcMatrix.Matrix.MinVal
+  parent: PlcDocu.TcMatrix.Matrix
+  name: MinVal
+  nameWithType: Matrix.MinVal
+  fullName: PlcDocu.TcMatrix.Matrix.MinVal
+- uid: PlcDocu.TcMatrix.Matrix.Sum
+  commentId: P:PlcDocu.TcMatrix.Matrix.Sum
+  parent: PlcDocu.TcMatrix.Matrix
+  name: Sum
+  nameWithType: Matrix.Sum
+  fullName: PlcDocu.TcMatrix.Matrix.Sum
+- uid: System
+  commentId: N:System
+  isExternal: true
+  name: System
+  nameWithType: System
+  fullName: System
+- uid: System.Void
+  commentId: T:System.Void
+  isExternal: true
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Free*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.Free
+  name: Free
+  nameWithType: DynamicMatrix.Free
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Free
+- uid: Vortex.Connector.ValueTypes.OnlinerUInt
+  commentId: T:Vortex.Connector.ValueTypes.OnlinerUInt
+  isExternal: true
+- uid: Vortex.Connector.ValueTypes.OnlinerLReal
+  commentId: T:Vortex.Connector.ValueTypes.OnlinerLReal
+  isExternal: true
+- uid: PlcDocu.TcMatrix.DynamicMatrix.GetI*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.GetI
+  name: GetI
+  nameWithType: DynamicMatrix.GetI
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.GetI
+- uid: Vortex.Connector.ValueTypes.OnlinerBool
+  commentId: T:Vortex.Connector.ValueTypes.OnlinerBool
+  isExternal: true
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Init*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.Init
+  name: Init
+  nameWithType: DynamicMatrix.Init
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Init
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitConstant*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.InitConstant
+  name: InitConstant
+  nameWithType: DynamicMatrix.InitConstant
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitConstant
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitCopy*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.InitCopy
+  name: InitCopy
+  nameWithType: DynamicMatrix.InitCopy
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitCopy
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitIdentity*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.InitIdentity
+  name: InitIdentity
+  nameWithType: DynamicMatrix.InitIdentity
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitIdentity
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitTrapezoidal*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.InitTrapezoidal
+  name: InitTrapezoidal
+  nameWithType: DynamicMatrix.InitTrapezoidal
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitTrapezoidal
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitVector*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.InitVector
+  name: InitVector
+  nameWithType: DynamicMatrix.InitVector
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitVector
+- uid: PlcDocu.TcMatrix.DynamicMatrix.InitZeros*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.InitZeros
+  name: InitZeros
+  nameWithType: DynamicMatrix.InitZeros
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.InitZeros
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Resize*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.Resize
+  name: Resize
+  nameWithType: DynamicMatrix.Resize
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Resize
+- uid: PlcDocu.TcMatrix.DynamicMatrix.SetI*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.SetI
+  name: SetI
+  nameWithType: DynamicMatrix.SetI
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.SetI
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Shrink*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.Shrink
+  name: Shrink
+  nameWithType: DynamicMatrix.Shrink
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Shrink
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Transpose*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.Transpose
+  name: Transpose
+  nameWithType: DynamicMatrix.Transpose
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Transpose
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Cols*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.Cols
+  name: Cols
+  nameWithType: DynamicMatrix.Cols
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Cols
+- uid: PlcDocu.TcMatrix.DynamicMatrix.Rows*
+  commentId: Overload:PlcDocu.TcMatrix.DynamicMatrix.Rows
+  name: Rows
+  nameWithType: DynamicMatrix.Rows
+  fullName: PlcDocu.TcMatrix.DynamicMatrix.Rows

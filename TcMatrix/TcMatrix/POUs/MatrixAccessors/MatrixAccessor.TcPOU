@@ -1,7 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="MatrixAccessor" Id="{e50a508d-f480-0127-320a-803982deccd5}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK ABSTRACT MatrixAccessor EXTENDS Matrix
+    <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Matrix accessors are a way of interacting with the data of a parent Matrix through a special lens, without copying the data into a new Matrix and then back again.
+			This type of Matrix works by creating a function that converts the I-based indexing of the accessor matrix into the I-based indexing of the parent matrix, then using it to intercept calls to GetI and SetI.
+			Concrete Matrix Accessor Classes can be easily created from the parent MatrixAccessor abstract class by implementing the This2Parent method in order to define the index conversion.
+			<remarks>			
+				<note>
+					Note that matrix accessor allow both read and write access to the parent matrix!	
+				</note>
+				<note type="warning">
+					Matrix Accessors inherently store a pointer (BY REFERENCE) to their parent matrix. If the parent matrix goes out of scope (through function return) or is moved (through an online change) then the Matrix Accessor will no longer work. Therefore, they are best used quickly then destroyed, all within the scope of a single F or FB.
+				</note>
+			</remarks>
+		</summary>			
+	</docu>
+~*)
+FUNCTION_BLOCK ABSTRACT MatrixAccessor EXTENDS Matrix
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -17,14 +34,26 @@ END_VAR
     <Folder Name="Mapping" Id="{8ff0265d-dfed-0d78-3f8a-9dc33a327da3}" />
     <Folder Name="Overrides" Id="{8f59b246-ef31-06b6-3efd-d819bffceb36}" />
     <Method Name="GetI" Id="{673a605f-ea3d-0fd4-108f-3cd0177f6697}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
-//:Prerequisites:
-// - I < Rows*Cols
-// - Matrix is not empty
-//If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
-METHOD PUBLIC GetI : LREAL//The value of the element at the specified index, or 0 if an invalid index is supplied
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
+			Prerequisites:
+				- I &lt; Rows*Cols
+				- Matrix is not empty
+			<remarks>			
+				<note type="note">
+					If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
+				</note>
+			</remarks>
+		</summary>			
+		<param name="I">The index of the element which should have its value returned</param>
+		<returns>The value of the element at the specified index, or 0 if an invalid index is supplied</returns>
+	</docu>
+~*)
+METHOD PUBLIC GetI : LREAL //The value of the element at the specified index, or 0 if an invalid index is supplied
 VAR_INPUT
-	I : UINT;//The index of the element which should have its value returned
+    I : UINT; //The index of the element which should have its value returned
 END_VAR
 VAR
 END_VAR]]></Declaration>
@@ -54,8 +83,17 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="SetI" Id="{2a187707-0985-02db-070b-3fa74894917a}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Sets the element specified by the supplied index to the suppleid value, assuming the data of the matrix is stored in a 1D row-major array
-//:Prerequisites: - I < Rows*Cols
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Sets the element specified BY the supplied index TO the suppleid value, assuming the data OF the matrix is stored in a 1D row-major ARRAY
+			Prerequisites: - I &lt; Rows*Cols
+		</summary>			
+		<param name="I">The index specifying which element should be modified</param>
+		<param name="Val">The value copied to the corresponding element</param>
+		<returns>TRUE if the specified index is valid and the data is copied. FLASE otherwise</returns>
+	</docu>
+~*)
 METHOD PUBLIC SetI : BOOL//TRUE if the specified index is valid and the data is copied. FLASE otherwise
 VAR_INPUT
 	I : UINT;//The index specifying which element should be modified
@@ -87,33 +125,5 @@ END_VAR
         <ST><![CDATA[This2Parent := Index;]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="MatrixAccessor">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="MatrixAccessor.GetI">
-      <LineId Id="14" Count="0" />
-      <LineId Id="32" Count="1" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="MatrixAccessor.Init_">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="MatrixAccessor.SetI">
-      <LineId Id="40" Count="2" />
-      <LineId Id="34" Count="5" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="MatrixAccessor.This2Parent">
-      <LineId Id="5" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

@@ -1,7 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="ExternalStaticMatrix" Id="{5b159a29-4d48-0710-367d-ddb55ec87279}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'reflection'}
+    <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			This simple concrete derivative of the StaticMatrix class uses an external ARRAY OF LREAL as the memory source for the matrix data.
+			It is accessed in row-major order based on the logic in the GetI and SetI functions.
+			It is most useful when someone doesn't trust dynamically allocated memory, but also doesn't want to make multiple size-specific custom derived FBs just to set up a single complex matrix operation.
+			
+			<code>Init(R,C,pD)</code> : Must be called in order to setup the matrix (it will be empty until this method is called).
+			
+			<remarks>			
+				<note type="warning">
+				It is the callers responsibility to ensure that the pointer provided to the initializer is valid:
+				 	- The length of the data structure pointed to (probably an array of LREAL) is at least as long as Rows x Cols
+					- The scope of the data structure pointed to is the same as the scope of the corresponding ExternalStaticMatrix (probably declared adjacent to eachother as a VAR or GVL)
+				
+				Additionally, direct assignment (:=) should not be used with this type of matrix because a second copy of the Matrix, but with a pointer to the original's data source, would be created. For this reason, the pragma {attribute 'no_assign'} is used to block assignment at compile-time. Keep in mind that returning a value from a function is also a form of assignment and is not allowed.	
+				</note>
+			</remarks>
+		</summary>			
+		<param name="Row">The row of the element to fetch</param>
+		<param name="Col">The column of the element to fetch</param>
+		<returns>Returns the value of the element at the specified (0-indexed) position within the matrix</returns>
+	</docu>
+~*)
+{attribute 'reflection'}
 {attribute 'no_assign'}
 FUNCTION_BLOCK ExternalStaticMatrix EXTENDS StaticMatrix
 VAR_INPUT
@@ -19,12 +43,24 @@ END_VAR
     <Folder Name="Initializers" Id="{5822050c-0c80-0707-31a1-3c552739c65e}" />
     <Folder Name="Overrides" Id="{fab6d9a1-db67-00dd-2f3e-ebf9953ff9e5}" />
     <Method Name="GetI" Id="{ae7d2383-cb95-0e9e-07e8-2a6bcfaf546b}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
-//:Prerequisites:
-// - I < Rows*Cols
-// - Matrix is not empty
-//If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
-METHOD PUBLIC GetI : LREAL//The value of the element at the specified index, or 0 if an invalid index is supplied
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
+			Prerequisites:
+				- I &lt; Rows*Cols
+				- Matrix is not empty
+			<remarks>			
+				<note type="note">
+					If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
+				</note>
+			</remarks>
+		</summary>			
+		<param name="I">The index of the element which should have its value returned</param>
+		<returns>The value of the element at the specified index, or 0 if an invalid index is supplied</returns>
+	</docu>
+~*)
+METHOD PUBLIC GetI : LREAL
 VAR_INPUT
 	I : UINT;//The index of the element which should have its value returned
 END_VAR
@@ -55,8 +91,17 @@ Data := BUFFER;]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetI" Id="{8782231e-8005-09b5-02c8-d20a443b3036}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Sets the element specified by the supplied index to the suppleid value, assuming the data of the matrix is stored in a 1D row-major array
-//:Prerequisites: - I < Rows*Cols
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Sets the element specified BY the supplied index TO the suppleid value, assuming the data OF the matrix is stored in a 1D row-major ARRAY
+			Prerequisites: - I &lt; Rows*Cols
+		</summary>			
+		<param name="I">The index specifying which element should be modified</param>
+		<param name="Val">The value copied to the corresponding element</param>
+		<returns>TRUE if the specified index is valid and the data is copied. FLASE otherwise</returns>
+	</docu>
+~*)
 METHOD PUBLIC SetI : BOOL//TRUE if the specified index is valid and the data is copied. FLASE otherwise
 VAR_INPUT
 	I : UINT;//The index specifying which element should be modified
@@ -76,32 +121,5 @@ ELSE
 END_IF]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="ExternalStaticMatrix">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="ExternalStaticMatrix.GetI">
-      <LineId Id="14" Count="1" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="ExternalStaticMatrix.Init">
-      <LineId Id="9" Count="0" />
-      <LineId Id="17" Count="0" />
-    </LineIds>
-    <LineIds Name="ExternalStaticMatrix.SetI">
-      <LineId Id="5" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="22" Count="1" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
