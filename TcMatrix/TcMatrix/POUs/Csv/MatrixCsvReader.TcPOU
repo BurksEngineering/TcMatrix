@@ -53,7 +53,7 @@ END_VAR]]></Declaration>
       <ST><![CDATA[FileOpen(
 	sNetId := '',
 	sPathName := spathname,
-	nMode := FOPEN_MODEREAD,
+	nMode := FOPEN_MODEREAD OR FOPEN_MODEBINARY,
 	ePath := E_OpenPath.PATH_GENERIC,
 	bExecute := step = stepOpenFile,
 	tTimeout := tTimeout);
