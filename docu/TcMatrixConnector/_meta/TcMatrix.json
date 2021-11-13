@@ -1,0 +1,72 @@
+{
+  "Types": [
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "MatrixCsvReader",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "MatrixCsvWriter",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "DynamicMatrix",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "ExternalStaticMatrix",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "Matrix",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "MatrixAccessor",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "ShrunkMatrixAccessor",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "SubMatrixAccessor",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "TransposeMatrixAccessor",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "StaticMatrix",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 4
+    },
+    {
+      "TypeAttributes": "\n{attribute addProperty Name \"\" }",
+      "TypeName": "Global_Version",
+      "Namespace": "TcMatrix",
+      "TypeMetaInfo": 0
+    }
+  ],
+  "Name": "TcMatrix",
+  "Namespace": "TcMatrix"
+}

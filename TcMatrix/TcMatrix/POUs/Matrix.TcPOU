@@ -1,23 +1,24 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix" Id="{37681762-a9e8-4dd1-b97b-ca342c51c659}" SpecialFunc="None">
-    <Declaration><![CDATA[(*
-Matrix Base Class
-=============
-
-Overview
--------------
-
-This abstract class encapsulates the logic of manipulating and interacting with matricies without forcing a specific memory management pattern.
-Derived classes are:
-
-- DynamicMatrix: A concrete class that dynamically allocates memory to take any form needed
-- StaticMatrix: An abstract class that serves as the base for classes with fixed memory sources
-- MatrixAccessor: An abstract class that serves as the base for classes that inherit the memory of another matrix and remap it to their own form
+    <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			This abstract FB is the basis for all other matrix FBs. It represents a 2D array of LREAL elements. 
+			It provides dozens of methods and properties useful for manipulating itself, calculating values, and comparing to other matricies.
+			Critically, this base class does not actually contain any mechanism for storing the values of the matrix (that is the responsibility of the specific inheriting sub-class).
+		
+			<remarks>			
+					<note type="info">
+						Because Matrix is an abstract FB it cannot be assigned (:=) directly. 
+						Instead, each Matrix is always passed in and out of a function AS REFERENCE.
+					 	This also allows interactions with inhereted sub-classes of Matrix more easily.	
+					</note>
+				</remarks>	
+		</summary>
  
-With either pattern the memory is accessed as a row-major 1D array of LREAL.
-
-*)
+	</docu>	
+~*)	
 {attribute 'reflection'}
 {attribute 'no_assign'}
 FUNCTION_BLOCK ABSTRACT Matrix
@@ -51,7 +52,13 @@ END_VAR
     <Folder Name="Properties" Id="{63bcd68f-51b7-4cdd-bc76-abfb7c04d216}" />
     <Folder Name="Protected" Id="{52ab6c01-12bf-4ee4-b7d8-7459de792de0}" />
     <Property Name="Average" Id="{bbb5565e-c8b8-06a4-072f-2f69a4299899}" FolderPath="Aggregators\">
-      <Declaration><![CDATA[//returns the average value of all elements
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns the average value of all elements
+		</summary>			
+	</docu>
+~*)
 PROPERTY PUBLIC Average : LREAL]]></Declaration>
       <Get Name="Get" Id="{3df0d655-ce9c-0473-3f0c-ac0787664407}">
         <Declaration><![CDATA[VAR
@@ -79,17 +86,31 @@ END_VAR
       </Get>
     </Property>
     <Method Name="Clear" Id="{788b000b-9652-4513-87ea-afa0efbc93b4}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[//Resets the value of every element in this matrix to zero
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Resets the value of every element in this matrix to zero
+			Sets the value of every element to 0.0
+		</summary>			
+	</docu>
+~*)	
 METHOD PUBLIC Clear
 VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[FillTrapezoidal(0,0,0);]]></ST>
+        <ST><![CDATA[FillTrapezoidal(0,0,0);
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="Cols" Id="{d523fd23-40b0-0c12-048f-35d989fa4f45}" FolderPath="Properties\">
-      <Declaration><![CDATA[//Total number of columns in this matrix
+      <Declaration><![CDATA[(*~
+<docu>
+	<summary>
+		Returns the number of columns in the matrix
+	</summary>			
+</docu>
+~*)
 PROPERTY PUBLIC ABSTRACT Cols : UINT]]></Declaration>
       <Get Name="Get" Id="{a7a6e0d6-1627-0349-3c56-d4f322f68321}">
         <Declaration><![CDATA[VAR
@@ -101,20 +122,28 @@ END_VAR
       </Get>
     </Property>
     <Method Name="CopyFrom" Id="{dae02926-a792-0e0c-1dd5-5763605fc7fb}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[(*Copy the value from each element in the source matrix to each corresponding element in this matrix
-
-:Prerequisites:
- - This matrix is the same size as the source matrix
- - Neither matrix is empty
- 
- *)
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Copy the value from each element in the source matrix to each corresponding element in this matrix
+			Prerequisites:
+			 - This matrix is the same size as the source matrix
+			 - Neither matrix is empty
+		</summary>			
+		<param name="M">Source of the copy operation</param>
+		<returns>Returns true if the prerequisites were met and the data was copied, false otherwise</returns>
+	</docu>
+~*)
 METHOD PUBLIC CopyFrom : BOOL//Returns true if the prerequisites were met and the data was copied, false otherwise
 VAR_INPUT
 	M : REFERENCE TO Matrix;//Source of the copy operation
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[CopyFrom := Matrix_Copy(M,THIS^);]]></ST>
+        <ST><![CDATA[CopyFrom := Matrix_Copy(M,THIS^);
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="CopyTo" Id="{8ef25dfb-afc0-053f-1591-86389e6847af}" FolderPath="Helpers\">
@@ -135,75 +164,103 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="ElementDifference" Id="{e1125626-a54e-0cea-3fa3-0f21fba9398c}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[(*
-For each element in this matrix, calculate a new value by Subtracting the value of the corresponding element of the supplied matrix from the value in this matrix
-
-THIS := THIS - M
-
-:Prerequisites:
- - This matrix is the same size as the supplied matrix
- - Neither matrix is empty
- 
- *)
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			For each element in this matrix, calculate a new value by Subtracting the value of the corresponding element of the supplied matrix from the value in this matrix
+			
+			THIS := THIS - M
+			
+			:Prerequisites:
+			 - This matrix is the same size as the supplied matrix
+			 - Neither matrix is empty
+			 
+		</summary>			
+		<param name="M">The subtrahend in the subtraction</param>
+		<returns>TRUE if the operation completes successfully, false if the prerequisites are not met</returns>
+	</docu>
+~*)
 METHOD PUBLIC ElementDifference : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
 VAR_INPUT
 	M : REFERENCE TO Matrix;//the subtrahend in the subtraction
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[ElementDifference := Matrix_ElementDifference(THIS^,M,THIS^);]]></ST>
+        <ST><![CDATA[ElementDifference := Matrix_ElementDifference(THIS^,M,THIS^);
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="ElementProduct" Id="{0f328a92-3951-078e-3107-736a766f63a8}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[(*
-For each element in this matrix, calculate a new value by Multiplying the value of the corresponding element of the supplied matrix with the value in this matrix
-
-THIS := THIS .* M
-
-:Prerequisites:
- - This matrix is the same size as the supplied matrix
- - Neither matrix is empty
- 
- *)
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+		For each element in this matrix, calculate a new value by Multiplying the value of the corresponding element of the supplied matrix with the value in this matrix
+		
+		THIS := THIS .* M
+		
+		:Prerequisites:
+		 - This matrix is the same size as the supplied matrix
+		 - Neither matrix is empty
+			 
+		</summary>			
+		<param name="M">the supplied matrix to be multiplied element-by-element to this matrix</param>
+		<returns>TRUE if the operation completes successfully, false if the prerequisites are not met</returns>
+	</docu>
+~*)
 METHOD PUBLIC ElementProduct : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
 VAR_INPUT
 	M : REFERENCE TO Matrix;//the supplied matrix to be multiplied element-by-element to this matrix
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[ElementProduct := Matrix_ElementProduct(THIS^,M,THIS^);]]></ST>
+        <ST><![CDATA[ElementProduct := Matrix_ElementProduct(THIS^,M,THIS^);
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="ElementSum" Id="{009657bb-27d7-0cc7-0f12-e292b249bb77}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[(*
-For each element in this matrix, calculate a new value by Adding the value of the corresponding element of the supplied matrix with the value in this matrix
-
-THIS := THIS + M
-
-:Prerequisites:
- - This matrix is the same size as the supplied matrix
- - Neither matrix is empty
- 
- *)
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			For each element in this matrix, calculate a new value by Adding the value of the corresponding element of the supplied matrix with the value in this matrix
+			THIS := THIS + M
+			Prerequisites:
+			 - This matrix is the same size as the supplied matrix
+			 - Neither matrix is empty
+		</summary>			
+		<param name="M">The supplied matrix to be added to this matrix</param>
+		<returns>TRUE if the operation completes successfully, false if the prerequisites are not met</returns>
+	</docu>
+~*)
 METHOD PUBLIC ElementSum : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
 VAR_INPUT
 	M : REFERENCE TO Matrix;//the supplied matrix to be added to this matrix
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[ElementSum := Matrix_ElementSum(THIS^,M,THIS^);]]></ST>
+        <ST><![CDATA[ElementSum := Matrix_ElementSum(THIS^,M,THIS^);
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="FillFrom" Id="{022b237b-0584-4ce7-a547-77e65ab3d048}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[(*
-For every element that exist in both this matrix and the source matrix, copy the value from the source matrix into this matrix
-*)
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			For every element that exist in both this matrix and the source matrix, copy the value from the source matrix into this matrix
+		</summary>			
+		<param name="M">source matrix for element copy operation</param>
+	</docu>
+~*)
 METHOD PUBLIC FillFrom
 VAR_INPUT
 	M : REFERENCE TO Matrix;//source matrix for element copy operation
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IF M.IsEmpty OR IsEmpty THEN
+        <ST><![CDATA[
+
+IF M.IsEmpty OR IsEmpty THEN
 	RETURN;//no need to fill to/from empty matricies, and it
 END_IF
 
@@ -252,7 +309,17 @@ SubMatrix.FillFrom(M);]]></ST>
       </Implementation>
     </Method>
     <Method Name="FillTrapezoidal" Id="{f5fa3a45-37d2-08ef-0015-41ed1be8ef4b}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[//Fills all elements of this matrix based on which of three zones it is located into when considered as a trapezoidal matrix
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Fills all elements of this matrix based on which of three zones it is located into when considered as a trapezoidal matrix
+		</summary>			
+		<param name="Diagonal">Every element on the main diagonal of the matrix is set to this value.</param>
+		<param name="UpperRight">Every element above or to the right of the main diagonal is set to this value</param>
+		<param name="LowerLeft">Every element below or to the left of the main diagonal is set to this value</param>
+	</docu>
+~*)
+//Fills all elements of this matrix based on which of three zones it is located into when considered as a trapezoidal matrix
 METHOD PUBLIC FillTrapezoidal
 VAR_INPUT
 	Diagonal : LREAL;//Every element on the main diagonal of the matrix is set to this value.
@@ -305,14 +372,24 @@ END_IF
       </Implementation>
     </Method>
     <Method Name="GetI" Id="{15777527-77a2-42cc-8d9c-f624271cdfcd}" FolderPath="Getters\">
-      <Declaration><![CDATA[//Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
-//
-//:Prerequisites:
-// - I < Rows*Cols
-// - Matrix is not empty
-//
-//.. note:: If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
-METHOD PUBLIC ABSTRACT GetI : LREAL//The value of the element at the specified index, or 0 if an invalid index is supplied
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
+			Prerequisites:
+				- I &lt; Rows*Cols
+				- Matrix is not empty
+			<remarks>			
+				<note type="note">
+					If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
+				</note>
+			</remarks>
+		</summary>			
+		<param name="I">The index of the element which should have its value returned</param>
+		<returns>The value of the element at the specified index, or 0 if an invalid index is supplied</returns>
+	</docu>
+~*)
+METHOD PUBLIC ABSTRACT GetI : LREAL
 VAR_INPUT
 	I : UINT;//The index of the element which should have its value returned
 END_VAR
@@ -322,18 +399,33 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="GetRC" Id="{fa44f9d9-95b5-4fc6-badf-738b5a3911f1}" FolderPath="Getters\">
-      <Declaration><![CDATA[//returns the value of the element of this matrix at the specified row and column.
-//
-//:Prerequisites:
-// - Row < Rows
-// - Col < Cols
-// - Matrix is not empty
-//
-//.. note:: If the supplied or or column is out of bounds then a warning message is generated in the Error List and the value 0 is returned
-METHOD PUBLIC GetRC : LREAL//The value of the element at the specified row and column, or 0 if an invalid index is supplied
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns the value of the element of this matrix at the specified row and column.
+			Prerequisites:
+				- Row &lt; Rows
+				- Col &lt; Cols
+				- Matrix is not empty
+
+			<remarks>			
+				<note type="important">
+					If the supplied or or column is out of bounds then a warning message is generated in the Error List and the value 0 is returned
+				</note>
+				<note type="important">
+					The value of the element at the specified row and column, or 0 if an invalid index is supplied
+				</note>
+			</remarks>
+		</summary>			
+		<param name="Row">The row of the element to fetch</param>
+		<param name="Col">The column of the element to fetch</param>
+		<returns>Returns the value of the element at the specified (0-indexed) position within the matrix</returns>
+	</docu>
+~*)
+METHOD PUBLIC GetRC : LREAL
 VAR_INPUT
-	Row : UINT;//The row of the element to fetch
-	Col : UINT;//The column of the element to fetch
+	Row : UINT; //The row of the element to fetch
+	Col : UINT; //The column of the element to fetch
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -365,15 +457,30 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="GetSize" Id="{61a33f57-364a-4e27-9ba3-9caf9ad98b8f}" FolderPath="Getters\">
-      <Declaration><![CDATA[//Returns the length of the matrix in the specified dimension
-//
-// - GetSize(0) is equivalent to Rows
-// - GetSize(1) is equivalent to Cols
-//
-//.. note:: If an invalid dimension is supplied then a warning is generated in the Error List and the value 0 is returned
-METHOD PUBLIC GetSize : UINT//The length of the matrix in the specified dimension, or 0 if the dimension specified is invalid
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns the length of the matrix in the specified dimension
+			
+			<example>
+				GetSize(0) is equivalent to Rows	
+				GetSize(1) is equivalent to Cols
+			</example>
+			<remarks>			
+				<note type="important">
+					If an invalid dimension is supplied then a warning is generated in the Error List and the value 0 is returned 
+				</note>
+				<note type="important">
+					The length of the matrix in the specified dimension, or 0 if the dimension specified is invalid
+				</note>
+			</remarks>
+		</summary>	
+		<param name="Dim">The dimension of the matrix for which the size should be returned. 0=Rows, 1=Cols</param>		
+	</docu>
+~*)
+METHOD PUBLIC GetSize : UINT
 VAR_INPUT
-	Dim : UINT;//The dimension of the matrix for which the size should be returned. 0=Rows, 1=Cols
+    Dim : UINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -446,17 +553,26 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetVectorMagnitude" Id="{2cda7f0d-36ea-0716-0a39-1b669b254390}" FolderPath="Getters\">
-      <Declaration><![CDATA[//Calcualtes the vector magnitude of this matrix (square root of the sum of the squares), assuming it is a vector.
-//
-//:Prerequisites:
-// - This matrix is not empty and is a vector
-//
-//.. note:: If this matrix is empty or is not a vector, 0 is returned
-METHOD PUBLIC GetVectorMagnitude : LREAL//The vector magnitude of this matrix if it is a vector, otherwise 0
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Calcualtes the vector magnitude of this matrix (square root of the sum of the squares), assuming it is a vector.
+			:Prerequisites:
+			 - This matrix is not empty and is a vector
+			 <remarks>			
+				<note type="important">
+					 If this matrix is empty or is not a vector, 0 is returned
+				</note>
+			</remarks>
+		</summary>
+		<returns>The vector magnitude of this matrix if it is a vector, otherwise 0</returns>
+	</docu>
+~*)
+METHOD PUBLIC GetVectorMagnitude : LREAL
 VAR_INPUT
 END_VAR
 VAR
-	Res : LREAL;
+    Res : LREAL;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT(Vector_Magnitude(THIS^,Res => Res)) THEN
@@ -464,7 +580,9 @@ END_VAR]]></Declaration>
 	GetVectorMagnitude := 0;
 ELSE
 	GetVectorMagnitude := Res;
-END_IF]]></ST>
+END_IF
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="IC2RC" Id="{7255f7df-750d-0f66-22e3-0b875b59a237}" FolderPath="Protected\">
@@ -500,23 +618,40 @@ END_FOR]]></ST>
       </Implementation>
     </Method>
     <Method Name="InvertSquare" Id="{a64d1a3c-dedb-0302-0073-1fce8da4a4ec}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[//Inverts the matrix. May fail if the matrix is too close to being singular. Use the tolerance input to specify how close to go (1E-6 to 1E-9 is porbably good).
-//
-//:Prerequisites:
-//- This matrix is square
-//- This matrix is not empty
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Inverts the matrix. May fail if the matrix is too close to being singular. Use the tolerance input to specify how close to go (1E-6 to 1E-9 is porbably good).
+			:Prerequisites:
+				- This matrix is square
+				- This matrix is not empty
+		</summary>			
+		<param name="Tolerance">The smallest magnitude of number that is allowed to be used as a denominator in the calculation of the inverse</param>		
+		<returns>True if the inverse has been calculated. False if a precondition was not met, or a near-singularity was detected (data may be malformed).</returns>
+	</docu>
+~*)
 METHOD PUBLIC InvertSquare : BOOL//True if the inverse has been calculated. False if a precondition was not met, or a near-singularity was detected (data may be malformed).
 VAR_INPUT
 	Tolerance : LREAL;//The smallest magnitude of number that is allowed to be used as a denominator in the calculation of the inverse
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[InvertSquare := Matrix_InvertSquare(THIS^,Tolerance);]]></ST>
+        <ST><![CDATA[InvertSquare := Matrix_InvertSquare(THIS^,Tolerance);
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="IsEmpty" Id="{c235a1c3-19da-47f7-9309-34932eb65324}" FolderPath="Helpers\">
-      <Declaration><![CDATA[//Returns true if the matrix does not have any addresible elements
-PROPERTY PUBLIC IsEmpty : Bool]]></Declaration>
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns true if the matrix does not have any addresible elements
+		</summary>	
+		<returns>Returns true if the matrix does not have any addresible elements</returns>		
+	</docu>
+~*)
+PROPERTY PUBLIC IsEmpty : BOOL]]></Declaration>
       <Get Name="Get" Id="{ae4f7dd7-6afa-42b8-914f-506a87feabaa}">
         <Declaration><![CDATA[VAR
 END_VAR
@@ -564,23 +699,64 @@ IsEqual := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="IsEqualSize" Id="{27be0354-ccaa-4d4d-aa11-92c8ff0d05d2}" FolderPath="Comparators\">
-      <Declaration><![CDATA[//Checks if this matrix is the same size (number of rows and number of columns match) as the supplied matrix.
-//
-//.. note:: two empty matricies are considered the same size.
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns TRUE if IsEqualSize is true AND every element in this matrix is equal to its corresponding element in the supplied matrix
+			Checks if this matrix is the same size (number of rows and number of columns match) as the supplied matrix.
+			<remarks>			
+				<note type="note">
+					two empty matricies are considered the same size.
+				</note>
+			</remarks>
+		</summary>			
+		<param name="M">The matrix which should have its size compared to the size of this matrix</param>
+		<returns>True if this matrix is the same size as the supplied matrix</returns>
+	</docu>
+~*)
 METHOD PUBLIC IsEqualSize : BOOL//True if this matrix is the same size as the supplied matrix
 VAR_INPUT
 	M : REFERENCE TO Matrix;//The matrix which should have its size compared to the size of this matrix
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[IsEqualSize := M.Rows = Rows AND M.Cols = Cols;]]></ST>
+        <ST><![CDATA[IsEqualSize := M.Rows = Rows AND M.Cols = Cols;
+
+
+(*~
+	<docu>
+		<summary>
+			Checks if this matrix is the same size (number of rows and number of columns match) as the supplied matrix.
+			<remarks>			
+				<note type="note">
+					two empty matricies are considered the same size.
+				</note>
+			</remarks>
+		</summary>			
+		<param name="M">The matrix which should have its size compared to the size of this matrix</param>
+		<returns>True if this matrix is the same size as the supplied matrix</returns>
+	</docu>
+~*)]]></ST>
       </Implementation>
     </Method>
     <Method Name="IsNearlyEqual" Id="{5d748479-c05b-0288-3d27-e100bad6055b}" FolderPath="Comparators\">
-      <Declaration><![CDATA[//Determines if this matrix is *nearly* equal to a supplied matrix, based on a supplied precision.
-//
-//Two matricies are considered nearly equal if they are the same size and every set of corresponding elements are equal to within the supplied precision.
-//.. note:: Note that two empty matricies are considered equal
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Determines if this matrix is *nearly* equal to a supplied matrix, based on a supplied precision.
+			Two matricies are considered nearly equal if they are the same size and every set of corresponding elements are equal to within the supplied precision.
+
+			<remarks>			
+				<note type="note">
+					Note that two empty matricies are considered equal
+				</note>
+			</remarks>
+		</summary>			
+		<param name="M">The other matrix to compare to this one</param>
+		<param name="Precision">Deviation between two elements larger than this value makes them unequal</param>
+		<returns>TRUE if the two matricies are nearly equal, FALSE if they are not</returns>
+	</docu>
+~*)
 METHOD PUBLIC IsNearlyEqual : BOOL//TRUE if the two matricies are nearly equal, FALSE if they are not
 VAR_INPUT
 	M : REFERENCE TO Matrix;//The other matrix to compare to this one
@@ -610,7 +786,9 @@ FOR Ri := 0 TO Rows-1 DO
 	END_FOR
 END_FOR
 
-IsNearlyEqual := TRUE;]]></ST>
+IsNearlyEqual := TRUE;
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="IsNearZero" Id="{14d96c82-fff9-0250-2cd6-b017194a9777}" FolderPath="Helpers\">
@@ -625,7 +803,13 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="IsSquare" Id="{e672b3bd-9ada-4884-9298-de073113df9b}" FolderPath="Helpers\">
-      <Declaration><![CDATA[//Returns true if this matrix is not empty, and the number of columns is equal to the number of rows
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns true if this matrix is not empty, and the number of columns is equal to the number of rows
+		</summary>			
+	</docu>
+~*)
 PROPERTY PUBLIC IsSquare : BOOL]]></Declaration>
       <Get Name="Get" Id="{4255b8b2-db7d-4f6c-90fc-32930d8d75f2}">
         <Declaration><![CDATA[VAR
@@ -637,7 +821,13 @@ END_VAR
       </Get>
     </Property>
     <Property Name="IsVector" Id="{fa53e68e-f9cd-4264-b4bc-c5aa3563b636}" FolderPath="Helpers\">
-      <Declaration><![CDATA[//Returns true if this matrix is not empty, and at least one dimension has a size of 1 (row vector or column vector).
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns true if this matrix is not empty, and at least one dimension has a size of 1 (row vector or column vector).
+		</summary>			
+	</docu>
+~*)
 PROPERTY PUBLIC IsVector : BOOL]]></Declaration>
       <Get Name="Get" Id="{37d299d5-2a39-4c73-888a-5f06acc43d3e}">
         <Declaration><![CDATA[VAR
@@ -649,7 +839,13 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Length" Id="{2c497c08-f008-0342-1d0c-6819a4969e69}" FolderPath="Properties\">
-      <Declaration><![CDATA[//Total number of elements in this matrix
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Total number of elements in this matrix
+		</summary>			
+	</docu>
+~*)
 PROPERTY PUBLIC Length : UINT]]></Declaration>
       <Get Name="Get" Id="{fc001511-17d0-03a1-3ade-ffcc96d39c1c}">
         <Declaration><![CDATA[VAR
@@ -705,7 +901,13 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="MaxVal" Id="{2e28b031-b417-0f4a-0152-01ef3cd1db57}" FolderPath="Aggregators\">
-      <Declaration><![CDATA[//Returns the maximum value from all elements
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns the maximum value from all elements
+		</summary>			
+	</docu>
+~*)
 PROPERTY PUBLIC MaxVal : LREAL]]></Declaration>
       <Get Name="Get" Id="{f7bebe36-e3d7-072e-0310-06c7d57e73dc}">
         <Declaration><![CDATA[VAR
@@ -729,7 +931,13 @@ END_IF
       </Get>
     </Property>
     <Property Name="MinVal" Id="{02b2c522-52fd-07a2-0002-77487d44cc65}" FolderPath="Aggregators\">
-      <Declaration><![CDATA[//Returns the minimum value from all elements
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns the minimum value from all elements
+		</summary>			
+	</docu>
+~*)
 PROPERTY PUBLIC MinVal : LREAL]]></Declaration>
       <Get Name="Get" Id="{cbaba9d2-d69b-0140-2c06-09a756014561}">
         <Declaration><![CDATA[VAR
@@ -797,9 +1005,19 @@ Scale(1/Mag);]]></ST>
       </Implementation>
     </Method>
     <Method Name="Power" Id="{554d7c44-e24f-0d64-3e72-fbca02a11c79}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[//Raises every element of the matrix to the supplied power
-//
-//.. caution:: Many values of exponent could easily cause all of the elements to turn into NaN!
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Raises every element of the matrix to the supplied power
+			<remarks>			
+				<note type="important">
+					Many values of exponent could easily cause all of the elements to turn into NaN!
+				</note>
+			</remarks>
+		</summary>			
+		<param name="Exponent">Power with which to raise every element of the matrix</param>
+	</docu>
+~*)
 METHOD PUBLIC Power
 VAR_INPUT
 	Exponent : LREAL;//Power with which to raise every element of the matrix
@@ -811,7 +1029,10 @@ END_VAR
 END_IF
 FOR I := 0 TO Length-1 DO
 	SetI(I,EXPT(GetI(I),Exponent));
-END_FOR]]></ST>
+END_FOR
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="RC2I" Id="{3fa58cb3-47e4-0750-1d7e-28cc355ab4a5}" FolderPath="Protected\">
@@ -840,7 +1061,13 @@ END_VAR
       </Implementation>
     </Method>
     <Property Name="Rows" Id="{d28429c0-8643-0547-1543-63793204cffa}" FolderPath="Properties\">
-      <Declaration><![CDATA[//Total number of rows in this matrix
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Total number of rows in this matrix
+		</summary>			
+	</docu>
+~*)
 PROPERTY PUBLIC ABSTRACT Rows : UINT]]></Declaration>
       <Get Name="Get" Id="{38f7288d-05a9-0a44-1ad7-57f45d3df90f}">
         <Declaration><![CDATA[VAR
@@ -852,20 +1079,37 @@ END_VAR
       </Get>
     </Property>
     <Method Name="Scale" Id="{b7f3a516-3a74-41d5-8946-fd12d55e7c87}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[//Scales every element of this matrix by the supplied value.
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+		Scales every element of this matrix by the supplied value
+		</summary>			
+		<param name="Scalar">Value with which to scale every element of this matrix</param>
+	</docu>
+~*)
 METHOD PUBLIC Scale
 VAR_INPUT
 	Scalar : LREAL;//Value with which to scale every element of this matrix
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[Matrix_Scale(THIS^,Scalar);]]></ST>
+        <ST><![CDATA[Matrix_Scale(THIS^,Scalar);
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="SetI" Id="{1887d363-8acf-46d8-a10f-82241082042b}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[//Sets the element specified by the supplied index to the suppleid value, assuming the data of the matrix is stored in a 1D row-major array
-//
-//:Prerequisites: - I < Rows*Cols
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Sets the element specified BY the supplied index TO the suppleid value, assuming the data OF the matrix is stored in a 1D row-major ARRAY
+			Prerequisites: - I &lt; Rows*Cols
+		</summary>			
+		<param name="I">The index specifying which element should be modified</param>
+		<param name="Val">The value copied to the corresponding element</param>
+		<returns>TRUE if the specified index is valid and the data is copied. FLASE otherwise</returns>
+	</docu>
+~*)
 METHOD PUBLIC ABSTRACT SetI : BOOL//TRUE if the specified index is valid and the data is copied. FLASE otherwise
 VAR_INPUT
 	I : UINT;//The index specifying which element should be modified
@@ -877,12 +1121,28 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="SetRC" Id="{95b644b0-5978-469a-8c47-6f924bbad114}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[//Sets the element specified by the supplied row and column to the suppleid value
-//
-//:Prerequisites:
-// - Row < Rows
-// - Col < Cols
-METHOD PUBLIC SetRC : BOOL;//TRUE if the specified row and column are valid and the data is copied. FALSE otherwise
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Sets the element specified by the supplied row and column to the suppleid value
+			Prerequisites:
+				- Row &lt; Rows
+				- Col &lt; Cols
+				- Matrix is not empty
+			<remarks>			
+				<note type="important">
+					If the supplied or or column is out of bounds then a warning message is generated in the Error List and the value 0 is returned
+					The value of the element at the specified row and column, or 0 if an invalid index is supplied
+				</note>
+			</remarks>
+		</summary>	
+	<param name="Row">The row of the element to set</param>
+	<param name="Col">The column of the element to set</param>
+	<param name="Val">The value to copy into the specified element</param>
+	<returns>TRUE if the specified row and column are valid and the data is copied. FALSE otherwise</returns>		
+	</docu>
+~*)
+METHOD PUBLIC SetRC : BOOL;
 VAR_INPUT
 	Row : UINT;//The row of the element to set
 	Col : UINT;//The column of the element to set
@@ -905,10 +1165,19 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="SortByColAsc" Id="{ea20e01d-e4b6-07c7-3aa6-8ff1eae01e44}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[//In-place bubble sort of rows by the specified col, into ascending order
-//
-//algorithm is 'stable', meaning that two equivalent rows will maintain their relative position after sorting.
-//This is nice because it lets you sort by secondary/tertiary/etc columns (if you do them in reverse)
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+		 	Sorts the matrix by swapping entire rows around until the specified column is in ascending order. The relative position of equal rows will remain unchanged so as to allow tiered sorting.
+			In-place bubble sort of rows by the specified col, into ascending order
+			algorithm is 'stable', meaning that two equivalent rows will maintain their relative position after
+			This is nice because it lets you sort by secondary/tertiary/etc columns (if you do them in reverse)
+		</summary>			
+		<param name="Row">The row of the element to fetch</param>
+		<param name="Col">The column of the element to fetch</param>
+		<returns>Returns the value of the element at the specified (0-indexed) position within the matrix</returns>
+	</docu>
+~*)
 METHOD PUBLIC SortByColAsc : BOOL
 VAR_INPUT
 	SortCol : UINT;
@@ -937,7 +1206,10 @@ REPEAT
 	lastUnsortedRow := lastSwappedRow-1;
 UNTIL
 	lastSwappedRow = 0
-END_REPEAT]]></ST>
+END_REPEAT
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Property Name="sPath" Id="{71b212c0-e2af-08e9-0666-16cfb7faa00b}" FolderPath="Properties\">
@@ -953,7 +1225,13 @@ END_VAR
       </Get>
     </Property>
     <Property Name="Sum" Id="{26264213-af04-0fe3-15b5-fce4debe5ded}" FolderPath="Aggregators\">
-      <Declaration><![CDATA[//Returns the sum of all elements
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Returns the sum of all elements
+		</summary>			
+	</docu>
+~*)
 PROPERTY PUBLIC Sum : LREAL]]></Declaration>
       <Get Name="Get" Id="{98d20894-bd36-02b2-129d-e600f0a5d072}">
         <Declaration><![CDATA[VAR
@@ -1038,23 +1316,33 @@ SwapRow := TRUE;]]></ST>
       </Implementation>
     </Method>
     <Method Name="TransposeSquare" Id="{e53a992d-b14e-03c8-244a-30c9a5ab7640}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[//Transposes the matrix.
-//
-//:Prerequisites:
-//- This matrix is square
-//- This matrix is not empty
-METHOD PUBLIC TransposeSquare : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Transposes the matrix.    
+			                          
+			:Prerequisites:           
+			- This matrix is square   
+			- This matrix is not empty
+		</summary>			
+		<returns>TRUE if the operation completes successfully, false if the prerequisites are not met</returns>
+	</docu>
+~*)
+METHOD PUBLIC TransposeSquare : BOOL
 VAR_INPUT
 END_VAR
 VAR
 	Temp : DynamicMatrix;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[TransposeSquare := Matrix_TransposeSquare(THIS^);]]></ST>
+        <ST><![CDATA[TransposeSquare := Matrix_TransposeSquare(THIS^);
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="WriteDataToString" Id="{7c9446a3-69a9-08e8-3b1c-3852339b4db4}" FolderPath="Helpers\">
-      <Declaration><![CDATA[//Writes the elements of this matrix to a string in a human-readable way, up to the specified length.
+      <Declaration><![CDATA[//~
+//Writes the elements of this matrix to a string in a human-readable way, up to the specified length.
 //
 //Use the GetStringLengthEstimate function to calculate how much memory is necessary to output the entire matrix to one string
 METHOD PUBLIC WriteDataToString : BOOL//Returns true if the entire matrix was written to the string, false otherwise
@@ -1071,7 +1359,8 @@ VAR CONSTANT
 	RowSep : STRING(6) := ' ;$R$L  ';
 	MatStart : STRING(2) := '[ ';
 	MatEnd : STRING(2) := ' ]';
-END_VAR]]></Declaration>
+END_VAR
+//~]]></Declaration>
       <Implementation>
         <ST><![CDATA[Pos := 0;
 IF NOT(STRNCPY(Buffer+Pos,ADR(MatStart),BufferLen-Pos)) THEN
@@ -1135,376 +1424,5 @@ END_VAR
         </Implementation>
       </Set>
     </Property>
-    <LineIds Name="Matrix">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.Average.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="6" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.BufferSize.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.Clear">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.Cols.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.CopyFrom">
-      <LineId Id="25" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.CopyTo">
-      <LineId Id="25" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.ElementDifference">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.ElementProduct">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.ElementSum">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.FillFrom">
-      <LineId Id="19" Count="0" />
-      <LineId Id="21" Count="1" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="15" Count="3" />
-      <LineId Id="14" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.FillFromAt">
-      <LineId Id="89" Count="19" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="109" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.FillTrapezoidal">
-      <LineId Id="5" Count="0" />
-      <LineId Id="45" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="20" Count="3" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetDeterminant">
-      <LineId Id="39" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="68" Count="0" />
-      <LineId Id="66" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="53" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetI">
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetRC">
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="14" Count="1" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="18" Count="1" />
-      <LineId Id="13" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetShrunkMatrixAccessor">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetSize">
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="0" />
-      <LineId Id="9" Count="2" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetStringLengthEstimate">
-      <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetSubMatrixAccessor">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetTransposeMatrixAccessor">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetVectorDotProduct">
-      <LineId Id="5" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="13" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.GetVectorMagnitude">
-      <LineId Id="5" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="13" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.IC2RC">
-      <LineId Id="5" Count="0" />
-      <LineId Id="12" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.IntPower">
-      <LineId Id="15" Count="2" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.InvertSquare">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.IsEmpty.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.IsEqual">
-      <LineId Id="5" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="34" Count="2" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="49" Count="0" />
-      <LineId Id="48" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.IsEqualSize">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.IsNearlyEqual">
-      <LineId Id="5" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="34" Count="2" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="53" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.IsNearZero">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.IsSquare.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.IsVector.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.Length.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.LogError">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.LogEvent">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.LogMessage">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.LogWarning">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.MaxVal.Get">
-      <LineId Id="5" Count="8" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.MinVal.Get">
-      <LineId Id="5" Count="8" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.Normalize">
-      <LineId Id="5" Count="0" />
-      <LineId Id="33" Count="1" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="10" Count="3" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="35" Count="1" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="21" Count="1" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="23" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.Power">
-      <LineId Id="15" Count="2" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.RC2I">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.RCC2I">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.Rows.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.Scale">
-      <LineId Id="15" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.SetI">
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.SetRC">
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="18" Count="1" />
-      <LineId Id="13" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.SortByColAsc">
-      <LineId Id="12" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="23" Count="1" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="21" Count="1" />
-      <LineId Id="20" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.sPath.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.Sum.Get">
-      <LineId Id="5" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="12" Count="1" />
-      <LineId Id="2" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.SwapI">
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="13" Count="2" />
-    </LineIds>
-    <LineIds Name="Matrix.SwapRC">
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="13" Count="2" />
-    </LineIds>
-    <LineIds Name="Matrix.SwapRow">
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="20" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.TransposeSquare">
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.WriteDataToString">
-      <LineId Id="5" Count="0" />
-      <LineId Id="17" Count="1" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="36" Count="2" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="42" Count="5" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="48" Count="1" />
-      <LineId Id="51" Count="3" />
-      <LineId Id="50" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="28" Count="3" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="55" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.ZeroReference.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="Matrix.ZeroReference.Set">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

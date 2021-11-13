@@ -1,11 +1,31 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="StaticMatrix" Id="{d79dcd61-649c-042a-2c3d-c130631ac3c2}" SpecialFunc="None">
-    <Declaration><![CDATA[(*
-Derived class must:
-- Declare a VAR array of LREAL named Data_
-- Call Init_ in FB_init, pointing to the local arrays, with Rows and Cols such that Rows*Cols <= Length(Data_)
-*)
+    <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			This type of matrix has the number of rows and columns set during initialization and then they cannot be changed.
+			Derived class must:
+				- Declare a VAR array of LREAL named Data_
+				- Call Init_ in FB_init, pointing to the local arrays, with Rows and Cols such that Rows*Cols &lt;= Length(Data_)
+			This simple abstract class sets the rules for all static memory matricies by creating a protected Init_(R,C) method that must be called to set the initial size of the matrix.
+			It also implements the required Rows and Cols properties to return the values that were set during initialization.
+
+			<remarks>			
+				<note type="warning">
+				It is the callers responsibility to ensure that the pointer provided to the initializer is valid:
+				 	- The length of the data structure pointed to (probably an array of LREAL) is at least as long as Rows x Cols
+					- The scope of the data structure pointed to is the same as the scope of the corresponding ExternalStaticMatrix (probably declared adjacent to eachother as a VAR or GVL)
+				
+				Additionally, direct assignment (:=) should not be used with this type of matrix because a second copy of the Matrix, but with a pointer to the original's data source, would be created. For this reason, the pragma {attribute 'no_assign'} is used to block assignment at compile-time. Keep in mind that returning a value from a function is also a form of assignment and is not allowed.	
+				</note>
+			</remarks>
+		</summary>			
+		<param name="Row">The row of the element to fetch</param>
+		<param name="Col">The column of the element to fetch</param>
+		<returns>Returns the value of the element at the specified (0-indexed) position within the matrix</returns>
+	</docu>
+~*)
 {attribute 'reflection'}
 {attribute 'no_assign'}
 FUNCTION_BLOCK ABSTRACT StaticMatrix EXTENDS Matrix
@@ -24,7 +44,11 @@ END_VAR
     <Folder Name="Initialziers" Id="{08f59030-94f7-0073-0a6e-d3e1830889b4}" />
     <Folder Name="Overrides" Id="{ae8f9fd6-d618-01fa-1ea5-e735cb12e13d}" />
     <Property Name="Cols" Id="{cefe6429-a672-0a6c-0720-70da52f990a4}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Total number of columns in this matrix
+      <Declaration><![CDATA[(*~
+<docu>
+	<inheritdoc/>			
+</docu>
+~*)
 PROPERTY PUBLIC Cols : UINT]]></Declaration>
       <Get Name="Get" Id="{19a27711-2729-023c-0ff4-6a64ec484c7e}">
         <Declaration><![CDATA[VAR
@@ -48,7 +72,11 @@ Cols_ := ColCount;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Rows" Id="{d7666184-3fb7-0897-1633-3a18d91e3046}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Total number of rows in this matrix
+      <Declaration><![CDATA[(*~
+	<docu>
+		<inheritdoc/>			
+	</docu>
+~*)
 PROPERTY PUBLIC Rows : UINT]]></Declaration>
       <Get Name="Get" Id="{79065fd2-fc3e-00cb-257e-499471f5c52d}">
         <Declaration><![CDATA[VAR
@@ -59,17 +87,5 @@ END_VAR
         </Implementation>
       </Get>
     </Property>
-    <LineIds Name="StaticMatrix">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="StaticMatrix.Cols.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="StaticMatrix.Init_">
-      <LineId Id="8" Count="1" />
-    </LineIds>
-    <LineIds Name="StaticMatrix.Rows.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

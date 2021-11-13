@@ -1,7 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_DeterminateSquare" Id="{eb8e9d71-3179-0365-01f4-1666dd276213}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION Matrix_DeterminateSquare : BOOL
+    <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Calculates the determinate of the matrix if it is square
+			Prerequisites:
+				- Row &lt; Rows
+				- Col &lt; Cols
+				- Matrix is not empty
+		
+		<param name="M">The matrix</param>
+		<returns>Returns the determinate</returns>
+	</docu>
+~*)
+FUNCTION Matrix_DeterminateSquare : BOOL
 VAR_INPUT
 	M : REFERENCE TO Matrix;
 END_VAR
@@ -38,9 +51,5 @@ END_IF
 
 ]]></ST>
     </Implementation>
-    <LineIds Name="Matrix_DeterminateSquare">
-      <LineId Id="174" Count="19" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

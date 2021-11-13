@@ -1,7 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="DynamicMatrix" Id="{48b9f1ca-1ace-0f6f-3081-31a18046958e}" SpecialFunc="None">
-    <Declaration><![CDATA[{attribute 'no_assign'}
+    <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			The DynamicMatrix class uses the FB_DynMem_Manager2 to dynamically allocate as much memory as required for the given operation.
+			This amazing flexibility comes at the cost of some restrictions on use in order to avoid memory leaks.
+			<remarks>			
+				<note type="warning">
+					Using the assignment operator (:=) to copy a DynamicMatrix will result in the new matrix retaining a pointer to the data of the old matrix! For this reason, the pragma {attribute 'no_assign'} is used to block assignment at compile-time, but inheriting sub-classes will need to include this pragma themselves.
+					Note that using DynamicMatrix as the return value of a function is essentially an assignment operation and will also not work. Therefore, it is recommended to always pass DynamicMatrix objects in and out of functions using the REFERENCE TO keyword. To alleviate the pain of these assignment rules there are a ton of 'Resultant' helper functions available to use which initialize a new DynamicMatrix as the result of some operation on other matrix objects.	
+				</note>
+			</remarks>	
+			The DynamicMatrix FB will automatically free its memory when an instance of the class is created, or goes out of scope.
+			This prevents memory leaks and page faults, but it also prevents you from instantiating a DynamicMatrix inside of a function and then passing a REFERENCE TO it back up the call chain.
+			Another consequnce is that a DynamicMatrix cannot be retained after power-loss. 
+			A DynamicMatrix within a GVL will free its memory when the program terminates.							
+		</summary>			
+	</docu>
+~*)
+{attribute 'no_assign'}
 {attribute 'reflection'}
 FUNCTION_BLOCK DynamicMatrix EXTENDS Matrix
 VAR_INPUT
@@ -9,12 +27,12 @@ END_VAR
 VAR_OUTPUT
 END_VAR
 VAR
-	Rows_ : UINT := 0;
-	Cols_ : UINT := 0;
-	
-	Data : POINTER TO LREAL;//1D array of reals, such that I = F(R,C) = R*Cols + C (row-major)
-	
-	MemManager : FB_DynMem_Manager2;
+    Rows_ : UINT := 0;
+    Cols_ : UINT := 0;
+
+    Data : POINTER TO LREAL; //1D array of reals, such that I = F(R,C) = R*Cols + C (row-major)
+
+    MemManager : FB_DynMem_Manager2;
 END_VAR
 ]]></Declaration>
     <Implementation>
@@ -249,7 +267,10 @@ AsTransposed := Matrix_Transpose(M,THIS^);]]></ST>
 VAR_INPUT
 END_VAR
 VAR_IN_OUT
+	//~
 	Vectors : ARRAY[*] OF POINTER TO Matrix;
+	//~
+
 END_VAR
 VAR
 	Dim : UINT;
@@ -283,7 +304,11 @@ AsVectorCrossProduct := Vector_CrossProduct(THIS^,Vectors);]]></ST>
       </Implementation>
     </Method>
     <Property Name="Cols" Id="{09c98137-9055-00b0-0894-d32717273f77}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Total number of columns in this matrix
+      <Declaration><![CDATA[(*~
+<docu>
+	<inheritdoc/>			
+</docu>
+~*)
 PROPERTY PUBLIC Cols : UINT]]></Declaration>
       <Get Name="Get" Id="{ce7151de-32b2-073c-1f3b-8ce75ec362a9}">
         <Declaration><![CDATA[VAR
@@ -318,7 +343,14 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="Free" Id="{ed9227e7-8e2a-060e-3b7c-fa220c6f8eaf}" FolderPath="Initializers\">
-      <Declaration><![CDATA[METHOD PUBLIC Free
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Frees all dynamically allocated memory and resets the size of the matrix to 0x0
+		</summary>			
+	</docu>
+~*)
+METHOD PUBLIC Free
 VAR_INPUT
 END_VAR
 ]]></Declaration>
@@ -328,18 +360,32 @@ Rows_ := 0;
 Cols_ := 0;
 IF Data <> 0 THEN
 	MemManager.Free2(Data);
-END_IF;]]></ST>
+END_IF;
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="GetI" Id="{a2b5b528-33de-0111-2730-98e9e03688a1}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
-//:Prerequisites:
-// - I < Rows*Cols
-// - Matrix is not empty
-//If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
-METHOD PUBLIC GetI : LREAL//The value of the element at the specified index, or 0 if an invalid index is supplied
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
+			Prerequisites:
+				- I &lt; Rows*Cols
+				- Matrix is not empty
+			<remarks>			
+				<note type="note">
+					If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
+				</note>
+			</remarks>
+		</summary>			
+		<param name="I">The index of the element which should have its value returned</param>
+		<returns>The value of the element at the specified index, or 0 if an invalid index is supplied</returns>
+	</docu>
+~*)
+METHOD PUBLIC GetI : LREAL //The value of the element at the specified index, or 0 if an invalid index is supplied
 VAR_INPUT
-	I : UINT;//The index of the element which should have its value returned
+    I : UINT; //The index of the element which should have its value returned
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -368,11 +414,32 @@ VAR
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[Temp.InitCopy(THIS^);
-Grow := AsGrown(Temp,Row,Col,DiagVal,RowVal,ColVal);]]></ST>
+Grow := AsGrown(Temp,Row,Col,DiagVal,RowVal,ColVal);
+
+
+(*~
+	<docu>
+		<summary>
+			 Adds a row and column in the specified positions.
+			 The value of the new element at the intersection is specified by DVal, while the values in the newly created Row and Column are specified by Rval and Cval, respectively.	
+		</summary>			
+		<returns>Returns TRUE on success</returns>
+	</docu>
+~*)]]></ST>
       </Implementation>
     </Method>
     <Method Name="Init" Id="{ef75234b-f0a2-0ba6-3c2d-bd5bff0db60c}" FolderPath="Initializers\">
-      <Declaration><![CDATA[METHOD PUBLIC Init : BOOL
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Initializes a RxC matrix, with potentially random non-zero values
+		</summary>			
+		<param name="Rows">The number of  rows to create</param>
+		<param name="Cols">The number of collumns to create</param>
+		<returns>Returns True if success</returns>
+	</docu>
+~*)
+METHOD PUBLIC Init : BOOL
 VAR_INPUT
 	Rows : UINT;
 	Cols : UINT;
@@ -383,7 +450,19 @@ END_VAR
       </Implementation>
     </Method>
     <Method Name="InitConstant" Id="{6665df21-10cf-041e-2560-fd1085528ad3}" FolderPath="Initializers\">
-      <Declaration><![CDATA[METHOD PUBLIC InitConstant : BOOL;
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			  Initializes a RxC matrix where every element is equal to the supplied value
+		</summary>			
+		<param name="Rows">Number of rows to create</param>
+		<param name="Cols">Number of columns to create</param>
+		<param name="Val">The value to to initiliaze with</param>
+
+		<returns>Returns True if success</returns>
+	</docu>
+~*)
+METHOD PUBLIC InitConstant : BOOL;
 VAR_INPUT
 	Rows : UINT;
 	Cols : UINT;
@@ -391,11 +470,23 @@ VAR_INPUT
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[InitConstant := InitTrapezoidal(Rows,Cols,Val,Val,Val);]]></ST>
+        <ST><![CDATA[InitConstant := InitTrapezoidal(Rows,Cols,Val,Val,Val);
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="InitCopy" Id="{bcdd2e69-8663-4d69-9214-f5a0b970f2d2}" FolderPath="Initializers\">
-      <Declaration><![CDATA[METHOD PUBLIC InitCopy : BOOL
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			 Initializes a matrix with the exact size and contents of the supplied matrix
+		</summary>			
+		<param name="M">Supplied matrix</param>
+		<returns>Returns True if success</returns>
+	</docu>
+~*)
+METHOD PUBLIC InitCopy : BOOL
 VAR_INPUT
 	M : REFERENCE TO Matrix;
 END_VAR
@@ -408,17 +499,32 @@ END_IF
 
 InitCopy := TRUE;
 
-FillFrom(M);]]></ST>
+FillFrom(M);
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="InitIdentity" Id="{3034c14e-05ed-051b-118d-0a77fc4909a0}" FolderPath="Initializers\">
-      <Declaration><![CDATA[METHOD PUBLIC InitIdentity : BOOL;
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			 Initializes a square identity matrix of size Size x Size
+		</summary>			
+		<param name="Size">Size of the square matrix</param>
+		<returns>Returns True if success</returns>
+	</docu>
+~*)
+METHOD PUBLIC InitIdentity : BOOL;
 VAR_INPUT
 	Size : UINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[InitIdentity := InitTrapezoidal(Size,Size,1,0,0);]]></ST>
+        <ST><![CDATA[InitIdentity := InitTrapezoidal(Size,Size,1,0,0);
+
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="InitMagicSquare" Id="{b6028141-d29b-0bb0-2bb8-954bb3757e26}" FolderPath="Initializers\">
@@ -463,7 +569,20 @@ END_FOR]]></ST>
       </Implementation>
     </Method>
     <Method Name="InitTrapezoidal" Id="{4953ae1d-3460-490d-987e-075e15022f4f}" FolderPath="Initializers\">
-      <Declaration><![CDATA[METHOD PUBLIC InitTrapezoidal : BOOL
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			   Initializes a RxC matrix then fills is using FillTrapezoidal()
+		</summary>			
+		<param name="Rows">Number of rows to create</param>
+		<param name="Cols">Number of columns to create</param>
+		<param name="Diagonal">Every element on the main diagonal of the matrix is set to this value.</param>
+		<param name="UpperRight">Every element above or to the right of the main diagonal is set to this value</param>
+		<param name="LowerLeft">Every element below or to the left of the main diagonal is set to this value</param>
+		<returns>Returns True if success</returns>
+	</docu>
+~*)
+METHOD PUBLIC InitTrapezoidal : BOOL
 VAR_INPUT
 	Rows : UINT;
 	Cols : UINT;
@@ -484,7 +603,18 @@ FillTrapezoidal(Diagonal,UpperRight,LowerLeft);]]></ST>
       </Implementation>
     </Method>
     <Method Name="InitVector" Id="{7d76ba78-bfb1-0c87-0b22-1cb029ef8698}" FolderPath="Initializers\">
-      <Declaration><![CDATA[METHOD PUBLIC InitVector : BOOL
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			 Initializes an Lx1 column vector where the 0th element is equal to Val and every subsequent element is Inc larger than the previous
+		</summary>			
+		<param name="Length">Length of the vector</param>
+		<param name="Value">Value of 0th element</param>
+		<param name="Increment">Value by witch every other value is incremented by</param>
+		<returns>Returns True if success</returns>
+	</docu>
+~*)
+METHOD PUBLIC InitVector : BOOL
 VAR_INPUT
 	Length : UINT;
 	Value : LREAL;
@@ -507,18 +637,32 @@ ELSE
 			SetI(I,Value + I * Increment);
 		END_FOR
 	END_IF;
-END_IF]]></ST>
+END_IF
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="InitZeros" Id="{536c56ab-c302-073c-2f7f-5791158506f5}" FolderPath="Initializers\">
-      <Declaration><![CDATA[METHOD PUBLIC InitZeros : BOOL
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			 Initializes a RxC matrix where every element is equal to 0.0
+		</summary>			
+		<param name="Rows">The number of  rows to create</param>
+		<param name="Cols">The number of collumns to create</param>
+		<returns>Returns True if success</returns>
+	</docu>
+~*)
+METHOD PUBLIC InitZeros : BOOL
 VAR_INPUT
 	Rows : UINT;
 	Cols : UINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[InitZeros := Resize(Rows,Cols,FALSE,TRUE);]]></ST>
+        <ST><![CDATA[InitZeros := Resize(Rows,Cols,FALSE,TRUE);
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="LogData" Id="{90177dcb-13b5-0277-11bc-c310b8752ac9}" FolderPath="Helpers\">
@@ -548,7 +692,22 @@ MemManager.Free2(Buffer);]]></ST>
       </Implementation>
     </Method>
     <Method Name="Resize" Id="{86e43810-4b4c-4ed7-930f-0ccd5cc3ebc0}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[METHOD PUBLIC Resize : BOOL
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Changes the total number of Rows and Cols in the matrix. 
+			If Retain is seleced then any element within the bounds of both the initial and resulting matrix will have its value retained.
+			If Init is selected then any newly created element will have its value set to zero.
+		</summary>			
+		<param name="NewRows">The row of the element to fetch</param>
+		<param name="NewCols">The column of the element to fetch</param>
+		<param name="RetainVals">If  selected then  any element within the bounds of both the initial and resulting matrix will have its value retained.</param>
+		<param name="ClearVals">If  selected then any newly created element will have its value set to zero.</param>
+		
+		<returns>Returns TRUE on success</returns>
+	</docu>
+~*)
+METHOD PUBLIC Resize : BOOL
 VAR_INPUT
 	NewRows : UINT;
 	NewCols : UINT;
@@ -561,7 +720,9 @@ VAR
 	OldCols : UINT;
 END_VAR]]></Declaration>
       <Implementation>
-        <ST><![CDATA[//case where desired size is an empty matrix
+        <ST><![CDATA[
+
+//case where desired size is an empty matrix
 IF NewRows * NewCols = 0 THEN
 	IF Data <> 0 THEN
 		MemManager.Free2(Data);
@@ -622,7 +783,11 @@ END_IF
       </Implementation>
     </Method>
     <Property Name="Rows" Id="{5a9e21cc-4483-01f1-1ffd-f7170d98d654}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Total number of rows in this matrix
+      <Declaration><![CDATA[(*~
+	<docu>
+		<inheritdoc/>			
+	</docu>
+~*)
 PROPERTY PUBLIC Rows : UINT]]></Declaration>
       <Get Name="Get" Id="{851dbb5a-4632-0955-0ca2-0204caf2236d}">
         <Declaration><![CDATA[VAR
@@ -634,8 +799,17 @@ END_VAR
       </Get>
     </Property>
     <Method Name="SetI" Id="{8240be42-2571-04a1-0d81-a5786edab7a1}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Sets the element specified by the supplied index to the suppleid value, assuming the data of the matrix is stored in a 1D row-major array
-//:Prerequisites: - I < Rows*Cols
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Sets the element specified BY the supplied index TO the suppleid value, assuming the data OF the matrix is stored in a 1D row-major ARRAY
+			Prerequisites: - I &lt; Rows*Cols
+		</summary>			
+		<param name="I">The index specifying which element should be modified</param>
+		<param name="Val">The value copied to the corresponding element</param>
+		<returns>TRUE if the specified index is valid and the data is copied. FLASE otherwise</returns>
+	</docu>
+~*)
 METHOD PUBLIC SetI : BOOL//TRUE if the specified index is valid and the data is copied. FLASE otherwise
 VAR_INPUT
 	I : UINT;//The index specifying which element should be modified
@@ -656,7 +830,16 @@ END_IF]]></ST>
       </Implementation>
     </Method>
     <Method Name="Shrink" Id="{b394fe74-6e86-4084-bac8-4e80abad3f51}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[METHOD PUBLIC Shrink : BOOL
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			 Removes the specified Row and Column from the matrix, resuling in a new size of (Rows-1,Cols-1).
+			 No dimension can be shrunk from 1 to 0 (therefore vectors only shrink in one direction).
+		</summary>			
+		<returns>Returns TRUE on success</returns>
+	</docu>
+~*)
+METHOD PUBLIC Shrink : BOOL
 VAR_INPUT
 	Row : UINT;
 	Col : UINT;
@@ -671,11 +854,21 @@ END_VAR]]></Declaration>
 END_IF
 
 Temp.InitCopy(THIS^);
-Shrink := AsShrunk(Temp,Row,Col);]]></ST>
+Shrink := AsShrunk(Temp,Row,Col);
+
+]]></ST>
       </Implementation>
     </Method>
     <Method Name="Transpose" Id="{5895d9f9-ae16-04ed-0e86-43484feeb00d}" FolderPath="Modifiers\">
-      <Declaration><![CDATA[METHOD PUBLIC Transpose : BOOL
+      <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			Similar to <see cref="Matrix.TransposeSquare">TransposeSquare</see>, however it works on rectangular matricies (swapping Rows and Cols)
+		</summary>			
+		<returns>Returns TRUE on success</returns>
+	</docu>
+~*)
+METHOD PUBLIC Transpose : BOOL
 VAR_INPUT
 END_VAR
 VAR
@@ -693,310 +886,10 @@ ELSE
 	
 	Transpose := AsTransposed(Temp);
 
-END_IF]]></ST>
+END_IF
+
+]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="DynamicMatrix">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsColVector">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsElementDifference">
-      <LineId Id="29" Count="1" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="31" Count="2" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsElementProduct">
-      <LineId Id="29" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsElementSum">
-      <LineId Id="29" Count="1" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="31" Count="2" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsGrown">
-      <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsInverse">
-      <LineId Id="9" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsMatrixProduct">
-      <LineId Id="29" Count="1" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="31" Count="1" />
-      <LineId Id="34" Count="3" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsRowVector">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsScaled">
-      <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="29" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsShrunk">
-      <LineId Id="31" Count="1" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsSubMatrix">
-      <LineId Id="25" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="28" Count="0" />
-      <LineId Id="31" Count="1" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsTransposed">
-      <LineId Id="5" Count="0" />
-      <LineId Id="13" Count="0" />
-      <LineId Id="15" Count="0" />
-      <LineId Id="14" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.AsVectorCrossProduct">
-      <LineId Id="16" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="27" Count="1" />
-      <LineId Id="42" Count="0" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="43" Count="0" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="31" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.Cols.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.FB_exit">
-      <LineId Id="6" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="8" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.FB_init">
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.Free">
-      <LineId Id="10" Count="0" />
-      <LineId Id="6" Count="3" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.GetI">
-      <LineId Id="14" Count="1" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="19" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.Grow">
-      <LineId Id="98" Count="0" />
-      <LineId Id="57" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.Init">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.InitConstant">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.InitCopy">
-      <LineId Id="10" Count="0" />
-      <LineId Id="18" Count="0" />
-      <LineId Id="20" Count="1" />
-      <LineId Id="27" Count="1" />
-      <LineId Id="22" Count="0" />
-      <LineId Id="14" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.InitIdentity">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.InitMagicSquare">
-      <LineId Id="6" Count="3" />
-      <LineId Id="42" Count="1" />
-      <LineId Id="35" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="39" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="41" Count="0" />
-      <LineId Id="40" Count="0" />
-      <LineId Id="13" Count="5" />
-      <LineId Id="51" Count="1" />
-      <LineId Id="56" Count="0" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="57" Count="3" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.InitTrapezoidal">
-      <LineId Id="68" Count="6" />
-      <LineId Id="33" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.InitVector">
-      <LineId Id="12" Count="0" />
-      <LineId Id="27" Count="0" />
-      <LineId Id="13" Count="1" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="20" Count="3" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="24" Count="2" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.InitZeros">
-      <LineId Id="5" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.LogData">
-      <LineId Id="50" Count="12" />
-      <LineId Id="22" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.Resize">
-      <LineId Id="48" Count="0" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="23" Count="0" />
-      <LineId Id="25" Count="1" />
-      <LineId Id="160" Count="0" />
-      <LineId Id="106" Count="0" />
-      <LineId Id="104" Count="0" />
-      <LineId Id="102" Count="0" />
-      <LineId Id="49" Count="1" />
-      <LineId Id="30" Count="0" />
-      <LineId Id="87" Count="1" />
-      <LineId Id="138" Count="1" />
-      <LineId Id="94" Count="1" />
-      <LineId Id="33" Count="0" />
-      <LineId Id="52" Count="0" />
-      <LineId Id="34" Count="0" />
-      <LineId Id="96" Count="1" />
-      <LineId Id="116" Count="0" />
-      <LineId Id="137" Count="0" />
-      <LineId Id="169" Count="0" />
-      <LineId Id="129" Count="0" />
-      <LineId Id="37" Count="0" />
-      <LineId Id="165" Count="0" />
-      <LineId Id="167" Count="1" />
-      <LineId Id="166" Count="0" />
-      <LineId Id="38" Count="0" />
-      <LineId Id="55" Count="0" />
-      <LineId Id="171" Count="0" />
-      <LineId Id="53" Count="0" />
-      <LineId Id="82" Count="0" />
-      <LineId Id="140" Count="0" />
-      <LineId Id="142" Count="1" />
-      <LineId Id="141" Count="0" />
-      <LineId Id="173" Count="1" />
-      <LineId Id="54" Count="0" />
-      <LineId Id="172" Count="0" />
-      <LineId Id="144" Count="0" />
-      <LineId Id="170" Count="0" />
-      <LineId Id="146" Count="1" />
-      <LineId Id="32" Count="0" />
-      <LineId Id="154" Count="0" />
-      <LineId Id="158" Count="0" />
-      <LineId Id="155" Count="0" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="45" Count="2" />
-      <LineId Id="20" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.Rows.Get">
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.SetI">
-      <LineId Id="5" Count="0" />
-      <LineId Id="16" Count="0" />
-      <LineId Id="25" Count="0" />
-      <LineId Id="22" Count="1" />
-      <LineId Id="26" Count="0" />
-      <LineId Id="8" Count="1" />
-      <LineId Id="24" Count="0" />
-      <LineId Id="7" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.Shrink">
-      <LineId Id="5" Count="0" />
-      <LineId Id="8" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="20" Count="0" />
-    </LineIds>
-    <LineIds Name="DynamicMatrix.Transpose">
-      <LineId Id="29" Count="10" />
-      <LineId Id="16" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>

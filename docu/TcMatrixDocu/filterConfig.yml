@@ -1,0 +1,19 @@
+﻿apiRules:
+    - exclude:
+        uidRegex: ^TcMatrix$
+    - exclude:
+        uidRegex: ^TcMatrixConnector.Properties$
+    - exclude:
+        uidRegex: ^PlcDocu.TcMatrix.Global_Version$
+    - exclude:
+        uidRegex: ^System\.Object
+        type: Type
+    - exclude:
+        uidRegex : ^PlcDocu.TcMatrix.*Matrix.(M_|MemManager|Length_|Rows_|Cols_|Data|Ci|I|Ri|sPath_|ZeroReference_)$
+        Type: Field
+    - exclude:
+        uidRegex : ^PlcDocu.TcMatrix.MatrixCsvWriter.*$
+        Type: Field
+    - exclude:
+        uidRegex : ^*#ctor$
+        Type: Field

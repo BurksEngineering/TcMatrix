@@ -1,7 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="SubMatrixAccessor" Id="{837da318-dc80-05cd-2c43-97c65ce7fbf9}" SpecialFunc="None">
-    <Declaration><![CDATA[FUNCTION_BLOCK SubMatrixAccessor EXTENDS MatrixAccessor
+    <Declaration><![CDATA[(*~
+	<docu>
+		<summary>
+			<see cref="MatrixAccessor">See Matrix accessor</see>
+			Allows access to a rectangular subset of the parent matrix as if it were a standalone matrix
+		</summary>			
+	</docu>
+~*)
+FUNCTION_BLOCK SubMatrixAccessor EXTENDS MatrixAccessor
 VAR_INPUT
 END_VAR
 VAR_OUTPUT
@@ -19,7 +27,11 @@ END_VAR
     <Folder Name="Initializers" Id="{c4ff6fb8-d426-06a0-2de0-6e817d8e8673}" />
     <Folder Name="Overrides" Id="{db7b0a8d-ca29-0b51-32da-29239fddaa39}" />
     <Property Name="Cols" Id="{a38b3dd4-923d-0130-3754-ff352bbd92f6}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Total number of columns in this matrix
+      <Declaration><![CDATA[(*~
+<docu>
+	<inheritdoc/>			
+</docu>
+~*)
 PROPERTY PUBLIC Cols : UINT]]></Declaration>
       <Get Name="Get" Id="{7ed751df-7924-05b4-3c5e-07a9c0bf5d5b}">
         <Declaration><![CDATA[VAR
@@ -56,7 +68,11 @@ ColCount_ := ColCount;]]></ST>
       </Implementation>
     </Method>
     <Property Name="Rows" Id="{aee046b9-e47f-08ab-02ba-83dd133dbd4a}" FolderPath="Overrides\">
-      <Declaration><![CDATA[//Total number of rows in this matrix
+      <Declaration><![CDATA[(*~
+	<docu>
+		<inheritdoc/>			
+	</docu>
+~*)
 PROPERTY PUBLIC Rows : UINT]]></Declaration>
       <Get Name="Get" Id="{2e0f523c-22c0-0b7f-3ffa-dd5110d1775f}">
         <Declaration><![CDATA[VAR
@@ -95,34 +111,5 @@ IC2RC(Index,Cols,Row => ThisR, Col => ThisC);
 This2Parent := RCC2I(ThisR+RowStart_,ThisC+ColStart_,M_.Cols);]]></ST>
       </Implementation>
     </Method>
-    <LineIds Name="SubMatrixAccessor">
-      <LineId Id="9" Count="0" />
-    </LineIds>
-    <LineIds Name="SubMatrixAccessor.Cols.Get">
-      <LineId Id="2" Count="0" />
-      <LineId Id="10" Count="0" />
-      <LineId Id="12" Count="0" />
-      <LineId Id="11" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="7" Count="1" />
-      <LineId Id="6" Count="0" />
-    </LineIds>
-    <LineIds Name="SubMatrixAccessor.Init">
-      <LineId Id="5" Count="0" />
-      <LineId Id="11" Count="3" />
-    </LineIds>
-    <LineIds Name="SubMatrixAccessor.Rows.Get">
-      <LineId Id="9" Count="2" />
-      <LineId Id="5" Count="3" />
-      <LineId Id="2" Count="0" />
-    </LineIds>
-    <LineIds Name="SubMatrixAccessor.This2Parent">
-      <LineId Id="18" Count="1" />
-      <LineId Id="21" Count="1" />
-      <LineId Id="17" Count="0" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="5" Count="0" />
-      <LineId Id="15" Count="0" />
-    </LineIds>
   </POU>
 </TcPlcObject>
