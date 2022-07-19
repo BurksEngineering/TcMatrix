@@ -23,6 +23,7 @@ Compare to:
 
 * [Installation](#twincat-3-installation)
 * [Usage](#usage)
+   * [Quick Start](#quick-start)
    * [Matrix](#base-matrix-class)
    * [DynamicMatrix](#dynamicmatrix-class)
    * [StaticMatrix](#static-memory-matrix)
@@ -66,6 +67,32 @@ Test:
 1. After a few seconds the TcUnit results should be visible in the Error List window. Verify that all tests have passed.
 
 ## Usage
+
+### Quick Start
+
+Example showing vector multiplication with the identity matrix.
+See TcMatrixTest.FB_Array_Test.MarkdownExample1
+```
+VAR
+	M : Array2DStaticMatrix; //This instance is the matrix that the code will interact with
+	M_Data : ARRAY[1..3,1..3] OF LREAL; //This array will act as the memory for the matrix
+	V : Array2DStaticMatrix; //This instance is the initial column vector
+	V_Data : ARRAY[1..3,1..1] OF LREAL := [1, 2, 3]; //This array will act as the memory for the initial column vector, prepopulated
+	Res : Array2DStaticMatrix; //This instance is the resulting column vector
+	Res_Data : ARRAY[1..3,1..1] OF LREAL := [1, 2, 3]; //This array will act as the memory for the resulting column vector
+	success : BOOL; //records success or failure of the matrix multiplication
+	equal : BOOL; //records success if the resulting vector is equal to the first
+END_VAR
+
+M(Data := M_Data); //Connect the memory to the matrix and initialize it
+V(Data := V_Data); //Connect the memory to the initial column vector and initialize it (retaining declared values)
+Res(Data := Res_Data); //Connect the memory to the resulting column vector and initialize it
+
+M.FillTrapezoidal(Diagonal := 1, UpperRight := 0, LowerLeft := 0); //Transforms the matrix from all zeros into the identity matrix
+success := Matrix_Product(M,V,Res); //perform the matrix multiplication
+equal := V.IsEqual(Res); //the result of the multiplication should be equal to the initial value because of the identity matrix
+
+```
 
 ### Base Matrix Class
 
@@ -256,6 +283,13 @@ It is accessed in row-major order based on the logic in the *GetI* and *SetI* fu
 It is most useful when someone doesn't trust dynamically allocated memory, but also doesn't want to make multiple size-specific custom derived FBs just to set up a single complex matrix operation.
 
 * __Init(R,C,pD)__ : Must be called in order to setup the matrix (it will be empty until this method is called).
+
+#### Array2DStaticMatrix Class
+
+This simple concrete derivative of the StaticMatrix class uses an external *2D ARRAY OF LREAL* as the memory source for the matrix data.
+It is most useful when someone is already interfacing with data in a native 2D array, but wants to quickly utilize some matrix functions.
+
+* To set up the matrix, the main FB must be called with the __Data__ parameter pointing at the external 2D array of LREAL that will be treated like a matrix.
 
 ---
 **WARNING**

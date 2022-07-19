@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Array2D_To_Matrix" Id="{f3e50eaf-9dca-09c7-1725-57bc1aaea6bc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Array2D_To_Matrix : BOOL
+VAR_IN_OUT
+	A : ARRAY[*,*] OF LREAL;//source matrix for element copy operation
+END_VAR
+VAR_INPUT
+	M : REFERENCE TO Matrix;//destination matrix for element copy operation
+END_VAR
+VAR
+	Ri : UINT;
+	Ci : UINT;
+	R0 : UINT;
+	C0 : UINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//check for bad references and size agreement
+IF NOT(Matrix_SameSizeAs_Array2D(A,M)) THEN
+	Array2D_To_Matrix := FALSE;
+	RETURN;
+END_IF
+Array2D_To_Matrix := TRUE;
+
+R0 := DINT_TO_UINT(LOWER_BOUND(A,1));
+C0 := DINT_TO_UINT(LOWER_BOUND(A,2));
+
+IF M.IsEmpty THEN
+	RETURN;//do not start loop when empty
+END_IF
+
+FOR Ri := 0 TO M.Rows-1 DO
+	FOR Ci := 0 TO M.Cols-1 DO
+		M.SetRC(Ri,Ci,A[R0+Ri,C0+Ci]);
+	END_FOR
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="Array2D_To_Matrix">
+      <LineId Id="58" Count="7" />
+      <LineId Id="72" Count="3" />
+      <LineId Id="66" Count="5" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -4,6 +4,7 @@
     <Declaration><![CDATA[PROGRAM PRG_TEST
 VAR
 	fbDynamicMatrix : FB_DynamicMatrix_Test;
+	fbArray: FB_Array_Test;
 	fbMatrixGetMagicSquare : FB_MatrixGetMagicSquare_Test;
 	fbMatrixSubmatrix : FB_MatrixSubMatrix_Test;
 	fbMatrixGrow : FB_MatrixGrow_Test;

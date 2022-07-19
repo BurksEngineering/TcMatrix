@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Matrix_SameSizeAs_Array2D" Id="{c9358c1e-1fa6-0af9-1809-136157085d7a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Matrix_SameSizeAs_Array2D : BOOL
+VAR_IN_OUT
+	A : ARRAY[*,*] OF LREAL;
+END_VAR
+VAR_INPUT
+	M : REFERENCE TO Matrix;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//check for bad references
+IF NOT(__ISVALIDREF(M)) THEN
+	Matrix_SameSizeAs_Array2D := FALSE;
+	RETURN;
+END_IF
+
+//check for size mismatch
+Matrix_SameSizeAs_Array2D := Array2D_Rows(A) = M.Rows AND Array2D_Cols(A) = M.Cols;]]></ST>
+    </Implementation>
+    <LineIds Name="Matrix_SameSizeAs_Array2D">
+      <LineId Id="8" Count="6" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -31,6 +31,9 @@
     <Compile Include="TESTs\FB_CsvReadWrite_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="TESTs\FB_Array_Test.TcPOU">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="TESTs\FB_MatrixElementProduct_Test.TcPOU">
       <SubType>Code</SubType>
     </Compile>

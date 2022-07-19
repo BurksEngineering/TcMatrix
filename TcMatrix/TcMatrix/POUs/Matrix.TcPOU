@@ -214,6 +214,33 @@ FOR Ri := 0 TO MIN(Rows,M.Rows)-1 DO
 END_FOR]]></ST>
       </Implementation>
     </Method>
+    <Method Name="FillFromArray2D" Id="{2cb8ce14-15ec-0e5f-0bdb-629074473dbd}" FolderPath="Modifiers\">
+      <Declaration><![CDATA[(*
+For every element that exist in both this matrix and the source array, copy the value from the source array into this matrix
+*)
+METHOD PUBLIC FillFromArray2D
+VAR_IN_OUT
+	A : ARRAY[*,*] OF LREAL;//source matrix for element copy operation
+END_VAR
+VAR
+	inRows : UINT;
+	inCols : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF LOWER_BOUND(A,1) < UPPER_BOUND(A,1) OR LOWER_BOUND(A,2) < UPPER_BOUND(A,2)  OR IsEmpty THEN
+	RETURN;//no need to fill to/from empty matricies
+END_IF
+
+inRows := DINT_TO_UINT(UPPER_BOUND(A,1) - LOWER_BOUND(A,1) + 1);
+inCols := DINT_TO_UINT(UPPER_BOUND(A,2) - LOWER_BOUND(A,2) + 1);
+
+FOR Ri := 0 TO MIN(Rows,inRows)-1 DO
+	FOR Ci := 0 TO MIN(Cols,inCols)-1 DO
+		SetRC(Ri,Ci,A[LOWER_BOUND(A,1)+Ri,LOWER_BOUND(A,2)+Ci]);
+	END_FOR
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="FillFromAt" Id="{57397ef9-06ec-050d-1f21-ec905dd7b0ad}" FolderPath="Modifiers\">
       <Declaration><![CDATA[//Consider the subset of elements in this matrix starting and the supplied initial row and column as a submatrix. 
 //For every element that exists in both the submatrix and the supplies source matrix, copy the value from the source matrix into the corresponding element of the submatrix.
@@ -1169,10 +1196,11 @@ END_VAR
       <LineId Id="5" Count="0" />
     </LineIds>
     <LineIds Name="Matrix.FillFrom">
-      <LineId Id="19" Count="0" />
-      <LineId Id="21" Count="1" />
-      <LineId Id="20" Count="0" />
-      <LineId Id="15" Count="3" />
+      <LineId Id="40" Count="7" />
+      <LineId Id="38" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.FillFromArray2D">
+      <LineId Id="29" Count="10" />
       <LineId Id="14" Count="0" />
     </LineIds>
     <LineIds Name="Matrix.FillFromAt">

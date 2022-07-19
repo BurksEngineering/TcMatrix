@@ -3,8 +3,8 @@
   <POU Name="Matrix_Product" Id="{78d7729b-89b3-48bc-b06c-a73009771b2d}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_Product : Bool
 VAR_INPUT
-	A : REFERENCE TO Matrix;
-	B : REFERENCE TO Matrix;
+	A : REFERENCE TO Matrix;//left side matrix
+	B : REFERENCE TO Matrix;//right side matrix
 	Res : REFERENCE TO Matrix;//must not be the same source as M_L or M_R
 END_VAR
 VAR

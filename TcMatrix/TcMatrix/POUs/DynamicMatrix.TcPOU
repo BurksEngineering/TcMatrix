@@ -382,6 +382,29 @@ END_VAR
         <ST><![CDATA[Init := Resize(Rows,Cols,FALSE,FALSE);]]></ST>
       </Implementation>
     </Method>
+    <Method Name="InitArray2D" Id="{32568124-a27f-0411-103a-1245f53e0bbf}" FolderPath="Initializers\">
+      <Declaration><![CDATA[METHOD PUBLIC InitArray2D : BOOL
+VAR_IN_OUT
+	A : ARRAY[*,*] OF LREAL;
+END_VAR
+VAR
+	inRows : UINT;
+	inCols : UINT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[inRows := DINT_TO_UINT(UPPER_BOUND(A,1) - LOWER_BOUND(A,1) + 1);
+inCols := DINT_TO_UINT(UPPER_BOUND(A,2) - LOWER_BOUND(A,2) + 1);
+
+IF NOT(Init(inRows,inCols)) THEN
+	InitArray2D := FALSE;
+	RETURN;
+END_IF
+
+InitArray2D := Array2D_To_Matrix(A,THIS^);
+
+]]></ST>
+      </Implementation>
+    </Method>
     <Method Name="InitConstant" Id="{6665df21-10cf-041e-2560-fd1085528ad3}" FolderPath="Initializers\">
       <Declaration><![CDATA[METHOD PUBLIC InitConstant : BOOL;
 VAR_INPUT
@@ -868,6 +891,19 @@ END_IF]]></ST>
     </LineIds>
     <LineIds Name="DynamicMatrix.Init">
       <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="DynamicMatrix.InitArray2D">
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="22" Count="0" />
     </LineIds>
     <LineIds Name="DynamicMatrix.InitConstant">
       <LineId Id="5" Count="0" />

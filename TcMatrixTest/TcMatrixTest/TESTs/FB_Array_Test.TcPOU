@@ -1,0 +1,218 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="FB_Array_Test" Id="{f241cd76-b942-0fa1-14c1-4beded545f88}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Array_Test EXTENDS FB_TestSuite
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[WhenDynamicInitializedExpectValuesCopied();
+WhenStaticInitializedExpectValuesCopied();
+MarkdownExample1();]]></ST>
+    </Implementation>
+    <Method Name="MarkdownExample1" Id="{fa93413e-70da-01f6-149b-1bf045250fd1}">
+      <Declaration><![CDATA[METHOD PRIVATE MarkdownExample1
+VAR_INPUT
+END_VAR
+VAR
+	M : Array2DStaticMatrix; //This instance is the matrix that the code will interact with
+	M_Data : ARRAY[1..3,1..3] OF LREAL; //This array will act as the memory for the matrix
+	V : Array2DStaticMatrix; //This instance is the initial column vector
+	V_Data : ARRAY[1..3,1..1] OF LREAL := [1, 2, 3]; //This array will act as the memory for the initial column vector, prepopulated
+	Res : Array2DStaticMatrix; //This instance is the resulting column vector
+	Res_Data : ARRAY[1..3,1..1] OF LREAL := [1, 2, 3]; //This array will act as the memory for the resulting column vector
+	success : BOOL; //records success or failure of the matrix multiplication
+	equal : BOOL; //records success if the resulting vector is equal to the first
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('MarkdownExample1');
+
+// @TEST-RUN
+M(Data := M_Data); //Connect the memory to the matrix and initialize it
+V(Data := V_Data); //Connect the memory to the initial column vector and initialize it (retaining declared values)
+Res(Data := Res_Data); //Connect the memory to the resulting column vector and initialize it
+
+M.FillTrapezoidal(Diagonal := 1, UpperRight := 0, LowerLeft := 0); //Transforms the matrix from all zeros into the identity matrix
+success := Matrix_Product(M,V,Res); //perform the matrix multiplication
+equal := V.IsEqual(Res); //the result of the multiplication should be equal to the initial value because of the identity matrix
+	
+
+// @TEST-ASSERT
+AssertTrue(Condition :=success,
+	message := 'Error on valid initial resize');
+AssertTrue(Condition :=equal,
+	message := 'Error on valid initial resize');
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenDynamicInitializedExpectValuesCopied" Id="{311212b3-b34d-00e4-1f77-196dc04036d6}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenDynamicInitializedExpectValuesCopied
+VAR_INPUT
+END_VAR
+VAR
+	A : ARRAY[1..3, 1..3] OF LREAL := [1,2,3,4,5,6,7,8,9];
+	M : DynamicMatrix;
+	
+	InitSuccess : BOOL;
+	
+	ExpectedRank : UINT := 3;
+	ExpectedVal : LREAL := 8.0; //expected at A[3,2] and M(2,1)
+	
+	MatrixRows : UINT;
+	MatrixCols : UINT;
+	ArrayVal : LREAL;
+	MatrixVal : LREAL;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenDynamicInitializedExpectValuesCopied');
+
+// @TEST-RUN
+InitSuccess := M.InitArray2D(A);
+
+MatrixRows := M.Rows;
+MatrixCols := M.Cols;
+ArrayVal := A[3,2];
+MatrixVal := M.GetRC(2,1);
+
+
+// @TEST-ASSERT
+AssertTrue(Condition :=InitSuccess,
+	message := 'Error on valid initial resize');
+AssertEquals(Expected := ExpectedRank,
+	Actual := MatrixRows,
+	Message := 'Matrix row size not correct');
+AssertEquals(Expected := ExpectedRank,
+	Actual := MatrixCols,
+	Message := 'Matrix col size not correct');
+	
+AssertEquals(Expected := ExpectedVal,
+	Actual := ArrayVal,
+	Message := 'Array content at [3,2] not correct');
+	
+AssertEquals(Expected := ExpectedVal,
+	Actual := MatrixVal,
+	Message := 'Matrix content at (2,1) not correct');
+	
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WhenStaticInitializedExpectValuesCopied" Id="{3cea78d6-6898-0bee-1e70-7614e7d4ee9b}">
+      <Declaration><![CDATA[METHOD PRIVATE WhenStaticInitializedExpectValuesCopied
+VAR_INPUT
+END_VAR
+VAR
+	A : ARRAY[1..3, 1..3] OF LREAL := [1,2,3,4,5,6,7,8,9];
+	M : Array2DStaticMatrix;
+	
+	ExpectedRank : UINT := 3;
+	ExpectedVal : LREAL := 8.0; //expected at A[3,2] and M(2,1)
+	
+	MatrixRows : UINT;
+	MatrixCols : UINT;
+	ArrayVal : LREAL;
+	MatrixVal : LREAL;
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TEST('WhenStaticInitializedExpectValuesCopied');
+
+// @TEST-RUN
+M(Data := A);
+
+MatrixRows := M.Rows;
+MatrixCols := M.Cols;
+ArrayVal := A[3,2];
+MatrixVal := M.GetRC(2,1);
+
+
+// @TEST-ASSERT
+AssertEquals(Expected := ExpectedRank,
+	Actual := MatrixRows,
+	Message := 'Matrix row size not correct');
+AssertEquals(Expected := ExpectedRank,
+	Actual := MatrixCols,
+	Message := 'Matrix col size not correct');
+	
+AssertEquals(Expected := ExpectedVal,
+	Actual := ArrayVal,
+	Message := 'Array content at [3,2] not correct');
+	
+AssertEquals(Expected := ExpectedVal,
+	Actual := MatrixVal,
+	Message := 'Matrix content at (2,1) not correct');
+	
+TEST_FINISHED();]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Array_Test">
+      <LineId Id="44" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="45" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Array_Test.MarkdownExample1">
+      <LineId Id="6" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="129" Count="4" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="135" Count="2" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Array_Test.WhenDynamicInitializedExpectValuesCopied">
+      <LineId Id="6" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="8" Count="4" />
+      <LineId Id="55" Count="2" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Array_Test.WhenStaticInitializedExpectValuesCopied">
+      <LineId Id="6" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="8" Count="2" />
+      <LineId Id="55" Count="2" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="58" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

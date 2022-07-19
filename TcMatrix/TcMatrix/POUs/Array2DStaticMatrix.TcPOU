@@ -1,0 +1,120 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
+  <POU Name="Array2DStaticMatrix" Id="{a6eb7602-4f25-0098-0e69-1891a5e44e4f}" SpecialFunc="None">
+    <Declaration><![CDATA[(*
+Derived Matrix FB that wraps a provided 2D array of LREALS into an invariantly sized matrix
+*)
+{attribute 'reflection'}
+{attribute 'no_assign'}
+FUNCTION_BLOCK Array2DStaticMatrix EXTENDS StaticMatrix
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	R0 : DINT;
+	C0 : DINT;
+END_VAR
+VAR_IN_OUT
+	Data : ARRAY[*,*] OF LREAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[R0 := LOWER_BOUND(Data,1);
+C0 := LOWER_BOUND(Data,2);
+Init_(Array2D_Rows(Data),Array2D_Cols(Data));]]></ST>
+    </Implementation>
+    <Folder Name="Overrides" Id="{6fc454d7-7110-0aab-201f-31ae3ea4054e}" />
+    <Method Name="GetI" Id="{ad4aff6f-ab24-028f-3c4b-cbe7797bb10d}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Gets the value of the element in this matrix at the supplied location as if the elements were stored in a 1D row-major array
+//:Prerequisites:
+// - 0 <= I < Rows*Cols
+// - Matrix is not empty
+//If the supplied index is out of bounds the value 0 is returned and a warning is generated in the Error List
+METHOD PUBLIC GetI : LREAL//The value of the element at the specified index, or 0 if an invalid index is supplied
+VAR_INPUT
+	I : UINT;//The index of the element which should have its value returned
+END_VAR
+VAR
+	Ri : UINT;
+	Ci : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IsEmpty THEN
+	GetI := 0.0;
+	LogWarning('%s: Attempted I access of uninitialized Matrix');
+ELSE
+	//unwrap back into 2D
+	IC2RC(I,Cols,Row => Ri,Col => Ci);
+	IF Ri <0 OR Ri >= Rows OR Ci < 0 OR Ci >= Cols THEN
+		GetI := 0.0;
+		LogWarning('%s: Attempted I access outside of bounds of array');
+	ELSE
+		//add lower bound offset before fetching from array
+		GetI := Data[R0+Ri,C0+Ci];
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetI" Id="{d3833573-b0e3-0a5b-0936-52509088aeb3}" FolderPath="Overrides\">
+      <Declaration><![CDATA[//Sets the element specified by the supplied index to the suppleid value, assuming the data of the matrix is stored in a 1D row-major array
+//:Prerequisites: - 0 <= I < Rows*Cols
+METHOD PUBLIC SetI : BOOL//TRUE if the specified index is valid and the data is copied. FLASE otherwise
+VAR_INPUT
+	I : UINT;//The index specifying which element should be modified
+	Val : LREAL;//The value copied to the corresponding element
+END_VAR
+VAR
+	Ri : UINT;
+	Ci : UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF IsEmpty THEN
+	SetI := FALSE;
+	LogWarning('%s: Attempt to set data using I access when data is not initialized');
+ELSE
+	//unwrap back into 2D
+	IC2RC(I,Cols,Row => Ri,Col => Ci);
+	IF Ri <0 OR Ri >= Rows OR Ci < 0 OR Ci >= Cols THEN
+		SetI := FALSE;
+		LogWarning('%s: Attempted I access outside of bounds of array');
+	ELSE
+		SetI := TRUE;
+		Data[R0+Ri,C0+Ci] := Val;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Array2DStaticMatrix">
+      <LineId Id="35" Count="1" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Array2DStaticMatrix.GetI">
+      <LineId Id="14" Count="1" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="36" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="Array2DStaticMatrix.SetI">
+      <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="38" Count="4" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="45" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
