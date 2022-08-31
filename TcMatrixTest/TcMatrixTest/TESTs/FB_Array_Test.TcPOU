@@ -26,6 +26,10 @@ VAR
 	Res : Array2DStaticMatrix; //This instance is the resulting column vector
 	Res_Data : ARRAY[1..3,1..1] OF LREAL := [1, 2, 3]; //This array will act as the memory for the resulting column vector
 	success : BOOL; //records success or failure of the matrix multiplication
+	rows_expected : UINT := 3;
+	rows_actual : UINT;
+	cols_expected : UINT := 1;
+	cols_actual : UINT;
 	equal : BOOL; //records success if the resulting vector is equal to the first
 END_VAR]]></Declaration>
       <Implementation>
@@ -36,6 +40,9 @@ M(Data := M_Data); //Connect the memory to the matrix and initialize it
 V(Data := V_Data); //Connect the memory to the initial column vector and initialize it (retaining declared values)
 Res(Data := Res_Data); //Connect the memory to the resulting column vector and initialize it
 
+rows_actual := V.Rows;
+cols_actual := V.Cols;
+
 M.FillTrapezoidal(Diagonal := 1, UpperRight := 0, LowerLeft := 0); //Transforms the matrix from all zeros into the identity matrix
 success := Matrix_Product(M,V,Res); //perform the matrix multiplication
 equal := V.IsEqual(Res); //the result of the multiplication should be equal to the initial value because of the identity matrix
@@ -44,6 +51,8 @@ equal := V.IsEqual(Res); //the result of the multiplication should be equal to t
 // @TEST-ASSERT
 AssertTrue(Condition :=success,
 	message := 'Error on valid initial resize');
+AssertEquals(Expected := cols_expected, Actual := cols_actual, Message := 'Column count incorrect');
+AssertEquals(Expected := rows_expected, Actual := rows_actual, Message := 'Row count incorrect');
 AssertTrue(Condition :=equal,
 	message := 'Error on valid initial resize');
 TEST_FINISHED();]]></ST>
@@ -158,12 +167,17 @@ TEST_FINISHED();]]></ST>
       <LineId Id="6" Count="0" />
       <LineId Id="39" Count="0" />
       <LineId Id="38" Count="0" />
-      <LineId Id="129" Count="4" />
+      <LineId Id="129" Count="2" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="132" Count="1" />
       <LineId Id="77" Count="0" />
       <LineId Id="140" Count="0" />
       <LineId Id="41" Count="0" />
       <LineId Id="135" Count="2" />
       <LineId Id="134" Count="0" />
+      <LineId Id="154" Count="1" />
       <LineId Id="138" Count="0" />
       <LineId Id="141" Count="0" />
       <LineId Id="5" Count="0" />

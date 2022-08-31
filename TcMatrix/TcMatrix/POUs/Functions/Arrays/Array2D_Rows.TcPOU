@@ -6,7 +6,7 @@ VAR_IN_OUT
 	A : ARRAY[*,*] OF LREAL;
 END_VAR]]></Declaration>
     <Implementation>
-      <ST><![CDATA[IF UPPER_BOUND(A,1) <= LOWER_BOUND(A,1) THEN
+      <ST><![CDATA[IF UPPER_BOUND(A,1) < LOWER_BOUND(A,1) THEN
 	Array2D_Rows := 0;
 ELSE
 	Array2D_Rows := DINT_TO_UINT(UPPER_BOUND(A,1) - LOWER_BOUND(A,1) + 1);
