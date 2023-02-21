@@ -2,10 +2,12 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_ElementSum" Id="{dd7ad31b-9e72-403d-8fad-fec05d5191bf}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_ElementSum : BOOL
-VAR_INPUT
-	A : REFERENCE TO Matrix;
-	B : REFERENCE TO Matrix;
-	Res : REFERENCE TO Matrix;
+VAR_IN_OUT CONSTANT
+	A : Matrix;
+	B : Matrix;
+END_VAR
+VAR_IN_OUT
+	Res : Matrix;
 END_VAR
 VAR
 	I : UINT;

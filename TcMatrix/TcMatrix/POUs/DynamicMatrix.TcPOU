@@ -26,21 +26,31 @@ END_VAR
     <Folder Name="Overrides" Id="{78694c69-7fc5-08cd-0afe-6c21638c5b6b}" />
     <Folder Name="Resultants" Id="{e9cc64b5-17e3-05cb-0547-28b67d88aa8b}" />
     <Method Name="AsColVector" Id="{8333982d-97ec-03df-25f4-b8160437c221}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsColVector : BOOL
+      <Declaration><![CDATA[//Resets the content of this matrix to be a column vector, copied from the specified column of the input matrix
+METHOD PUBLIC AsColVector : BOOL
+VAR_IN_OUT CONSTANT
+	M : Matrix;
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO Matrix;
 	Col : UINT;
 END_VAR
+
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AsColVector := AsSubMatrix(M,0,M.Rows,Col,1);]]></ST>
+        <ST><![CDATA[AsColVector := AsSubMatrix(
+	M := M,
+	RowStart := 0,
+	RowCount := M.Rows,
+	ColStart := Col,
+	ColCount := 1);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsElementDifference" Id="{6b700784-8326-0bcf-2c9d-ca6331de219c}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsElementDifference : BOOL
-VAR_INPUT
-	Minuend : REFERENCE TO Matrix;
-	Subtrahend : REFERENCE TO Matrix;
+      <Declaration><![CDATA[//resets the content of this matrix to be the result of subtracting the input subtrahend matrix from the input minuend matrix element by element
+METHOD PUBLIC AsElementDifference : BOOL
+VAR_IN_OUT CONSTANT
+	Minuend : Matrix;
+	Subtrahend : Matrix;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT(Minuend.IsEqualSize(subtrahend)) THEN
@@ -58,10 +68,11 @@ AsElementDifference := Matrix_ElementSum(Minuend,Subtrahend,THIS^);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsElementProduct" Id="{1d639892-7279-0584-2a80-52cd430c8d25}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsElementProduct : BOOL
-VAR_INPUT
-	A : REFERENCE TO Matrix;
-	B : REFERENCE TO Matrix;
+      <Declaration><![CDATA[//resets the content of this matrix to be the result of multiplying the input matricies element by element
+METHOD PUBLIC AsElementProduct : BOOL
+VAR_IN_OUT CONSTANT
+	A : Matrix;
+	B : Matrix;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT(A.IsEqualSize(B)) THEN
@@ -79,10 +90,11 @@ AsElementProduct := Matrix_ElementProduct(A,B,THIS^);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsElementSum" Id="{1ed69aa6-4c59-063d-134e-146775a583ed}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsElementSum : BOOL
-VAR_INPUT
-	A : REFERENCE TO Matrix;
-	B : REFERENCE TO Matrix;
+      <Declaration><![CDATA[//resets the content of this matrix to be the result of adding the input matricies element by element
+METHOD PUBLIC AsElementSum : BOOL
+VAR_IN_OUT CONSTANT
+	A : Matrix;
+	B : Matrix;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT(A.IsEqualSize(B)) THEN
@@ -100,15 +112,19 @@ AsElementSum := Matrix_ElementSum(A,B,THIS^);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsGrown" Id="{3cd3cf6d-f6c0-085c-3642-2ba18a0c7d35}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsGrown : BOOL
+      <Declaration><![CDATA[//resets the content of this matrix to be a larger (by one row and one column) matrix copy of the input matrix. Initial values of the new row, column, and diagonal are controlled by other inputs.
+METHOD PUBLIC AsGrown : BOOL
+VAR_IN_OUT CONSTANT
+	M : Matrix;
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO Matrix;
 	Row : UINT;
 	Col : UINT;
 	DiagVal : LREAL;
 	RowVal : LREAL;
 	ColVal : LREAL;
-END_VAR]]></Declaration>
+END_VAR
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT(Init(M.Rows+1,M.Cols+1)) THEN
 	AsGrown := FALSE;
@@ -120,9 +136,13 @@ AsGrown := Matrix_Grow(M,THIS^,Row,Col,DiagVal,RowVal,ColVal);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsInverse" Id="{fffae31c-4722-0c74-25e1-98f5de4d08c5}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsInverse : BOOL
+      <Declaration><![CDATA[//resets the contents of this matrix to be the inverse of the input matrix.
+METHOD PUBLIC AsInverse : BOOL
+VAR_IN_OUT CONSTANT
+	M : Matrix;
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO MAtrix;
+	//Values with a lower magnitude than the tolerance will be rounded to zero in order to avoid divide-by-near-zero situations
 	Tolerance : LREAL;
 END_VAR
 ]]></Declaration>
@@ -137,10 +157,11 @@ AsInverse := THIS^.InvertSquare(Tolerance);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsMatrixProduct" Id="{53280527-f75b-06ac-01d7-498318ada10c}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsMatrixProduct : BOOL
-VAR_INPUT
-	A : REFERENCE TO Matrix;
-	B : REFERENCE TO Matrix;
+      <Declaration><![CDATA[//resets the content of this matrix to be the product of input matrix A x input matrix B
+METHOD PUBLIC AsMatrixProduct : BOOL
+VAR_IN_OUT CONSTANT
+	A : Matrix;
+	B : Matrix;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF A.Cols <> B.Rows THEN
@@ -158,22 +179,35 @@ AsMatrixProduct := Matrix_Product(A,B,THIS^);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsRowVector" Id="{46190744-41a6-0d8f-0bf6-d07b0ad4ecb0}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsRowVector : BOOL
+      <Declaration><![CDATA[//Resets the content of this matrix to be a row vector, copied from the specified row of the input matrix
+METHOD PUBLIC AsRowVector : BOOL
+VAR_IN_OUT CONSTANT
+	M : Matrix;
+END_VAR
+
 VAR_INPUT
-	M : REFERENCE TO Matrix;
 	Row : UINT;
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[AsRowVector := AsSubMatrix(M,Row,1,0,M.Cols);]]></ST>
+        <ST><![CDATA[AsRowVector := AsSubMatrix(
+	M := M,
+	RowStart := Row,
+	RowCount := 1,
+	ColStart := 0,
+	ColCount := M.Cols);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsScaled" Id="{b4ebfd3a-7f84-0c68-3eb7-f5f1a49c6aeb}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsScaled : BOOL
+      <Declaration><![CDATA[//resets the contents of this matrix to be an element by element product of the input matrix and the input scalar
+METHOD PUBLIC AsScaled : BOOL
+VAR_IN_OUT CONSTANT
+	M : Matrix;
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO Matrix;
 	Scalar : LREAL;
-END_VAR]]></Declaration>
+END_VAR
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT(InitCopy(M)) THEN
 	AsScaled := FALSE;
@@ -185,12 +219,16 @@ Scale(Scalar);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsShrunk" Id="{37c92294-b9bc-00a9-17a2-cb7d0631759a}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsShrunk : BOOL
+      <Declaration><![CDATA[//resets the contents of this matrix to be a copy of the input matrix with one fewer row and column (the specified row and column are removed)
+METHOD PUBLIC AsShrunk : BOOL
+VAR_IN_OUT CONSTANT
+	M : Matrix;
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO Matrix;
 	Row : UINT;
 	Col : UINT;
-END_VAR]]></Declaration>
+END_VAR
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT(Init(M.Rows-1,M.Cols-1)) THEN
 	AsShrunk := FALSE;
@@ -202,14 +240,18 @@ AsShrunk := Matrix_Shrink(M,THIS^,Row,Col);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsSubMatrix" Id="{f93c8810-7b34-0e2d-0d0e-56744d128372}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsSubMatrix : BOOL
+      <Declaration><![CDATA[//resets the contents of this matrix to be a copy of a continuous submatrix of the input reference matrix
+METHOD PUBLIC AsSubMatrix : BOOL
+VAR_IN_OUT CONSTANT
+	M : Matrix;
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO Matrix;
 	RowStart : UINT;
 	RowCount : UINT;
 	ColStart : UINT;
 	ColCount : UINT;
-END_VAR]]></Declaration>
+END_VAR
+]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF RowStart + RowCount > M.Rows THEN
 	AsSubMatrix := FALSE;
@@ -231,9 +273,10 @@ AsSubMatrix := Matrix_SubMatrix(M,THIS^,RowStart,RowCount,ColStart,ColCount);]]>
       </Implementation>
     </Method>
     <Method Name="AsTransposed" Id="{a2212529-f813-054e-209a-a7ba6ac5c31a}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsTransposed : BOOL
-VAR_INPUT
-	M : REFERENCE TO Matrix;
+      <Declaration><![CDATA[//Resets the contents of this matrix to be a transposed copy of the input matrix
+METHOD PUBLIC AsTransposed : BOOL
+VAR_IN_OUT CONSTANT
+	M : Matrix;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT(Init(M.Cols,M.Rows)) THEN
@@ -245,10 +288,11 @@ AsTransposed := Matrix_Transpose(M,THIS^);]]></ST>
       </Implementation>
     </Method>
     <Method Name="AsVectorCrossProduct" Id="{3ec0f3e8-0a31-090c-3d7c-88ea53422b02}" FolderPath="Resultants\">
-      <Declaration><![CDATA[METHOD PUBLIC AsVectorCrossProduct : BOOL
+      <Declaration><![CDATA[//resets the contents of this matrix to be the result of a sequential vector cross product of all of the input matricies
+METHOD PUBLIC AsVectorCrossProduct : BOOL
 VAR_INPUT
 END_VAR
-VAR_IN_OUT
+VAR_IN_OUT CONSTANT
 	Vectors : ARRAY[*] OF POINTER TO Matrix;
 END_VAR
 VAR
@@ -279,7 +323,7 @@ IF NOT(Init(Dim,1)) THEN
 	RETURN;
 END_IF
 
-AsVectorCrossProduct := Vector_CrossProduct(THIS^,Vectors);]]></ST>
+AsVectorCrossProduct := Vector_CrossProduct(Res := THIS^, Vectors := Vectors);]]></ST>
       </Implementation>
     </Method>
     <Property Name="Cols" Id="{09c98137-9055-00b0-0894-d32717273f77}" FolderPath="Overrides\">
@@ -384,7 +428,7 @@ END_VAR
     </Method>
     <Method Name="InitArray2D" Id="{32568124-a27f-0411-103a-1245f53e0bbf}" FolderPath="Initializers\">
       <Declaration><![CDATA[METHOD PUBLIC InitArray2D : BOOL
-VAR_IN_OUT
+VAR_IN_OUT CONSTANT
 	A : ARRAY[*,*] OF LREAL;
 END_VAR
 VAR
@@ -419,8 +463,8 @@ END_VAR
     </Method>
     <Method Name="InitCopy" Id="{bcdd2e69-8663-4d69-9214-f5a0b970f2d2}" FolderPath="Initializers\">
       <Declaration><![CDATA[METHOD PUBLIC InitCopy : BOOL
-VAR_INPUT
-	M : REFERENCE TO Matrix;
+VAR_IN_OUT CONSTANT
+	M : Matrix;
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -724,6 +768,7 @@ END_IF]]></ST>
     </LineIds>
     <LineIds Name="DynamicMatrix.AsColVector">
       <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="4" />
     </LineIds>
     <LineIds Name="DynamicMatrix.AsElementDifference">
       <LineId Id="29" Count="1" />
@@ -790,6 +835,7 @@ END_IF]]></ST>
     </LineIds>
     <LineIds Name="DynamicMatrix.AsRowVector">
       <LineId Id="5" Count="0" />
+      <LineId Id="16" Count="4" />
     </LineIds>
     <LineIds Name="DynamicMatrix.AsScaled">
       <LineId Id="5" Count="0" />

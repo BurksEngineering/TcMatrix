@@ -2,9 +2,11 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Vector_Normalize" Id="{b014a21a-b81c-08f1-053c-7e75309e191c}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Vector_Normalize : BOOL
-VAR_INPUT
-	In : REFERENCE TO Matrix;
-	Res : REFERENCE TO Matrix;
+VAR_IN_OUT CONSTANT
+	In : Matrix;
+END_VAR
+VAR_IN_OUT
+	Res : Matrix;
 END_VAR
 VAR
 	Mag : LREAL;

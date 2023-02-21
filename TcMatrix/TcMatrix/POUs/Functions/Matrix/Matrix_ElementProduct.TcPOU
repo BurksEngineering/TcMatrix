@@ -2,10 +2,12 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_ElementProduct" Id="{61941b80-cefc-03b0-068a-f4ffeccad5f5}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_ElementProduct : BOOL
-VAR_INPUT
-	A : REFERENCE TO Matrix;
-	B : REFERENCE TO Matrix;
-	Res : REFERENCE TO Matrix;
+VAR_IN_OUT CONSTANT
+	A : Matrix;
+	B : Matrix;
+END_VAR
+VAR_IN_OUT
+	Res : Matrix;
 END_VAR
 VAR
 	I : UINT;

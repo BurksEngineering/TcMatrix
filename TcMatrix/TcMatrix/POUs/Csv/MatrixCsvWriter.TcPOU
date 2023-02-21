@@ -2,9 +2,11 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="MatrixCsvWriter" Id="{b9c4277f-dd1d-07b9-250c-5d70c700e57b}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK MatrixCsvWriter
+VAR_IN_OUT
+	M : Matrix;
+END_VAR
 VAR_INPUT
 	bExecute : BOOL;
-	M : REFERENCE TO Matrix;
 	sPathName : T_MaxString;
 	tTimeout : TIME;//timeout applied indidivudally to each file operation
 	pHeader : POINTER TO STRING;
@@ -71,7 +73,7 @@ CASE step OF
 		Ri := 0;
 		Ci := 0;
 		
-		IF bExecute AND __ISVALIDREF(M) THEN
+		IF bExecute THEN
 			IF NOT M.IsEmpty THEN
 				bBusy := TRUE;
 				step := stepOpenFile;

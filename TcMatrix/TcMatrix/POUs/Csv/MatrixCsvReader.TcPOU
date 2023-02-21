@@ -2,9 +2,11 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="MatrixCsvReader" Id="{57e330de-3a6c-0c50-1c55-a24f6c132b53}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION_BLOCK MatrixCsvReader
+VAR_IN_OUT CONSTANT
+	M : Matrix;
+END_VAR
 VAR_INPUT
 	bExecute : BOOL;
-	M : REFERENCE TO Matrix;
 	sPathName : T_MaxString;
 	tTimeout : TIME;//timeout applied indidivudally to each file operation
 	nHeaderLines : UDINT;//number of lines to skip at the beginning
@@ -90,7 +92,7 @@ CASE step OF
 		nRows := 0;
 		nCols := 0;
 		
-		IF bExecute AND __ISVALIDREF(M) THEN
+		IF bExecute THEN
 			IF NOT M.IsEmpty THEN
 				bBusy := TRUE;
 				step := stepOpenFile;

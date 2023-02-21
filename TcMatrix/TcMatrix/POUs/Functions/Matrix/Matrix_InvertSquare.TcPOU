@@ -2,10 +2,13 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_InvertSquare" Id="{b101bfa5-3cd4-0d28-0025-8721c0566043}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_InvertSquare : BOOL
+VAR_IN_OUT
+	M : Matrix;
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO Matrix;
 	Tolerance : LREAL;//numbers with a smaller magnitude than this will not be used as denominators, sintead resulting in an abort
 END_VAR
+
 VAR
 	Ri : UINT;
 	Ci : UINT;

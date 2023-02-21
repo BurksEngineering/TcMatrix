@@ -2,9 +2,11 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_Transpose" Id="{9e8611eb-e7e8-49d4-8541-b23bf7999d2e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_Transpose : Bool
-VAR_INPUT
-	M_From : REFERENCE TO Matrix;
-	M_To : REFERENCE TO Matrix;
+VAR_IN_OUT CONSTANT
+	M_From : Matrix;
+END_VAR
+VAR_IN_OUT
+	M_To : Matrix;
 END_VAR
 VAR
 	Ri : UINT;

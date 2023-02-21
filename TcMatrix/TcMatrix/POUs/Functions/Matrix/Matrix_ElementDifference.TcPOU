@@ -3,10 +3,12 @@
   <POU Name="Matrix_ElementDifference" Id="{f74edede-e315-0158-3390-9afe49ecc709}" SpecialFunc="None">
     <Declaration><![CDATA[//Res := Minuend - Subtrahend
 FUNCTION Matrix_ElementDifference : BOOL
-VAR_INPUT
-	Minuend : REFERENCE TO Matrix;
-	Subtrahend : REFERENCE TO Matrix;
-	Res : REFERENCE TO Matrix;
+VAR_IN_OUT CONSTANT
+	Minuend : Matrix;
+	Subtrahend : Matrix;
+END_VAR
+VAR_IN_OUT
+	Res : Matrix;
 END_VAR
 VAR
 	I : UINT;

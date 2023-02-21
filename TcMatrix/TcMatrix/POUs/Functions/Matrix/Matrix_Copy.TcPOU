@@ -2,9 +2,11 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_Copy" Id="{0778dcde-058a-04aa-1a54-6d2a95b13461}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_Copy : BOOL
-VAR_INPUT
-	M_From : REFERENCE TO Matrix;
-	M_To : REFERENCE TO Matrix;
+VAR_IN_OUT CONSTANT
+	M_From : Matrix;
+END_VAR
+VAR_IN_OUT
+	M_To : Matrix;
 END_VAR
 ]]></Declaration>
     <Implementation>

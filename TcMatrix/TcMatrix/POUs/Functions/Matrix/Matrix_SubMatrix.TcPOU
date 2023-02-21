@@ -2,14 +2,19 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_SubMatrix" Id="{e584d28a-8010-4956-af80-0bbe9d155507}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_SubMatrix : Bool
+VAR_IN_OUT CONSTANT
+	M_Super : Matrix;
+END_VAR
+VAR_IN_OUT
+	M_Sub : Matrix;
+END_VAR
 VAR_INPUT
-	M_Super : REFERENCE TO Matrix;
-	M_Sub : REFERENCE TO Matrix;
 	RowStart : UINT;
 	RowCount : UINT;
 	ColStart : UINT;
 	ColCount : UINT;
 END_VAR
+
 
 VAR
 	Ri : UINT;
