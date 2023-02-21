@@ -2,15 +2,21 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_Grow" Id="{f909547c-ed56-48e1-9f36-d8c62dce67dc}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_Grow : Bool
+VAR_IN_OUT CONSTANT
+	M_From : Matrix;
+END_VAR
+VAR_IN_OUT
+	M_To : Matrix;
+END_VAR
 VAR_INPUT
-	M_From : REFERENCE TO Matrix;
-	M_To : REFERENCE TO Matrix;
 	Row : UINT;
 	Col : UINT;
 	DiagVal : LREAL;
 	RowVal : LREAL;
 	ColVal : LREAL;
 END_VAR
+
+
 VAR
 	Ri : UINT;
 	Ci : UINT;

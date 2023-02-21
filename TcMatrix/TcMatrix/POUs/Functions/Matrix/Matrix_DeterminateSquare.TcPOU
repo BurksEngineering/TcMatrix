@@ -2,8 +2,8 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_DeterminateSquare" Id="{eb8e9d71-3179-0365-01f4-1666dd276213}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_DeterminateSquare : BOOL
-VAR_INPUT
-	M : REFERENCE TO Matrix;
+VAR_IN_OUT CONSTANT
+	M : Matrix;
 END_VAR
 VAR_OUTPUT
 	Res : LREAL;

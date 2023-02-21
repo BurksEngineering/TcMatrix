@@ -109,12 +109,12 @@ END_VAR
  
  *)
 METHOD PUBLIC CopyFrom : BOOL//Returns true if the prerequisites were met and the data was copied, false otherwise
-VAR_INPUT
-	M : REFERENCE TO Matrix;//Source of the copy operation
+VAR_IN_OUT CONSTANT
+	M : Matrix;//Source of the copy operation
 END_VAR
 ]]></Declaration>
       <Implementation>
-        <ST><![CDATA[CopyFrom := Matrix_Copy(M,THIS^);]]></ST>
+        <ST><![CDATA[CopyFrom := Matrix_Copy(M_From := M, M_To := THIS^);]]></ST>
       </Implementation>
     </Method>
     <Method Name="CopyTo" Id="{8ef25dfb-afc0-053f-1591-86389e6847af}" FolderPath="Helpers\">
@@ -126,8 +126,8 @@ END_VAR
  
  *)
 METHOD PUBLIC CopyTo : BOOL//Returns true if the prerequisites were met and the data was copied, false otherwise
-VAR_INPUT
-	M : REFERENCE TO Matrix;//Destination for the copy operation
+VAR_IN_OUT
+	M : Matrix;//Destination for the copy operation
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -146,8 +146,8 @@ THIS := THIS - M
  
  *)
 METHOD PUBLIC ElementDifference : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
-VAR_INPUT
-	M : REFERENCE TO Matrix;//the subtrahend in the subtraction
+VAR_IN_OUT CONSTANT
+	M : Matrix;//the subtrahend in the subtraction
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -166,8 +166,8 @@ THIS := THIS .* M
  
  *)
 METHOD PUBLIC ElementProduct : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
-VAR_INPUT
-	M : REFERENCE TO Matrix;//the supplied matrix to be multiplied element-by-element to this matrix
+VAR_IN_OUT CONSTANT
+	M : Matrix;//the supplied matrix to be multiplied element-by-element to this matrix
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -186,8 +186,8 @@ THIS := THIS + M
  
  *)
 METHOD PUBLIC ElementSum : BOOL//TRUE if the operation completes successfully, false if the prerequisites are not met
-VAR_INPUT
-	M : REFERENCE TO Matrix;//the supplied matrix to be added to this matrix
+VAR_IN_OUT CONSTANT
+	M : Matrix;//the supplied matrix to be added to this matrix
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -199,8 +199,8 @@ END_VAR
 For every element that exist in both this matrix and the source matrix, copy the value from the source matrix into this matrix
 *)
 METHOD PUBLIC FillFrom
-VAR_INPUT
-	M : REFERENCE TO Matrix;//source matrix for element copy operation
+VAR_IN_OUT CONSTANT
+	M : Matrix;//source matrix for element copy operation
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF M.IsEmpty OR IsEmpty THEN
@@ -219,7 +219,7 @@ END_FOR]]></ST>
 For every element that exist in both this matrix and the source array, copy the value from the source array into this matrix
 *)
 METHOD PUBLIC FillFromArray2D
-VAR_IN_OUT
+VAR_IN_OUT CONSTANT
 	A : ARRAY[*,*] OF LREAL;//source matrix for element copy operation
 END_VAR
 VAR
@@ -245,11 +245,14 @@ END_FOR]]></ST>
       <Declaration><![CDATA[//Consider the subset of elements in this matrix starting and the supplied initial row and column as a submatrix. 
 //For every element that exists in both the submatrix and the supplies source matrix, copy the value from the source matrix into the corresponding element of the submatrix.
 METHOD PUBLIC FillFromAt
+VAR_IN_OUT CONSTANT
+	M : Matrix;//Source matrix for the copy operation
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO Matrix;//Source matrix for the copy operation
 	RStart : UINT;//Row within this matrix to start the fill operation
 	CStart : UINT;//Column within this matrix to start the fill operation
 END_VAR
+
 VAR
 	SubMatrix : SubMatrixAccessor;
 END_VAR]]></Declaration>
@@ -457,8 +460,8 @@ END_VAR
 // - The supplied other matrix is a vector and is not empty
 // - This vector has the same length (but not necessarily orientation) as the supplied vector
 METHOD PUBLIC GetVectorDotProduct : LREAL//The dot product (element-wise product) of this vector and the supplied vector, or 0 if the inputs are invalid
-VAR_INPUT
-	V : REFERENCE TO Matrix;//The vector which which the dot product of this vector should be taken.
+VAR_IN_OUT CONSTANT
+	V : Matrix;//The vector which which the dot product of this vector should be taken.
 END_VAR
 VAR
 	Res : LREAL;
@@ -560,8 +563,8 @@ END_VAR
 //
 //.. note:: Two empty matricies are considered equal.
 METHOD PUBLIC IsEqual : BOOL//TRUE if the two matricies are equal, FALSE if they are not
-VAR_INPUT
-	M : REFERENCE TO Matrix;//The other matrix to compare to this one
+VAR_IN_OUT CONSTANT
+	M : Matrix;//The other matrix to compare to this one
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -595,8 +598,8 @@ IsEqual := TRUE;]]></ST>
 //
 //.. note:: two empty matricies are considered the same size.
 METHOD PUBLIC IsEqualSize : BOOL//True if this matrix is the same size as the supplied matrix
-VAR_INPUT
-	M : REFERENCE TO Matrix;//The matrix which should have its size compared to the size of this matrix
+VAR_IN_OUT CONSTANT
+	M : Matrix;//The matrix which should have its size compared to the size of this matrix
 END_VAR
 ]]></Declaration>
       <Implementation>
@@ -609,10 +612,13 @@ END_VAR
 //Two matricies are considered nearly equal if they are the same size and every set of corresponding elements are equal to within the supplied precision.
 //.. note:: Note that two empty matricies are considered equal
 METHOD PUBLIC IsNearlyEqual : BOOL//TRUE if the two matricies are nearly equal, FALSE if they are not
+VAR_IN_OUT CONSTANT
+	M : Matrix;//The other matrix to compare to this one
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO Matrix;//The other matrix to compare to this one
 	Precision : LREAL;//Deviation between two elements larger than this value makes them unequal
 END_VAR
+
 ]]></Declaration>
       <Implementation>
         <ST><![CDATA[IF NOT( IsEqualSize(M)) THEN

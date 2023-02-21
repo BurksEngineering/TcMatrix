@@ -2,9 +2,9 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_CanMult" Id="{5be8d691-0a25-42cd-92c4-3f31297674a2}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_CanMult : Bool
-VAR_INPUT
-	M_L : REFERENCE TO Matrix;
-	M_R : REFERENCE TO Matrix;
+VAR_IN_OUT CONSTANT
+	M_L : Matrix;
+	M_R : Matrix;
 END_VAR
 VAR
 END_VAR

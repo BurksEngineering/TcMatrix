@@ -2,7 +2,7 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Array2D_Rows" Id="{62ad947c-b6a0-0ed8-1fe8-1b629cbe1f2f}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Array2D_Rows : UINT
-VAR_IN_OUT
+VAR_IN_OUT CONSTANT
 	A : ARRAY[*,*] OF LREAL;
 END_VAR]]></Declaration>
     <Implementation>

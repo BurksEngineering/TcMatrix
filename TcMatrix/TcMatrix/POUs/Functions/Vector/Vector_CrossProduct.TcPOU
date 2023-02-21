@@ -2,8 +2,9 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Vector_CrossProduct" Id="{25532393-25b9-0f66-3679-64664fc1dc7e}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Vector_CrossProduct : BOOL
-VAR_INPUT
-	Res : REFERENCE TO Matrix;
+VAR_IN_OUT
+	Res : Matrix;
+	Vectors : ARRAY[*] OF POINTER TO Matrix;
 END_VAR
 VAR
 	Ri : UINT;
@@ -14,9 +15,7 @@ VAR
 	Det : LREAL;
 	Sign : LREAL;
 END_VAR
-VAR_IN_OUT
-	Vectors : ARRAY[*] OF POINTER TO Matrix;
-END_VAR
+
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[//a cross product in N dimensions space requires N-1 vectors of length N, the result of which is an N-length vector orthogonal to all supplied vectors. Order of vectors matters.

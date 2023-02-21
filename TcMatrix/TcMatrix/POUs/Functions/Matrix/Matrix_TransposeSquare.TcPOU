@@ -2,8 +2,8 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_TransposeSquare" Id="{cddc94bc-80ef-0bdc-2507-33761c831052}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_TransposeSquare : BOOL
-VAR_INPUT
-	M : REFERENCE TO Matrix;
+VAR_IN_OUT
+	M : Matrix;
 END_VAR
 VAR
 	Ri : UINT;

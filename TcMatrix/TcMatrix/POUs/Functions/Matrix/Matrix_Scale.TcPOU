@@ -2,10 +2,13 @@
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.9">
   <POU Name="Matrix_Scale" Id="{0a70bdcb-e9cf-0eec-2ebf-e6289b9019aa}" SpecialFunc="None">
     <Declaration><![CDATA[FUNCTION Matrix_Scale : BOOL
+VAR_IN_OUT
+	M : Matrix;
+END_VAR
 VAR_INPUT
-	M : REFERENCE TO Matrix;
 	Scalar : LREAL;
 END_VAR
+
 VAR
 	I : UINT;
 END_VAR

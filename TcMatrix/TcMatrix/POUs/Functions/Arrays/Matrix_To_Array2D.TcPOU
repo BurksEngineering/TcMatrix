@@ -5,8 +5,8 @@
 VAR_IN_OUT
 	A : ARRAY[*,*] OF LREAL;//destination matrix for element copy operation
 END_VAR
-VAR_INPUT
-	M : REFERENCE TO Matrix;//source matrix for element copy operation
+VAR_IN_OUT CONSTANT
+	M : Matrix;//source matrix for element copy operation
 END_VAR
 VAR
 	Ri : UINT;
