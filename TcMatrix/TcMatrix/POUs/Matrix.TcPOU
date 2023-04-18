@@ -544,6 +544,32 @@ END_VAR
         <ST><![CDATA[InvertSquare := Matrix_InvertSquare(THIS^,Tolerance);]]></ST>
       </Implementation>
     </Method>
+    <Property Name="IsCleared" Id="{066f6b71-08d6-0966-16ee-3e8688b515c8}" FolderPath="Helpers\">
+      <Declaration><![CDATA[//Returns TRUE if every element of the matrix is equal to zero, or the matrix is empty
+PROPERTY PUBLIC IsCleared : BOOL]]></Declaration>
+      <Get Name="Get" Id="{ff11b87f-acf8-086b-3eb7-73b184f48aea}">
+        <Declaration><![CDATA[VAR
+END_VAR
+]]></Declaration>
+        <Implementation>
+          <ST><![CDATA[IF IsEmpty THEN
+	IsCleared := TRUE;
+	RETURN;
+END_IF
+
+FOR Ri := 0 TO Rows-1 DO
+	FOR Ci := 0 TO Cols-1 DO
+		IF GetRC(Ri,Ci) <> 0 THEN
+			IsCleared := FALSE;
+			RETURN;
+		END_IF
+	END_FOR
+END_FOR
+
+IsCleared := TRUE;]]></ST>
+        </Implementation>
+      </Get>
+    </Property>
     <Property Name="IsEmpty" Id="{c235a1c3-19da-47f7-9309-34932eb65324}" FolderPath="Helpers\">
       <Declaration><![CDATA[//Returns true if the matrix does not have any addresible elements
 PROPERTY PUBLIC IsEmpty : Bool]]></Declaration>
@@ -1304,6 +1330,14 @@ END_VAR
     </LineIds>
     <LineIds Name="Matrix.InvertSquare">
       <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="Matrix.IsCleared.Get">
+      <LineId Id="2" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="9" Count="9" />
+      <LineId Id="8" Count="0" />
     </LineIds>
     <LineIds Name="Matrix.IsEmpty.Get">
       <LineId Id="2" Count="0" />

@@ -4,6 +4,8 @@
     <Declaration><![CDATA[FUNCTION Vector_CrossProduct : BOOL
 VAR_IN_OUT
 	Res : Matrix;
+END_VAR
+VAR_IN_OUT CONSTANT
 	Vectors : ARRAY[*] OF POINTER TO Matrix;
 END_VAR
 VAR

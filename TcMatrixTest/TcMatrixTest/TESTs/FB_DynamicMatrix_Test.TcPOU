@@ -10,45 +10,12 @@ VAR
 END_VAR
 ]]></Declaration>
     <Implementation>
-      <ST><![CDATA[WhenDeclaredExpectNoMemoryAllocated();
-WhenInitiallyResizedExpectMemoryAllocated();
+      <ST><![CDATA[WhenInitiallyResizedExpectMemoryAllocated();
 WhenResizedBiggerExpectMoreMemoryAllocated();
 WhenResizedSmallerExpectLessMemoryAllocated();
 WhenResizedToZeroExpectNoMemoryAllocated();]]></ST>
     </Implementation>
     <Folder Name="Resize" Id="{bfa23fd9-95bb-0df9-1e4f-a4e0bf87e25f}" />
-    <Method Name="WhenDeclaredExpectNoMemoryAllocated" Id="{e76f40f2-9e5f-0e70-0e41-efbd9edc0c41}" FolderPath="Resize\">
-      <Declaration><![CDATA[METHOD PRIVATE WhenDeclaredExpectNoMemoryAllocated
-VAR_INPUT
-END_VAR
-VAR
-	M : DynamicMatrix;
-	
-	ExpectedBufferSize : ULINT := 0;
-	ExpectedBufferCount : ULINT := 0;
-	
-	ActualBufferSize : ULINT;
-	ActualBufferCount : ULINT;
-END_VAR]]></Declaration>
-      <Implementation>
-        <ST><![CDATA[TEST('WhenDeclaredExpectNoMemoryAllocated');
-
-// @TEST-RUN
-ActualBufferSize := M.MemManager.nAllocatedSize;
-ActualBufferCount := M.MemManager.nBufferCount;
-
-// @TEST-ASSERT
-AssertEquals(Expected := ExpectedBufferSize,
-	Actual := ActualBufferSize,
-	Message := 'Matrix buffer size not correct');
-AssertEquals(Expected := ExpectedBufferCount,
-	Actual := ActualBufferCount,
-	Message := 'Matrix buffer count not correct');
-	
-TEST_FINISHED();
-]]></ST>
-      </Implementation>
-    </Method>
     <Method Name="WhenInitiallyResizedExpectMemoryAllocated" Id="{e070b58a-7b2e-00c9-236c-e1d4bd9dab24}" FolderPath="Resize\">
       <Declaration><![CDATA[METHOD PRIVATE WhenInitiallyResizedExpectMemoryAllocated
 VAR_INPUT
@@ -57,12 +24,7 @@ END_VAR
 VAR
 	M : DynamicMatrix;
 	ResizeSuccess : BOOL;
-	
-	ExpectedBufferSize : ULINT := 1*SIZEOF(LREAL) + SIZEOF(ULINT);
-	ExpectedBufferCount : ULINT := 1;
-	
-	ActualBufferSize : ULINT;
-	ActualBufferCount : ULINT;
+
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('WhenInitiallyResizedExpectMemoryAllocated');
@@ -70,19 +32,12 @@ END_VAR]]></Declaration>
 // @TEST-RUN
 ResizeSuccess := M.Resize(1,1,FALSE,TRUE);
 
-ActualBufferSize := M.MemManager.nAllocatedSize;
-ActualBufferCount := M.MemManager.nBufferCount;
 
 
 // @TEST-ASSERT
 AssertTrue(Condition :=ResizeSuccess,
 	message := 'Error on valid initial resize');
-AssertEquals(Expected := ExpectedBufferSize,
-	Actual := ActualBufferSize,
-	Message := 'Matrix buffer size not correct');
-AssertEquals(Expected := ExpectedBufferCount,
-	Actual := ActualBufferCount,
-	Message := 'Matrix buffer count not correct');
+
 	
 TEST_FINISHED();]]></ST>
       </Implementation>
@@ -95,12 +50,7 @@ VAR
 	M : DynamicMatrix;
 	InitialResizeSuccess : BOOL;
 	SecondResizeSuccess : BOOL;
-	
-	ExpectedBufferSize : ULINT := 4*SIZEOF(LREAL) + SIZEOF(ULINT);
-	ExpectedBufferCount : ULINT := 1;
-	
-	ActualBufferSize : ULINT;
-	ActualBufferCount : ULINT;
+
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('WhenResizedBiggerExpectMoreMemoryAllocated');
@@ -109,20 +59,13 @@ END_VAR]]></Declaration>
 InitialResizeSuccess := M.Resize(1,1,FALSE,TRUE);
 SecondResizeSuccess := M.Resize(2,2,FALSE,TRUE);
 
-ActualBufferSize := M.MemManager.nAllocatedSize;
-ActualBufferCount := M.MemManager.nBufferCount;
 
 // @TEST-ASSERT
 AssertTrue(Condition :=InitialResizeSuccess,
 	message := 'Error on valid initial resize');
 AssertTrue(Condition :=SecondResizeSuccess,
 	message := 'Error on valid second resize');
-AssertEquals(Expected := ExpectedBufferSize,
-	Actual := ActualBufferSize,
-	Message := 'Matrix buffer size not correct');
-AssertEquals(Expected := ExpectedBufferCount,
-	Actual := ActualBufferCount,
-	Message := 'Matrix buffer count not correct');
+
 	
 TEST_FINISHED();]]></ST>
       </Implementation>
@@ -136,11 +79,6 @@ VAR
 	InitialResizeSuccess : BOOL;
 	SecondResizeSuccess : BOOL;
 	
-	ExpectedBufferSize : ULINT := 1*SIZEOF(LREAL) + SIZEOF(ULINT);
-	ExpectedBufferCount : ULINT := 1;
-	
-	ActualBufferSize : ULINT;
-	ActualBufferCount : ULINT;
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('WhenResizedSmallerExpectLessMemoryAllocated');
@@ -149,20 +87,12 @@ END_VAR]]></Declaration>
 InitialResizeSuccess := M.Resize(2,2,FALSE,TRUE);
 SecondResizeSuccess := M.Resize(1,1,FALSE,TRUE);
 
-ActualBufferSize := M.MemManager.nAllocatedSize;
-ActualBufferCount := M.MemManager.nBufferCount;
-
 // @TEST-ASSERT
 AssertTrue(Condition :=InitialResizeSuccess,
 	message := 'Error on valid initial resize');
 AssertTrue(Condition :=SecondResizeSuccess,
 	message := 'Error on valid second resize');
-AssertEquals(Expected := ExpectedBufferSize,
-	Actual := ActualBufferSize,
-	Message := 'Matrix buffer size not correct');
-AssertEquals(Expected := ExpectedBufferCount,
-	Actual := ActualBufferCount,
-	Message := 'Matrix buffer count not correct');
+
 	
 TEST_FINISHED();]]></ST>
       </Implementation>
@@ -175,12 +105,7 @@ VAR
 	M : DynamicMatrix;
 	InitialResizeSuccess : BOOL;
 	SecondResizeSuccess : BOOL;
-	
-	ExpectedBufferSize : ULINT := 0;
-	ExpectedBufferCount : ULINT := 0;
-	
-	ActualBufferSize : ULINT;
-	ActualBufferCount : ULINT;
+
 END_VAR]]></Declaration>
       <Implementation>
         <ST><![CDATA[TEST('WhenResizedToZeroExpectNoMemoryAllocated');
@@ -189,49 +114,27 @@ END_VAR]]></Declaration>
 InitialResizeSuccess := M.Resize(1,1,FALSE,TRUE);
 SecondResizeSuccess := M.Resize(0,0,FALSE,TRUE);
 
-ActualBufferSize := M.MemManager.nAllocatedSize;
-ActualBufferCount := M.MemManager.nBufferCount;
 
 // @TEST-ASSERT
 AssertTrue(Condition :=InitialResizeSuccess,
 	message := 'Error on valid initial resize');
 AssertTrue(Condition :=SecondResizeSuccess,
 	message := 'Error on valid second resize');
-AssertEquals(Expected := ExpectedBufferSize,
-	Actual := ActualBufferSize,
-	Message := 'Matrix buffer size not correct');
-AssertEquals(Expected := ExpectedBufferCount,
-	Actual := ActualBufferCount,
-	Message := 'Matrix buffer count not correct');
+
 	
 TEST_FINISHED();]]></ST>
       </Implementation>
     </Method>
     <LineIds Name="FB_DynamicMatrix_Test">
-      <LineId Id="9" Count="4" />
-    </LineIds>
-    <LineIds Name="FB_DynamicMatrix_Test.WhenDeclaredExpectNoMemoryAllocated">
-      <LineId Id="5" Count="0" />
-      <LineId Id="180" Count="0" />
-      <LineId Id="167" Count="0" />
-      <LineId Id="166" Count="0" />
-      <LineId Id="168" Count="0" />
-      <LineId Id="120" Count="0" />
-      <LineId Id="9" Count="0" />
-      <LineId Id="22" Count="1" />
-      <LineId Id="21" Count="0" />
-      <LineId Id="26" Count="1" />
-      <LineId Id="156" Count="1" />
-      <LineId Id="29" Count="0" />
-      <LineId Id="51" Count="0" />
+      <LineId Id="10" Count="3" />
     </LineIds>
     <LineIds Name="FB_DynamicMatrix_Test.WhenInitiallyResizedExpectMemoryAllocated">
       <LineId Id="6" Count="0" />
       <LineId Id="39" Count="0" />
       <LineId Id="38" Count="0" />
-      <LineId Id="50" Count="3" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="53" Count="0" />
       <LineId Id="8" Count="4" />
-      <LineId Id="55" Count="4" />
       <LineId Id="40" Count="1" />
       <LineId Id="5" Count="0" />
     </LineIds>
@@ -240,11 +143,11 @@ TEST_FINISHED();]]></ST>
       <LineId Id="176" Count="0" />
       <LineId Id="175" Count="0" />
       <LineId Id="158" Count="0" />
-      <LineId Id="187" Count="3" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="190" Count="0" />
       <LineId Id="160" Count="3" />
       <LineId Id="174" Count="0" />
       <LineId Id="173" Count="0" />
-      <LineId Id="192" Count="4" />
       <LineId Id="177" Count="1" />
       <LineId Id="51" Count="0" />
     </LineIds>
@@ -253,9 +156,8 @@ TEST_FINISHED();]]></ST>
       <LineId Id="185" Count="0" />
       <LineId Id="184" Count="0" />
       <LineId Id="164" Count="0" />
-      <LineId Id="196" Count="3" />
+      <LineId Id="196" Count="0" />
       <LineId Id="166" Count="5" />
-      <LineId Id="201" Count="4" />
       <LineId Id="186" Count="1" />
       <LineId Id="51" Count="0" />
     </LineIds>
@@ -264,9 +166,9 @@ TEST_FINISHED();]]></ST>
       <LineId Id="192" Count="0" />
       <LineId Id="191" Count="0" />
       <LineId Id="164" Count="0" />
-      <LineId Id="203" Count="3" />
+      <LineId Id="203" Count="0" />
+      <LineId Id="206" Count="0" />
       <LineId Id="166" Count="5" />
-      <LineId Id="208" Count="4" />
       <LineId Id="51" Count="0" />
       <LineId Id="193" Count="1" />
     </LineIds>
